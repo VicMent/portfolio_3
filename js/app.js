@@ -193,6 +193,7 @@ class PortfolioApp {
     this._initMagneticButtons();
     this._initParallaxFloat();
     this._initTiltEffect();
+    this._initLenis();
     new AutoplayClips();
     this._checkReveals();
     this._loop();
@@ -272,6 +273,89 @@ class PortfolioApp {
       card.addEventListener('mouseleave', () => {
         card.style.transform = '';
       });
+    });
+  }
+
+  _initLenis() {
+    if (!window.Lenis) {
+      console.warn('Lenis not loaded');
+      return;
+    }
+
+    this.lenis = new Lenis({
+      autoRaf: false,
+      lerp: 0.1,
+      smoothWheel: true,
+      syncTouch: false,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+    });
+
+    this.lenis.on('scroll', ({ animatedScroll }) => {
+      this._onScroll();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      const scrollKeys = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' '];
+      if (!scrollKeys.includes(e.key)) return;
+
+      e.preventDefault();
+      const viewportH = window.innerHeight;
+      const currentScroll = this.lenis.animatedScroll || window.scrollY;
+      let targetY = currentScroll;
+
+      if (e.key === 'ArrowDown') {
+        let best = null;
+        let bestDist = Infinity;
+        this.sections.forEach(section => {
+          const rect = section.getBoundingClientRect();
+          const sectionTop = rect.top + currentScroll;
+          if (sectionTop > currentScroll + viewportH * 0.15) {
+            const dist = sectionTop - currentScroll;
+            if (dist < bestDist) {
+              best = section;
+              bestDist = dist;
+            }
+          }
+        });
+        if (best) {
+          const rect = best.getBoundingClientRect();
+          const sectionTop = rect.top + currentScroll;
+          const sectionHeight = rect.height;
+          targetY = sectionTop + sectionHeight / 2 - viewportH / 2;
+        } else {
+          targetY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        }
+      } else if (e.key === 'ArrowUp') {
+        let best = null;
+        let bestDist = Infinity;
+        this.sections.forEach(section => {
+          const rect = section.getBoundingClientRect();
+          const sectionTop = rect.top + currentScroll;
+          const sectionBottom = sectionTop + rect.height;
+          if (sectionBottom < currentScroll - viewportH * 0.15) {
+            const dist = currentScroll - sectionBottom;
+            if (dist < bestDist) {
+              best = section;
+              bestDist = dist;
+            }
+          }
+        });
+        if (best) {
+          const rect = best.getBoundingClientRect();
+          const sectionTop = rect.top + currentScroll;
+          const sectionHeight = rect.height;
+          targetY = sectionTop + sectionHeight / 2 - viewportH / 2;
+        } else {
+          targetY = 0;
+        }
+      } else if (e.key === ' ' || e.key === 'PageDown') {
+        targetY = currentScroll + viewportH * 0.8;
+      } else if (e.key === 'PageUp') {
+        targetY = currentScroll - viewportH * 0.8;
+      }
+
+      this.lenis.scrollTo(targetY, { immediate: false });
     });
   }
 
@@ -407,9 +491,12 @@ class PortfolioApp {
     });
   }
 
-  _loop() {
+  _loop(time) {
+    if (this.lenis) {
+      this.lenis.raf(time);
+    }
     this.animation.tick();
-    requestAnimationFrame(() => this._loop());
+    requestAnimationFrame((t) => this._loop(t));
   }
 }
 
