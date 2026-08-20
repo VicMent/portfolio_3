@@ -176,7 +176,6 @@ class PortfolioApp {
     this.progressFill = document.getElementById('scroll-progress-fill');
     this.nav = document.getElementById('nav');
     this.sections = document.querySelectorAll('.section');
-    this.reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
     this.heroContent = document.querySelector('.hero-content');
     this.navIndicator = document.createElement('div');
     this.navIndicator.className = 'nav-indicator';
@@ -193,9 +192,9 @@ class PortfolioApp {
     this._initMagneticButtons();
     this._initParallaxFloat();
     this._initTiltEffect();
+    this._initGSAP();
     this._initLenis();
     new AutoplayClips();
-    this._checkReveals();
     this._loop();
     this._updateNavIndicator();
   }
@@ -276,6 +275,73 @@ class PortfolioApp {
     });
   }
 
+  _initGSAP() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      console.warn('GSAP or ScrollTrigger not loaded');
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return;
+
+    const reveals = document.querySelectorAll('.reveal');
+    
+    const sectionAnims = {
+      'hero':       { x: 0, y: 40, rotate: 0, scale: 1 },
+      'work':       { x: -80, y: 60, rotate: -3, scale: 0.95 },
+      'about':      { x: 80, y: 60, rotate: 3, scale: 0.95 },
+      'roid':       { x: -80, y: 50, rotate: -2, scale: 0.96 },
+      'assets':     { x: 80, y: 50, rotate: 2, scale: 0.96 },
+      'skills':     { x: -60, y: 40, rotate: -1, scale: 0.98 },
+      'contact':    { x: 60, y: 40, rotate: 1, scale: 0.98 },
+    };
+
+    reveals.forEach((el, index) => {
+      const parent = el.closest('.section');
+      if (!parent) return;
+
+      const sectionId = parent.id || 'hero';
+      const anim = sectionAnims[sectionId] || sectionAnims['hero'];
+      const isHero = sectionId === 'hero';
+
+      const fromVars = {
+        opacity: 0,
+        x: anim.x,
+        y: anim.y,
+        rotate: anim.rotate,
+        scale: anim.scale,
+      };
+
+      const toVars = {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        rotate: 0,
+        scale: 1,
+        duration: 1.1,
+        ease: 'power3.out',
+      };
+
+      if (isHero) {
+        toVars.delay = 0.2 + index * 0.1;
+      } else {
+        toVars.scrollTrigger = {
+          trigger: el,
+          start: 'top 90%',
+          end: 'top 15%',
+          scrub: 1.5,
+        };
+        toVars.delay = 0;
+      }
+
+      gsap.fromTo(el, fromVars, toVars);
+    });
+
+    ScrollTrigger.refresh();
+  }
+
   _initLenis() {
     if (!window.Lenis) {
       console.warn('Lenis not loaded');
@@ -293,6 +359,9 @@ class PortfolioApp {
 
     this.lenis.on('scroll', ({ animatedScroll }) => {
       this._onScroll();
+      if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.update();
+      }
     });
 
     window.addEventListener('keydown', (e) => {
@@ -402,7 +471,6 @@ class PortfolioApp {
     this._updateHeroFade();
     this._updateActiveNav(progress);
     this._updateNavAccent(progress);
-    this._checkReveals();
     this._updateParallax();
 
     if (this._navIndicatorUpdate) this._navIndicatorUpdate();
@@ -460,24 +528,6 @@ class PortfolioApp {
     document.documentElement.style.setProperty('--nav-accent', currentAccent);
   }
 
-  _checkReveals() {
-    const trigger = window.innerHeight * 0.88;
-
-    this.reveals.forEach((el) => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < trigger) {
-        el.classList.add('visible');
-      }
-    });
-
-    document.querySelectorAll('.stagger-children, .section-content.stagger-reveal').forEach((el) => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < trigger) {
-        el.classList.add('visible');
-      }
-    });
-  }
-
   _updateParallax() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) return;
@@ -494,6 +544,7 @@ class PortfolioApp {
   _loop(time) {
     if (this.lenis) {
       this.lenis.raf(time);
+      ScrollTrigger.update();
     }
     this.animation.tick();
     requestAnimationFrame((t) => this._loop(t));
