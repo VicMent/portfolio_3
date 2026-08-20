@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Vic Menten — IT + indie game programmer. Unreal Engine 5, Unity. Play Totally Ethical Labs, a finished UE5 jam game.">
+  <title>Vic Menten — Game Programmer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <canvas id="scroll-canvas" aria-hidden="true"></canvas>
+  <div class="canvas-vignette" aria-hidden="true"></div>
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div class="ambient-glow glow-1" aria-hidden="true"></div>
+  <div class="ambient-glow glow-2" aria-hidden="true"></div>
+  <div class="ambient-glow glow-3" aria-hidden="true"></div>
+
+  <nav class="nav" id="nav">
+    <a href="#hero" class="nav-logo">Vic Menten</a>
+    <ul class="nav-links">
+      <li><a href="#work" data-section="work">Work</a></li>
+      <li><a href="#about" data-section="about">About</a></li>
+      <li><a href="#skills" data-section="skills">Skills</a></li>
+      <li><a href="cv.html" class="nav-cv">CV</a></li>
+      <li><a href="#contact" data-section="contact" class="nav-cta">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="scroll-progress" aria-hidden="true">
+    <div class="scroll-progress-fill" id="scroll-progress-fill"></div>
+  </div>
+
+  <aside class="dock" aria-label="Quick links">
+    <a href="https://vic-ment.itch.io/totally-ethical-labs" target="_blank" rel="noopener">Play</a>
+    <a href="cv.html">CV</a>
+    <a href="https://www.linkedin.com/in/vicmenten" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://vic-ment.itch.io" target="_blank" rel="noopener">itch.io</a>
+    <a href="https://github.com/VicMenten" target="_blank" rel="noopener">GitHub</a>
+  </aside>
+
+  <main class="scroll-container" id="scroll-container">
+
+    <section class="section section-hero" id="hero" data-frame-start="0" data-frame-end="20" data-accent="red">
+      <div class="section-content hero-content">
+        <p class="eyebrow reveal">Herselt, Belgium</p>
+        <h1 class="hero-name reveal">Vic Menten</h1>
+        <p class="hero-sub reveal">IT + indie game programmer — Unreal Engine 5 / Unity</p>
+        <div class="hero-actions reveal">
+          <a class="contact-btn primary" href="#work">Play the jam game</a>
+          <a class="contact-btn secondary" href="cv.html">CV</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-work" id="work" data-frame-start="21" data-frame-end="45" data-accent="red">
+      <div class="section-content">
+        <article class="lab-board reveal">
+          <header class="lab-head">
+            <div class="lab-head-meta">
+              <span class="project-tag">Finished · UE5 jam</span>
+            </div>
+            <div class="lab-stamp" aria-hidden="true">Specimen 07</div>
+            <div class="lab-head-copy">
+              <h2>Totally Ethical Labs</h2>
+              <p>2026 · one-week jam. Hurt an invincible alien, earn coins, buy upgrades. Windows build.</p>
+            </div>
+          </header>
+
+          <div class="lab-stage">
+            <figure class="lab-hero">
+              <img src="extra_images/ethicallabs_project.png" alt="Totally Ethical Labs: an alien pinned under a lab table">
+              <div class="lab-scan" aria-hidden="true"></div>
+              <div class="lab-brackets" aria-hidden="true"></div>
+              <figcaption>Lab cam 01 · live feed</figcaption>
+            </figure>
+            <aside class="lab-side">
+              <p class="lab-kicker">My work</p>
+              <p>I programmed gameplay, pickup, combat, magnet, and economy. Bert did the art. I did not do the visuals.</p>
+              <a class="project-link" href="https://vic-ment.itch.io/totally-ethical-labs" target="_blank" rel="noopener">
+                Download on itch.io
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+              <p class="project-note">No WebGL — jam zip. Expect bugs.</p>
+              <iframe
+                class="itch-embed"
+                src="https://itch.io/embed/4458837?linkback=true&amp;bg_color=0d0d0d&amp;fg_color=f0f0f0&amp;link_color=c41e3a&amp;border_color=333333"
+                title="Totally Ethical Labs on itch.io"
+                loading="lazy"></iframe>
+            </aside>
+          </div>
+
+          <ul class="lab-keys" aria-label="Controls">
+            <li><kbd>WASD</kbd> Move</li>
+            <li><kbd>E</kbd> Pickup</li>
+            <li class="lab-keys-warn"><kbd>V</kbd> Magnet</li>
+            <li><kbd>LMB</kbd> Attack</li>
+            <li><kbd>RMB</kbd> Aim</li>
+          </ul>
+
+          <div class="lab-foot">
+            <p class="challenge"><strong>Problem → fix.</strong> Testers spammed E for coins and never found magnet (V). I logged it as a control-discovery bug, put the keys on itch, and planned to bind magnet to the same interact key.</p>
+            <pre class="code-snip" tabindex="0"><code>// Testers never discovered Magnet (V).
+const controls = {
+  move: 'WASD', pickup: 'E', magnet: 'V',
+  attack: 'LMB', aim: 'RMB',
+};</code></pre>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section-about" id="about" data-frame-start="46" data-frame-end="85" data-accent="red">
+      <div class="section-content content-left">
+        <div class="glass-card glass-card-about reveal">
+          <h2>About</h2>
+          <p class="lead">I'm a 22 year old aspiring game developer with a Bachelor's degree in IT and a one-year specialization in Indie Game Development from Syntra.</p>
+          <p>I combine solid programming skills with hands-on experience in 3D art, allowing me to work across both the technical and creative sides of game development.</p>
+          <div class="about-aside">
+            <p>Outside of game dev, I'm an active gym-goer and volunteer as a scouts leader, where I've sharpened my teamwork and leadership skills.</p>
+            <figure class="about-photo">
+              <img src="extra_images/me%20on%20a%20mountain%20top.jpg" alt="On a mountain ridge">
+            </figure>
+          </div>
+          <div class="edu-row" aria-label="Education">
+            <div class="edu-item">
+              <img src="extra_images/ucll_logo.png" alt="UCLL" class="edu-logo edu-logo-ucll">
+              <span>Bachelor in IT</span>
+            </div>
+            <div class="edu-item">
+              <img src="extra_images/Synta-logo.png" alt="Syntra" class="edu-logo edu-logo-syntra">
+              <span>Indie Game Development</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-roid" id="roid" data-frame-start="86" data-frame-end="110" data-accent="red">
+      <div class="section-content">
+        <article class="roid-board reveal">
+          <header class="roid-head">
+            <div class="roid-head-meta">
+              <span class="project-tag">In progress · FPS</span>
+            </div>
+            <div class="roid-head-copy">
+              <h2>Roid Rager</h2>
+              <p>A pixelated 3D retro FPS wave survival. Work in progress. Here's the sneak peek.</p>
+            </div>
+          </header>
+          <div class="roid-mosaic">
+            <figure class="roid-tile roid-tile-clip">
+              <video src="extra_images/RoidRager3.mp4" muted loop playsinline preload="metadata" data-autoplay></video>
+              <figcaption>Clip</figcaption>
+            </figure>
+            <figure class="roid-tile roid-tile-clip">
+              <video src="extra_images/RoidRager4.mp4" muted loop playsinline preload="metadata" data-autoplay></video>
+              <figcaption>Clip</figcaption>
+            </figure>
+            <figure class="roid-tile roid-tile-logo">
+              <img src="extra_images/RoidRager2.png" alt="Roid Rager title">
+            </figure>
+            <figure class="roid-tile roid-tile-play">
+              <img src="extra_images/RoidRager1.png" alt="Roid Rager gameplay still">
+              <figcaption>Gameplay</figcaption>
+            </figure>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section-assets" data-frame-start="111" data-frame-end="145" data-accent="red">
+      <div class="section-content content-left content-bottom">
+        <div class="glass-card glass-card-whisper reveal">
+          <span class="project-tag">3D · Course work</span>
+          <h2>Game assets</h2>
+          <p>Props and vehicles for real-time engines. I did the models — not a shipped game.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-skills" id="skills" data-frame-start="146" data-frame-end="155" data-accent="red">
+      <div class="section-content content-right">
+        <div class="glass-card glass-card-skills reveal">
+          <h2>Skills</h2>
+          <p class="lead about-one">22. Bachelor in Applied Computer Science (UCLL) + one-year Indie Game Development (Syntra). Programmer first, 3D as a support skill.</p>
+          <dl class="skill-list">
+            <div class="skill-row">
+              <dt>Engines</dt>
+              <dd>
+                <span class="brand">
+                  <span class="icon-chip">
+                    <img src="extra_images/unreal-engine-white-icon.webp" alt="" class="brand-icon">
+                  </span>
+                  Unreal Engine 5
+                </span>
+                <span class="brand">
+                  <span class="icon-chip">
+                    <img src="extra_images/unity-game-engine-icon.webp" alt="" class="brand-icon">
+                  </span>
+                  Unity
+                </span>
+              </dd>
+            </div>
+            <div class="skill-row">
+              <dt>Programming</dt>
+              <dd>Gameplay systems, C# / Blueprints, general software (IT bachelor)</dd>
+            </div>
+            <div class="skill-row">
+              <dt>3D</dt>
+              <dd>Modeling, sculpting, retopology, rigging — Blender, Substance Painter</dd>
+            </div>
+            <div class="skill-row">
+              <dt>Also targeting</dt>
+              <dd>Junior programmer · QA / playtest</dd>
+            </div>
+            <div class="skill-row">
+              <dt>IT / GitHub</dt>
+              <dd>
+                <a href="https://github.com/VicMenten" target="_blank" rel="noopener">VicMenten</a>
+                <span>·</span>
+                <a href="https://github.com/VicMenten/ServerManagement" target="_blank" rel="noopener">ServerManagement</a>
+                <span>2023</span>
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-contact" id="contact" data-frame-start="156" data-frame-end="169" data-accent="red">
+      <div class="section-content content-center">
+        <div class="glass-card reveal contact-card">
+          <h2>Let’s talk</h2>
+          <p class="lead">Open to internships and junior roles: gameplay programming, generalist IT, QA.</p>
+          <div class="contact-links">
+            <a href="https://www.linkedin.com/in/vicmenten" target="_blank" rel="noopener" class="contact-btn primary">LinkedIn</a>
+            <a href="https://vic-ment.itch.io" target="_blank" rel="noopener" class="contact-btn secondary">itch.io</a>
+            <a href="https://github.com/VicMenten" target="_blank" rel="noopener" class="contact-btn secondary">GitHub</a>
+            <a href="cv.html" class="contact-btn secondary">CV</a>
+          </div>
+          <p class="contact-footer">© 2026 Vic Menten · Herselt, Belgium · Message me on LinkedIn</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="js/app.js" type="module"></script>
+</body>
+</html>

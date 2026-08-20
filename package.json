@@ -1,0 +1,9 @@
+{
+  "name": "vic-menten-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "npx --yes serve . -p 3000",
+    "dev": "npx --yes serve . -p 3000"
+  }
+}
