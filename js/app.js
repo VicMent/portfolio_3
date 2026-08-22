@@ -31,6 +31,19 @@ class ScrollAnimation {
   }
 
   async start() {
+    const barFill = document.getElementById('loader-bar-fill');
+    const percentText = document.getElementById('loader-percent');
+    const statusText = document.getElementById('loader-status');
+    const loader = document.getElementById('loader');
+
+    const statuses = [
+      'INITIALIZING',
+      'LOADING ASSETS',
+      'DECODING FRAMES',
+      'PREPARING CANVAS',
+      'ALMOST READY',
+    ];
+
     await new Promise((resolve) => {
       const onMeta = () => {
         this.duration = this.video.duration;
@@ -38,10 +51,24 @@ class ScrollAnimation {
         this.video.removeEventListener('loadedmetadata', onMeta);
         resolve();
       };
+
+      const onProgress = () => {
+        if (this.video.buffered.length > 0) {
+          const buffered = this.video.buffered.end(this.video.buffered.length - 1);
+          const pct = Math.min(100, Math.round((buffered / this.video.duration) * 100));
+          if (barFill) barFill.style.width = `${pct}%`;
+          if (percentText) percentText.textContent = `${pct}%`;
+          const idx = Math.min(statuses.length - 1, Math.floor(pct / (100 / statuses.length)));
+          if (statusText) statusText.textContent = statuses[idx];
+        }
+      };
+
       this.video.addEventListener('loadedmetadata', onMeta);
+      this.video.addEventListener('progress', onProgress);
       this.video.addEventListener('error', () => {
         console.warn('Animation video failed to load');
         this.video.removeEventListener('loadedmetadata', onMeta);
+        this.video.removeEventListener('progress', onProgress);
         resolve();
       }, { once: true });
       this.video.load();
@@ -50,11 +77,12 @@ class ScrollAnimation {
     this.video.currentTime = 0;
     this._render();
 
-    const loader = document.getElementById('loader');
-    if (loader) {
-      await new Promise(r => setTimeout(r, 600));
-      loader.classList.add('hidden');
-    }
+    if (barFill) barFill.style.width = '100%';
+    if (percentText) percentText.textContent = '100%';
+    if (statusText) statusText.textContent = 'READY';
+
+    await new Promise(r => setTimeout(r, 500));
+    if (loader) loader.classList.add('hidden');
   }
 
   _drawCover(el) {

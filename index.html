@@ -19,10 +19,16 @@
   <div class="ambient-glow glow-3" aria-hidden="true"></div>
 
   <div class="loader" id="loader" aria-label="Loading">
-    <div class="loader-inner">
-      <div class="loader-scan" aria-hidden="true"></div>
-      <div class="loader-brackets" aria-hidden="true"></div>
-      <p class="loader-text">Loading<span class="loader-dots"></span></p>
+    <div class="loader-ring" aria-hidden="true">
+      <div class="loader-ring-inner"></div>
+    </div>
+    <div class="loader-content">
+      <p class="loader-title">VIC MENTEN</p>
+      <p class="loader-status" id="loader-status">INITIALIZING</p>
+      <div class="loader-bar">
+        <div class="loader-bar-fill" id="loader-bar-fill"></div>
+      </div>
+      <p class="loader-percent" id="loader-percent">0%</p>
     </div>
   </div>
 
