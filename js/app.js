@@ -211,16 +211,40 @@ class PortfolioApp {
         const target = document.querySelector(href);
         if (target) {
           target.scrollIntoView({ behavior: 'smooth' });
-          document.querySelector('.nav-links').classList.remove('open');
-          document.getElementById('nav-toggle').classList.remove('open');
+          this._closeMobileNav();
         }
       });
     });
 
-    document.getElementById('nav-toggle').addEventListener('click', () => {
-      document.querySelector('.nav-links').classList.toggle('open');
-      document.getElementById('nav-toggle').classList.toggle('open');
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const backdrop = document.querySelector('.nav-backdrop');
+
+    navToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      navToggle.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+      if (backdrop) backdrop.classList.toggle('open', isOpen);
     });
+
+    if (backdrop) {
+      backdrop.addEventListener('click', () => this._closeMobileNav());
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') this._closeMobileNav();
+    });
+  }
+
+  _closeMobileNav() {
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const backdrop = document.querySelector('.nav-backdrop');
+
+    navLinks?.classList.remove('open');
+    navToggle?.classList.remove('open');
+    navToggle?.setAttribute('aria-expanded', 'false');
+    backdrop?.classList.remove('open');
   }
 
   _initMagneticButtons() {
