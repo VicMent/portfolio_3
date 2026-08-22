@@ -1,27 +1,20 @@
 // Scroll-scrubbed canvas. Frames load in background; page is interactive immediately.
 
-const TOTAL_FRAMES = 170;
-const FRAME_PATH = (i) => `animation/${String(i).padStart(4, '0')}.png`;
-const PRELOAD_BATCH = 6;
-
-function isThinClient() {
-  const saveData = navigator.connection?.saveData;
-  const slow = /2g/i.test(navigator.connection?.effectiveType || '');
-  const narrow = window.matchMedia('(max-width: 768px)').matches;
-  return Boolean(saveData || slow || narrow);
-}
+const VIDEO_PATH = 'animation.webm';
 
 class ScrollAnimation {
   constructor(canvas) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d', { alpha: false });
-    this.frames = new Array(TOTAL_FRAMES).fill(null);
-    this.loadedCount = 0;
-    this.currentFrame = -1;
-    this.targetFrame = 0;
-    this.smoothFrame = 0;
+    this.video = document.createElement('video');
+    this.video.muted = true;
+    this.video.playsInline = true;
+    this.video.preload = 'auto';
+    this.video.src = VIDEO_PATH;
     this.isReady = false;
-    this.step = 1;
+    this.duration = 0;
+    this.targetTime = 0;
+    this.smoothTime = 0;
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     this._resize();
@@ -35,115 +28,76 @@ class ScrollAnimation {
     this.canvas.style.width = `${window.innerWidth}px`;
     this.canvas.style.height = `${window.innerHeight}px`;
     this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
-
-    if (this.currentFrame >= 0) {
-      this._drawFrame(Math.round(this.smoothFrame));
-    }
   }
 
   async start() {
-    this.step = isThinClient() ? 4 : 1;
-    await this._loadFrame(1);
-    this.isReady = true;
-    this._drawFrame(1);
-
-    this._loadRest();
-  }
-
-  async _loadRest() {
-    const queue = [];
-    for (let i = 1 + this.step; i <= TOTAL_FRAMES; i += this.step) {
-      queue.push(i);
-    }
-
-    for (let b = 0; b < queue.length; b += PRELOAD_BATCH) {
-      const batch = queue.slice(b, b + PRELOAD_BATCH);
-      await Promise.all(batch.map((n) => this._loadFrame(n)));
-    }
-  }
-
-  _loadFrame(index) {
-    return new Promise((resolve) => {
-      if (this.frames[index - 1]) {
-        resolve();
-        return;
-      }
-
-      const img = new Image();
-      img.decoding = 'async';
-      img.src = FRAME_PATH(index);
-
-      img.onload = () => {
-        this.frames[index - 1] = img;
-        this.loadedCount++;
+    await new Promise((resolve) => {
+      const onMeta = () => {
+        this.duration = this.video.duration;
+        this.isReady = true;
+        this.video.removeEventListener('loadedmetadata', onMeta);
         resolve();
       };
-
-      img.onerror = () => {
-        this.loadedCount++;
+      this.video.addEventListener('loadedmetadata', onMeta);
+      this.video.addEventListener('error', () => {
+        console.warn('Animation video failed to load');
+        this.video.removeEventListener('loadedmetadata', onMeta);
         resolve();
-      };
+      }, { once: true });
+      this.video.load();
     });
+
+    this.video.currentTime = 0;
+    this._render();
   }
 
-  _drawCover(img) {
+  _drawCover(el) {
     const cw = window.innerWidth;
     const ch = window.innerHeight;
-    const scale = Math.max(cw / img.width, ch / img.height);
-    const w = img.width * scale;
-    const h = img.height * scale;
+    const vw = el.videoWidth || el.naturalWidth || el.width || 1536;
+    const vh = el.videoHeight || el.naturalHeight || el.height || 864;
+    const scale = Math.max(cw / vw, ch / vh);
+    const w = vw * scale;
+    const h = vh * scale;
     const x = (cw - w) / 2;
     const y = (ch - h) / 2;
-    this.ctx.drawImage(img, x, y, w, h);
+    this.ctx.drawImage(el, x, y, w, h);
   }
 
-  _drawFrame(index) {
-    const clamped = Math.max(1, Math.min(TOTAL_FRAMES, index));
-    const img = this.frames[clamped - 1];
-
-    if (!img) {
-      for (let offset = 0; offset < TOTAL_FRAMES; offset += this.step) {
-        const fwd = this.frames[clamped - 1 + offset];
-        const back = this.frames[clamped - 1 - offset];
-        if (fwd) { this._render(fwd, clamped - 1 + offset); return; }
-        if (back) { this._render(back, clamped - 1 - offset); return; }
-      }
-      return;
-    }
-
-    this._render(img, clamped);
-  }
-
-  _render(img, frameIndex) {
-    if (frameIndex === this.currentFrame) return;
-    this.currentFrame = frameIndex;
+  _render() {
     this.ctx.fillStyle = '#0d0d0d';
     this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-    this._drawCover(img);
+    this._drawCover(this.video);
   }
 
   setProgress(progress) {
-    const raw = progress * (TOTAL_FRAMES - 1) + 1;
-    this.targetFrame = raw;
+    const raw = progress * this.duration;
+    this.targetTime = raw;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reducedMotion) {
-      this.smoothFrame = raw;
+      this.smoothTime = raw;
     } else {
-      const diff = raw - this.smoothFrame;
-      this.smoothFrame += diff * 0.18;
-      if (Math.abs(diff) < 0.05) this.smoothFrame = raw;
+      const diff = raw - this.smoothTime;
+      this.smoothTime += diff * 0.18;
+      if (Math.abs(diff) < 0.05) this.smoothTime = raw;
     }
-
-    this._drawFrame(Math.round(this.smoothFrame));
   }
 
   tick() {
-    if (Math.abs(this.targetFrame - this.smoothFrame) > 0.05) {
-      const diff = this.targetFrame - this.smoothFrame;
-      this.smoothFrame += diff * 0.18;
-      this._drawFrame(Math.round(this.smoothFrame));
+    if (!this.isReady || !this.duration) return;
+
+    if (Math.abs(this.targetTime - this.smoothTime) > 0.05) {
+      const diff = this.targetTime - this.smoothTime;
+      this.smoothTime += diff * 0.18;
     }
+
+    const target = Math.max(0, Math.min(this.duration, this.smoothTime));
+    if (Math.abs(this.video.currentTime - target) > 0.03) {
+      this.video.currentTime = target;
+    }
+
+    this._render();
   }
 }
 
