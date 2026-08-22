@@ -1,6 +1,5 @@
-/* ============================================
-   Vic Menten Portfolio — Design System
-   ============================================ */
+/* Vic Menten Portfolio */
+
 
 :root {
   --bg: #0d0d0d;
@@ -801,8 +800,8 @@ img, video {
   line-height: 1.5 !important;
   color: rgba(240, 240, 240, 0.78) !important;
   padding: 0.7rem 0.8rem;
-  background: rgba(196, 30, 58, 0.1);
-  border-left: 2px solid var(--accent);
+  background: color-mix(in srgb, var(--section-accent, var(--accent)) 8%, transparent);
+  border-left: 2px solid var(--section-accent, var(--accent));
   border-radius: 0 8px 8px 0;
 }
 
@@ -1041,44 +1040,15 @@ img, video {
   margin-bottom: 0.95rem !important;
 }
 
-.project-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text);
-  text-decoration: none;
-  letter-spacing: 0.02em;
-  padding: 0.45rem 0.85rem;
-  border-radius: 100px;
-  background: rgba(196, 30, 58, 0.88);
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
-}
-
-.project-link:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px var(--accent-glow);
-}
-
 .glass-card-skills {
   max-width: 420px;
 }
 
 .section[data-accent="red"] { --section-accent: #c41e3a; --section-glow: rgba(196, 30, 58, 0.25); }
 
-:root {
-  --accent-primary: #c41e3a;
-}
-
 .project-tag {
   color: var(--section-accent, var(--accent));
   background: color-mix(in srgb, var(--section-accent, var(--accent)) 12%, transparent);
-}
-
-.challenge {
-  border-left-color: var(--section-accent, var(--accent));
-  background: color-mix(in srgb, var(--section-accent, var(--accent)) 8%, transparent);
 }
 
 .lab-keys kbd {

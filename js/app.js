@@ -1,7 +1,4 @@
-/**
- * Vic Menten Portfolio — Scroll-scrubbed canvas
- * Page is interactive immediately; frames load in the background.
- */
+// Scroll-scrubbed canvas. Frames load in background; page is interactive immediately.
 
 const TOTAL_FRAMES = 170;
 const FRAME_PATH = (i) => `animation/${String(i).padStart(4, '0')}.png`;
