@@ -55,6 +55,12 @@
           <a class="contact-btn primary" href="#work">Itch</a>
           <a class="contact-btn secondary" href="cv.html">CV</a>
         </div>
+        <a class="scroll-indicator reveal" href="#work" aria-label="Scroll to next section">
+          <span class="scroll-indicator-text">Scroll</span>
+          <div class="scroll-indicator-line">
+            <div class="scroll-indicator-dot"></div>
+          </div>
+        </a>
       </div>
     </section>
 
@@ -103,14 +109,14 @@
             <li><kbd>RMB</kbd> Aim</li>
           </ul>
 
-          <div class="lab-foot">
+          <!-- <div class="lab-foot">
             <p class="challenge"><strong>Problem → fix.</strong> Testers spammed E for coins and never found magnet (V). I logged it as a control-discovery bug, put the keys on itch, and planned to bind magnet to the same interact key.</p>
             <pre class="code-snip" tabindex="0"><code>// Testers never discovered Magnet (V).
 const controls = {
   move: 'WASD', pickup: 'E', magnet: 'V',
   attack: 'LMB', aim: 'RMB',
 };</code></pre>
-          </div>
+          </div> -->
         </article>
       </div>
     </section>
@@ -174,13 +180,37 @@ const controls = {
       </div>
     </section>
 
-    <section class="section section-assets" data-frame-start="111" data-frame-end="145" data-accent="red">
-      <div class="section-content content-left content-bottom">
-        <div class="glass-card glass-card-whisper reveal">
-          <span class="project-tag">3D · Course work</span>
-          <h2>Game assets</h2>
-          <p>Props and vehicles for real-time engines. I did the models — not a shipped game.</p>
-        </div>
+    <section class="section section-webdev" data-frame-start="111" data-frame-end="145" data-accent="red">
+      <div class="section-content">
+        <article class="lab-board reveal">
+          <header class="lab-head">
+            <div class="lab-head-meta">
+              <span class="project-tag">Web Development</span>
+            </div>
+            <div class="lab-head-copy">
+              <h2>Web Development</h2>
+              <p>Building responsive, modern web experiences with clean code and solid UX.</p>
+            </div>
+          </header>
+          <div class="lab-stage">
+            <figure class="lab-hero">
+              <video src="extra_images/website.mp4" muted loop playsinline preload="metadata" data-autoplay></video>
+              <div class="lab-scan" aria-hidden="true"></div>
+              <div class="lab-brackets" aria-hidden="true"></div>
+              <figcaption>Site preview 01 · live</figcaption>
+            </figure>
+            <aside class="lab-side">
+              <p class="lab-kicker">What I do</p>
+              <p>I build performant, accessible websites and web apps. Responsive layouts, clean architecture, and attention to detail.</p>
+              <div class="tech-tags">
+                <span>HTML/CSS</span>
+                <span>JavaScript</span>
+                <span>React</span>
+                <span>Node.js</span>
+              </div>
+            </aside>
+          </div>
+        </article>
       </div>
     </section>
 

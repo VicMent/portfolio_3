@@ -1,53 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vic Menten — CV</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ink: #161616;
-      --muted: #555;
-      --line: #ddd;
+      --bg: #0d0d0d;
+      --surface: rgba(12, 12, 12, 0.42);
+      --surface-border: rgba(255, 255, 255, 0.1);
+      --text: #f0f0f0;
+      --text-muted: rgba(240, 240, 240, 0.55);
       --accent: #c41e3a;
+      --accent-glow: rgba(196, 30, 58, 0.35);
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --nav-height: 72px;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
     }
-    * { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      font: 15px/1.45 "Segoe UI", Inter, system-ui, sans-serif;
-      color: var(--ink);
-      background: #f3f3f3;
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(1.5rem, 4vw, 3rem);
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, transparent 100%);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo:hover { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      transition: width 0.3s var(--ease-out);
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cv {
+      font-weight: 600 !important;
+      color: var(--text) !important;
+    }
+    .nav-cta {
+      padding: 0.5rem 1.25rem !important;
+      background: var(--accent) !important;
+      color: white !important;
+      border-radius: 100px;
+      text-decoration: none !important;
     }
     .sheet {
+      position: relative;
+      z-index: 2;
       max-width: 760px;
-      margin: 1.5rem auto;
-      padding: 2rem 2.2rem;
-      background: #fff;
-      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+      margin: 0 auto;
+      padding: calc(var(--nav-height) + 3rem) 2.2rem 3rem;
     }
-    header { border-bottom: 2px solid var(--ink); padding-bottom: 0.85rem; margin-bottom: 1.15rem; }
-    h1 { margin: 0; font-size: 1.85rem; letter-spacing: -0.03em; }
-    .role { margin: 0.2rem 0 0.55rem; font-weight: 600; }
+    .cv-card {
+      padding: clamp(1.5rem, 3.5vw, 2.15rem);
+      background: var(--surface);
+      backdrop-filter: blur(16px) saturate(1.1);
+      -webkit-backdrop-filter: blur(16px) saturate(1.1);
+      border: 1px solid var(--surface-border);
+      border-radius: 14px;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+    .cv-header { border-bottom: 1px solid var(--surface-border); padding-bottom: 0.85rem; margin-bottom: 1.15rem; }
+    h1 { margin: 0; font-family: var(--font-display); font-size: 1.85rem; letter-spacing: -0.03em; }
+    .role { margin: 0.2rem 0 0.55rem; font-weight: 600; font-size: 0.95rem; color: var(--text); }
     .links { display: flex; flex-wrap: wrap; gap: 0.35rem 1rem; font-size: 0.88rem; }
-    .links a { color: var(--accent); }
+    .links a { color: var(--accent); text-decoration: none; }
+    .links a:hover { text-decoration: underline; }
     h2 {
+      font-family: var(--font-display);
       font-size: 0.78rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--accent);
       margin: 1.15rem 0 0.4rem;
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid var(--surface-border);
       padding-bottom: 0.2rem;
     }
-    p, li { color: var(--ink); }
-    .muted { color: var(--muted); }
+    p, li { color: var(--text-muted); line-height: 1.65; }
+    .muted { color: var(--text-muted); }
     ul { margin: 0.3rem 0 0; padding-left: 1.15rem; }
     .job { margin-bottom: 0.75rem; }
-    .job strong { display: block; }
+    .job strong { display: block; color: var(--text); font-size: 0.92rem; }
     .bar { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.15rem; }
-    .actions { margin: 0 auto 1rem; max-width: 760px; display: flex; gap: 0.6rem; padding: 0 0.5rem; }
+    .actions {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
     .actions a, .actions button {
-      font: 600 0.85rem/1 "Segoe UI", sans-serif;
+      font: 600 0.85rem/1 var(--font-body);
       padding: 0.55rem 0.9rem;
       border-radius: 999px;
       border: 0;
@@ -56,76 +156,113 @@
       text-decoration: none;
       cursor: pointer;
     }
-    .actions a.ghost { background: #333; }
+    .actions a.ghost { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--surface-border); }
+    .skill-group { margin-bottom: 0.85rem; }
+    .skill-group-title { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem; letter-spacing: 0.02em; }
     @media print {
-      body { background: #fff; }
+      body { background: #fff; color: #000; }
       .actions { display: none; }
-      .sheet { margin: 0; box-shadow: none; padding: 0; max-width: none; }
+      nav { display: none; }
+      .noise-overlay { display: none; }
+      .sheet { padding: 0; max-width: none; }
+      .cv-card { background: none; border: none; box-shadow: none; backdrop-filter: none; }
+      h2 { color: #c41e3a; border-bottom-color: #ddd; }
+      p, li { color: #333; }
+      .muted { color: #555; }
+      .job strong { color: #000; }
+      .skill-group-title { color: #000; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .sheet { padding: calc(var(--nav-height) + 2rem) 1.25rem 2rem; }
     }
   </style>
 </head>
 <body>
-  <div class="actions">
-    <button type="button" onclick="window.print()">Save as PDF</button>
-    <a class="ghost" href="index.html">Back to portfolio</a>
-  </div>
-  <article class="sheet">
-    <header>
-      <h1>Vic Menten</h1>
-      <p class="role">IT + indie game programmer — Unreal Engine 5 / Unity</p>
-      <p class="muted">Herselt, Belgium · Open to internships and junior roles (gameplay, generalist IT, QA)</p>
-      <p class="links">
-        <a href="https://www.linkedin.com/in/vicmenten">linkedin.com/in/vicmenten</a>
-        <a href="https://github.com/VicMenten">github.com/VicMenten</a>
-        <a href="https://vic-ment.itch.io">vic-ment.itch.io</a>
-      </p>
-    </header>
-
-    <h2>Profile</h2>
-    <p>Bachelor in Applied Computer Science (UCLL) and a one-year Indie Game Development specialization (Syntra). Programmer first, with enough 3D skill to ship small games with a teammate. No studio experience yet — shipped a finished one-week UE5 jam game.</p>
-
-    <h2>Education</h2>
-    <div class="job">
-      <div class="bar"><strong>Indie Game Development — Syntra</strong><span class="muted">1-year specialization</span></div>
-      <p class="muted">Unreal, Unity, gameplay, 3D pipeline.</p>
-    </div>
-    <div class="job">
-      <div class="bar"><strong>Bachelor in Applied Computer Science — UCLL</strong><span class="muted">IT</span></div>
-      <p class="muted">Software development, systems, scripting.</p>
-    </div>
-
-    <h2>Projects</h2>
-    <div class="job">
-      <div class="bar"><strong>Totally Ethical Labs — UE5 jam (with Bert)</strong><span class="muted">2026</span></div>
-      <p>Finished 1-week sandbox: combat, pickups, magnet, coin economy. I programmed gameplay; Bert did art. Playtest: magnet on V was undiscoverable — documented as a control bug, added key list on itch.</p>
-      <p><a href="https://vic-ment.itch.io/totally-ethical-labs">vic-ment.itch.io/totally-ethical-labs</a></p>
-    </div>
-    <div class="job">
-      <div class="bar"><strong>Roid Rager — solo FPS prototype</strong><span class="muted">2026 · WIP</span></div>
-      <p>Pixel 3D wave survival. I own the FPS loop, waves, and combat. Unfinished — not the lead piece.</p>
-    </div>
-    <div class="job">
-      <div class="bar"><strong>IT coursework</strong><span class="muted">2022–2023</span></div>
-      <p><a href="https://github.com/VicMenten/ServerManagement">ServerManagement</a> (shell / sysadmin) · <a href="https://github.com/VicMenten/Labo_Assembly">Labo_Assembly</a></p>
-    </div>
-
-    <h2>Skills</h2>
-    <ul>
-      <li>Engines: Unreal Engine 5, Unity</li>
-      <li>Programming: gameplay systems, C# / Blueprints, general software</li>
-      <li>3D: Blender, Substance Painter (modeling, retopo, rigging)</li>
-      <li>QA mindset: playtest notes, control discovery, jam bug tracking</li>
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <nav>
+    <a href="index.html" class="nav-logo">Vic Menten</a>
+    <ul class="nav-links">
+      <li><a href="index.html#work">Work</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="cv.html" class="nav-cv">CV</a></li>
+      <li><a href="index.html#contact" class="nav-cta">Contact</a></li>
     </ul>
+  </nav>
+  <main class="sheet">
+    <div class="actions">
+      <button type="button" onclick="window.print()">Save as PDF</button>
+    </div>
+    <article class="cv-card">
+      <header class="cv-header">
+        <h1>Vic Menten</h1>
+        <p class="role">IT-professional</p>
+        <p class="muted">Herselt, Belgium</p>
+        <p class="links">
+          <a href="https://www.linkedin.com/in/vicmenten">linkedin.com/in/vicmenten</a>
+          <a href="https://github.com/VicMenten">github.com/VicMenten</a>
+          <a href="https://vic-ment.itch.io">vic-ment.itch.io</a>
+        </p>
+      </header>
 
-    <h2>Other</h2>
-    <div class="job">
-      <div class="bar"><strong>Scouts leader — volunteer</strong><span class="muted">ongoing</span></div>
-      <p class="muted">Weekly troop meetings, outdoor events, teamwork.</p>
-    </div>
-    <div class="job">
-      <div class="bar"><strong>Student job — Joris Menten (construction)</strong><span class="muted">Nov 2021 – Sep 2022</span></div>
-      <p class="muted">Diest / Herselt.</p>
-    </div>
-  </article>
+      <h2>Profiel</h2>
+      <p>22 jaar, net afgestudeerd. Bachelor Toegepaste Informatica – Digital Experience aan UCLL, gevolgd door een 1 jaar voltijdse opleiding Indie Game Development bij Syntra AB. Stage bij XP Lab Hasselt.</p>
+      <p>Ervaring met software development, web development, UX/UI en game development. Sterke interesse om bij te leren en breed inzetbaar. Hobbyprojecten in IT, fitness en scouts.</p>
+
+      <h2>Technische vaardigheden</h2>
+      <div class="skill-group">
+        <div class="skill-group-title">Programming &amp; Web</div>
+        <p class="muted">C#, Python, Java, JavaScript, TypeScript, React, SQL, HTML, CSS</p>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Game Development</div>
+        <p class="muted">Unity, Unreal Engine 5, Blender, Substance Painter</p>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Design &amp; Creative</div>
+        <p class="muted">Figma, Photoshop, Premiere Pro</p>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Productivity</div>
+        <p class="muted">Microsoft 365</p>
+      </div>
+
+      <h2>Opleiding</h2>
+      <div class="job">
+        <div class="bar"><strong>Indie Game Development — Syntra AB</strong><span class="muted">1 jaar voltijds</span></div>
+        <p class="muted">Unreal, Unity, gameplay, 3D pipeline.</p>
+      </div>
+      <div class="job">
+        <div class="bar"><strong>Bachelor Toegepaste Informatica – Digital Experience — UCLL</strong><span class="muted">3 jaar</span></div>
+        <p class="muted">Software development, web development, UX/UI.</p>
+      </div>
+
+      <h2>Werkervaring</h2>
+      <div class="job">
+        <div class="bar"><strong>Stage — XP Lab Hasselt</strong><span class="muted">Stage</span></div>
+        <p class="muted">Praktijkervaring in een IT-omgeving.</p>
+      </div>
+      <div class="job">
+        <div class="bar"><strong>Joris Menten BV</strong><span class="muted">Vakantiewerk</span></div>
+        <p class="muted">Praktische werkervaring opgebouwd tijdens vakantiewerk.</p>
+      </div>
+      <div class="job">
+        <div class="bar"><strong>Carrefour Leuven</strong><span class="muted">Studentenwerk</span></div>
+        <p class="muted">Klantgericht werken in een dynamische omgeving.</p>
+      </div>
+      <div class="job">
+        <div class="bar"><strong>Tuinbedrijf</strong><span class="muted">Studentenwerk</span></div>
+        <p class="muted">Studentenjob met verantwoordelijkheid en planning.</p>
+      </div>
+
+      <h2>Interesses</h2>
+      <ul>
+        <li>IT-hobbyprojecten</li>
+        <li>Fitness</li>
+        <li>Scouts (leidinggevend)</li>
+      </ul>
+    </article>
+  </main>
 </body>
 </html>

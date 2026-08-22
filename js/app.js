@@ -287,7 +287,7 @@ class PortfolioApp {
     if (reduced) return;
 
     const reveals = document.querySelectorAll('.reveal');
-    
+
     const sectionAnims = {
       'hero':       { x: 0, y: 40, rotate: 0, scale: 1 },
       'work':       { x: -80, y: 60, rotate: -3, scale: 0.95 },
@@ -338,6 +338,32 @@ class PortfolioApp {
 
       gsap.fromTo(el, fromVars, toVars);
     });
+
+    const scrollDot = document.querySelector('.scroll-indicator-dot');
+    if (scrollDot) {
+      gsap.set(scrollDot, { y: 0, opacity: 1 });
+
+      const dotTl = gsap.timeline({ repeat: -1, repeatDelay: 0.3 });
+      dotTl.to(scrollDot, {
+        y: 43,
+        opacity: 0.2,
+        duration: 1.6,
+        ease: 'power2.in',
+      }).to(scrollDot, {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: 'power2.out',
+      });
+
+      ScrollTrigger.create({
+        trigger: '#hero',
+        start: 'top top',
+        end: 'bottom top',
+        onLeave: () => dotTl.pause(),
+        onEnterBack: () => dotTl.resume(),
+      });
+    }
 
     ScrollTrigger.refresh();
   }
