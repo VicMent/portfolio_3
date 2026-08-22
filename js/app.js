@@ -49,6 +49,12 @@ class ScrollAnimation {
 
     this.video.currentTime = 0;
     this._render();
+
+    const loader = document.getElementById('loader');
+    if (loader) {
+      await new Promise(r => setTimeout(r, 600));
+      loader.classList.add('hidden');
+    }
   }
 
   _drawCover(el) {
