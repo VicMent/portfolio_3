@@ -150,17 +150,131 @@ ul { margin: 0.3rem 0 0; padding-left: 1.15rem; }
 .skill-group { margin-bottom: 0.85rem; }
 .skill-group-title { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem; letter-spacing: 0.02em; }
 @media print {
-  body { background: #fff; color: #000; }
-  .actions { display: none; }
-  nav { display: none; }
-  .noise-overlay { display: none; }
-  .sheet { padding: 0; max-width: none; }
-  .cv-card { background: none; border: none; box-shadow: none; backdrop-filter: none; }
-  h2 { color: #c41e3a; border-bottom-color: #ddd; }
-  p, li { color: #333; }
-  .muted { color: #555; }
-  .job strong { color: #000; }
-  .skill-group-title { color: #000; }
+  @page {
+    margin: 2cm;
+    size: A4;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt;
+    line-height: 1.6;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .actions,
+  nav,
+  .noise-overlay,
+  .loader {
+    display: none !important;
+  }
+
+  .sheet {
+    padding: 0 !important;
+    max-width: none !important;
+  }
+
+  .cv-card {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+  }
+
+  h1 {
+    font-size: 22pt;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.3rem;
+  }
+
+  .role {
+    font-size: 12pt;
+    margin-bottom: 0.3rem;
+  }
+
+  .links {
+    font-size: 10pt;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: 11pt;
+    letter-spacing: 0.08em;
+    color: #000 !important;
+    border-bottom: 1.5pt solid #000 !important;
+    margin-top: 1.2rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.2rem;
+  }
+
+  p, li {
+    color: #222 !important;
+    font-size: 10.5pt;
+    line-height: 1.55;
+  }
+
+  .muted {
+    color: #444 !important;
+  }
+
+  .job {
+    margin-bottom: 0.6rem;
+    page-break-inside: avoid;
+  }
+
+  .job strong {
+    font-size: 11pt;
+    color: #000 !important;
+  }
+
+  .bar {
+    margin-bottom: 0.1rem;
+  }
+
+  .skill-group {
+    margin-bottom: 0.5rem;
+    page-break-inside: avoid;
+  }
+
+  .skill-group-title {
+    color: #000 !important;
+    font-size: 10.5pt;
+    margin-bottom: 0.15rem;
+  }
+
+  .links a {
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+
+  .links a::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555;
+  }
+
+  a {
+    text-decoration: none !important;
+    color: #000 !important;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555;
+  }
+}
+
+  .cv-header {
+    border-bottom: 1.5pt solid #000 !important;
+    padding-bottom: 0.7rem !important;
+    margin-bottom: 0.8rem !important;
+  }
 }
 @media (max-width: 768px) {
   .nav-links { display: none; }
