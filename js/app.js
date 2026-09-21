@@ -301,9 +301,10 @@ class PortfolioApp {
       'hero':       { x: 0, y: 40, rotate: 0, scale: 1 },
       'work':       { x: -80, y: 60, rotate: -3, scale: 0.95 },
       'about':      { x: 80, y: 60, rotate: 3, scale: 0.95 },
-      'roid':       { x: -80, y: 50, rotate: -2, scale: 0.96 },
-      'assets':     { x: 80, y: 50, rotate: 2, scale: 0.96 },
-      'skills':     { x: -60, y: 40, rotate: -1, scale: 0.98 },
+      'skills':     { x: -80, y: 60, rotate: -3, scale: 0.95 },
+      'unreal':     { x: -80, y: 50, rotate: -2, scale: 0.96 },
+      'unity':      { x: 80, y: 50, rotate: 2, scale: 0.96 },
+      'webdev':     { x: -80, y: 50, rotate: -2, scale: 0.96 },
       'contact':    { x: 60, y: 40, rotate: 1, scale: 0.98 },
     };
 
@@ -312,7 +313,7 @@ class PortfolioApp {
       if (!parent) return;
 
       const sectionId = parent.id || 'hero';
-      const anim = sectionAnims[sectionId] || sectionAnims['hero'];
+      const anim = sectionAnims[el.id] || sectionAnims[sectionId] || sectionAnims['hero'];
       const isHero = sectionId === 'hero';
 
       const fromVars = {
@@ -504,7 +505,7 @@ class PortfolioApp {
     this.nav.classList.toggle('scrolled', window.scrollY > 60);
 
     this._updateHeroFade();
-    this._updateActiveNav(progress);
+    this._updateActiveNav();
     this._updateNavAccent(progress);
     this._updateParallax();
 
@@ -519,27 +520,34 @@ class PortfolioApp {
     this.heroContent.style.pointerEvents = fade > 0.85 ? 'none' : 'auto';
   }
 
-  _updateActiveNav(progress) {
-    const navMap = [
-      { id: 'hero', start: 0, end: 0.12 },
-      { id: 'work', start: 0.12, end: 0.32 },
-      { id: 'about', start: 0.32, end: 0.55 },
-      { id: 'skills', start: 0.72, end: 0.88 },
-      { id: 'contact', start: 0.88, end: 1 },
-    ];
+  _updateActiveNav() {
+    const navMap = {
+      hero: ['hero'],
+      'about-skills': ['about-skills'],
+      work: ['work'],
+      unreal: ['unreal'],
+      unity: ['unity'],
+      webdev: ['webdev'],
+      contact: ['contact'],
+    };
 
-    let active = 'hero';
-    for (const item of navMap) {
-      if (progress >= item.start && progress < item.end) {
-        active = item.id;
-        break;
-      }
+    const marker = window.scrollY + window.innerHeight * 0.4;
+    let activeSection = 'hero';
+
+    this.sections.forEach((section) => {
+      const top = section.getBoundingClientRect().top + window.scrollY;
+      const bottom = top + section.offsetHeight;
+      if (marker >= top && marker < bottom) activeSection = section.id;
+    });
+
+    if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
+      activeSection = 'contact';
     }
-    if (progress >= 0.88) active = 'contact';
 
+    const activeIds = navMap[activeSection] || ['hero'];
     document.querySelectorAll('.nav-links a').forEach((link) => {
       const href = link.getAttribute('href')?.slice(1);
-      link.classList.toggle('active', href === active);
+      link.classList.toggle('active', activeIds.includes(href));
     });
   }
 

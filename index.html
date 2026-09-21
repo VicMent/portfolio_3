@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Vic Menten - IT + indie game programmer. Unreal Engine 5, Unity. Play Totally Ethical Labs, a finished UE5 jam game.">
+  <meta name="description" content="Vic Menten - IT and indie game programmer working with Unity, Unreal Engine 5, and interactive web experiences.">
   <title>Vic Menten</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,10 +35,11 @@
   <nav class="nav" id="nav">
     <a href="#hero" class="nav-logo">Vic Menten</a>
     <ul class="nav-links">
+      <li><a href="#about-skills" data-section="about-skills">About &amp; Skills</a></li>
       <li><a href="#work" data-section="work">Work</a></li>
-      <li><a href="#about" data-section="about">About</a></li>
-      <li><a href="#skills" data-section="skills">Skills</a></li>
-      <!-- <li><a href="cv.html" class="nav-cv">CV</a></li> -->
+      <li><a href="#unreal" data-section="unreal">Unreal</a></li>
+      <li><a href="#unity" data-section="unity">Unity</a></li>
+      <li><a href="#webdev" data-section="webdev">Web Dev</a></li>
       <li><a href="extra_images/Vic_Menten_CV.pdf" class="nav-cv" target="_blank" rel="noopener">CV</a></li>
       <li><a href="#contact" data-section="contact" class="nav-cta">Contact</a></li>
     </ul>
@@ -71,7 +72,7 @@
           <a class="contact-btn primary" href="#work">Itch</a>
           <a class="contact-btn secondary" href="cv.html">CV</a>
         </div>
-        <a class="scroll-indicator reveal" href="#work" aria-label="Scroll to next section">
+        <a class="scroll-indicator reveal" href="#about-skills" aria-label="Scroll to next section">
           <span class="scroll-indicator-text">Scroll</span>
           <div class="scroll-indicator-line">
             <div class="scroll-indicator-dot"></div>
@@ -80,7 +81,77 @@
       </div>
     </section>
 
-    <section class="section section-work" id="work" data-frame-start="21" data-frame-end="45" data-accent="red">
+    <section class="section section-about-skills" id="about-skills" data-frame-start="21" data-frame-end="45" data-accent="red">
+      <div class="section-content about-skills-grid">
+        <article class="glass-card glass-card-about reveal" id="about">
+          <h2>About</h2>
+          <p class="lead">I'm a 22-year-old aspiring developer with a Bachelor's degree in IT and a one-year specialization in Indie Game Development from Syntra.</p>
+          <p>I combine solid programming skills with hands-on experience in 3D art, allowing me to work across both the technical and creative sides of game development.</p>
+          <div class="about-aside">
+            <p>Outside of game dev, I'm an active gym-goer and scouts leader, where I've sharpened my teamwork and leadership skills.</p>
+            <figure class="about-photo">
+              <img src="extra_images/me%20on%20a%20mountain%20top.jpeg" alt="On a mountain ridge">
+            </figure>
+          </div>
+          <div class="edu-row" aria-label="Education">
+            <div class="edu-item">
+              <img src="extra_images/ucll_logo.png" alt="UCLL" class="edu-logo edu-logo-ucll">
+              <span>Bachelor TI</span>
+            </div>
+            <div class="edu-item">
+              <img src="extra_images/Synta-logo.png" alt="Syntra" class="edu-logo edu-logo-syntra">
+              <span>Indie Game Development</span>
+            </div>
+          </div>
+        </article>
+
+        <aside class="glass-card glass-card-skills reveal" id="skills">
+          <h2>Skills</h2>
+          <p class="lead about-one">A technical and creative foundation for building interactive experiences from idea to playable result.</p>
+          <dl class="skill-list">
+            <div class="skill-row">
+              <dt>Engines</dt>
+              <dd>
+                <span class="brand">
+                  <span class="icon-chip">
+                    <img src="extra_images/unreal-engine-white-icon.webp" alt="" class="brand-icon">
+                  </span>
+                  Unreal Engine 5
+                </span>
+                <span class="brand">
+                  <span class="icon-chip">
+                    <img src="extra_images/unity-game-engine-icon.webp" alt="" class="brand-icon">
+                  </span>
+                  Unity
+                </span>
+              </dd>
+            </div>
+            <div class="skill-row">
+              <dt>Programming</dt>
+              <dd>Gameplay systems, C# / Blueprints, server management, software development, web development, version control</dd>
+            </div>
+            <div class="skill-row">
+              <dt>3D</dt>
+              <dd>Modeling, sculpting, retopology, rigging in Blender, Substance Painter</dd>
+            </div>
+            <div class="skill-row">
+              <dt>Interested in</dt>
+              <dd>Junior programmer · QA / playtest</dd>
+            </div>
+            <div class="skill-row">
+              <dt>GitHub</dt>
+              <dd>
+                <a href="https://github.com/VicMent" target="_blank" rel="noopener">VicMent</a>
+                <span>·</span>
+                <a href="https://github.com/VicMenten" target="_blank" rel="noopener">old account</a>
+              </dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-work" id="work" data-frame-start="46" data-frame-end="70" data-accent="red">
       <div class="section-content">
         <article class="lab-board reveal">
           <header class="lab-head">
@@ -90,7 +161,7 @@
             <div class="lab-stamp" aria-hidden="true">Specimen 07</div>
             <div class="lab-head-copy">
               <h2>Totally Ethical Labs</h2>
-              <p>2026 · one-week jam. Hurt an invincible alien, earn coins, buy upgrades. Windows build.</p>
+              <p>2026 · one-week jam. Turn an invincible alien into your upgrade fund in this Windows build.</p>
             </div>
           </header>
 
@@ -103,12 +174,12 @@
             </figure>
             <aside class="lab-side">
               <p class="lab-kicker">My work</p>
-              <p>I did all the programming mostly, A fellow student Bert was in charge of the assets. Expect some bugs since we only had a week.</p>
+              <p>I handled most of the programming, while my fellow student Bert created the assets. The one-week scope leaves a few charming bugs.</p>
               <a class="project-link" href="https://vic-ment.itch.io/totally-ethical-labs" target="_blank" rel="noopener">
                 Download on itch.io
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </a>
-              <p class="project-note">No WebGL -> jam zip</p>
+              <p class="project-note">No WebGL · jam zip</p>
               <iframe
                 class="itch-embed"
                 src="https://itch.io/embed/4458837?linkback=true&amp;bg_color=0d0d0d&amp;fg_color=f0f0f0&amp;link_color=c41e3a&amp;border_color=333333"
@@ -128,42 +199,16 @@
       </div>
     </section>
 
-    <section class="section section-about" id="about" data-frame-start="46" data-frame-end="85" data-accent="red">
-      <div class="section-content content-left">
-        <div class="glass-card glass-card-about reveal">
-          <h2>About</h2>
-          <p class="lead">I'm a 22 year old aspiring developer with a Bachelor's degree in IT and a one-year specialization in Indie Game Development from Syntra.</p>
-          <p>I combine solid programming skills with hands-on experience in 3D art, allowing me to work across both the technical and creative sides of game development.</p>
-          <div class="about-aside">
-            <p>Outside of game dev, I'm an active gym-goer and scouts leader, where I've sharpened my teamwork and leadership skills.</p>
-            <figure class="about-photo">
-              <img src="extra_images/me%20on%20a%20mountain%20top.jpeg" alt="On a mountain ridge">
-            </figure>
-          </div>
-          <div class="edu-row" aria-label="Education">
-            <div class="edu-item">
-              <img src="extra_images/ucll_logo.png" alt="UCLL" class="edu-logo edu-logo-ucll">
-              <span>Bachelor TI</span>
-            </div>
-            <div class="edu-item">
-              <img src="extra_images/Synta-logo.png" alt="Syntra" class="edu-logo edu-logo-syntra">
-              <span>Indie Game Development</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-roid" id="roid" data-frame-start="86" data-frame-end="110" data-accent="red">
+    <section class="section section-unreal" id="unreal" data-frame-start="71" data-frame-end="100" data-accent="red">
       <div class="section-content">
         <article class="roid-board reveal">
           <header class="roid-head">
             <div class="roid-head-meta">
-              <span class="project-tag">In progress · FPS</span>
+              <span class="project-tag">Learned at Syntra · In progress</span>
             </div>
             <div class="roid-head-copy">
-              <h2>Roid Rager</h2>
-              <p>A FPS wave survival with a retro aesthetic. Still in development. Here's the sneak peek.</p>
+              <h2>Unreal Engine</h2>
+              <p>I learned Unreal Engine at Syntra and am currently developing <strong>Roid Rager</strong>, a retro-styled FPS wave-survival game.</p>
             </div>
           </header>
           <div class="roid-mosaic">
@@ -187,7 +232,49 @@
       </div>
     </section>
 
-    <section class="section section-webdev" data-frame-start="111" data-frame-end="145" data-accent="red">
+    <section class="section section-unity" id="unity" data-frame-start="101" data-frame-end="130" data-accent="red">
+      <div class="section-content">
+        <article class="lab-board unity-board reveal">
+          <header class="lab-head">
+            <div class="lab-head-meta">
+              <span class="project-tag">Learned first · UCLL</span>
+            </div>
+            <div class="lab-head-copy">
+              <h2>Unity</h2>
+              <p>I learned Unity through my Bachelor in IT at UCLL, where the Digital Experience track included courses in 3D graphics and VR/AR.</p>
+            </div>
+          </header>
+          <div class="lab-stage">
+            <figure class="lab-hero">
+              <video src="extra_images/unity_project.mp4" muted loop playsinline preload="metadata" data-autoplay></video>
+              <div class="lab-scan" aria-hidden="true"></div>
+              <div class="lab-brackets" aria-hidden="true"></div>
+              <figcaption>Procedural terrain · preview</figcaption>
+            </figure>
+            <aside class="lab-side">
+              <p class="lab-kicker">Featured project</p>
+              <h3>Procedural Voxel Terrain Generator</h3>
+              <p>A Unity and C# system that generates infinite, chunk-based worlds with Perlin noise, layered terrain, caves, animated water, and a custom portal effect.</p>
+              <ul class="feature-list">
+                <li>Chunk streaming around the player</li>
+                <li>Layered blocks and procedurally carved caves</li>
+                <li>Custom meshes with exposed-face culling</li>
+                <li>First-person movement and flying controls</li>
+                <li>Animated water and portal shaders</li>
+              </ul>
+              <div class="tech-tags">
+                <span>Unity</span>
+                <span>C#</span>
+                <span>Perlin noise</span>
+                <span>Chunk streaming</span>
+              </div>
+            </aside>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section-webdev" id="webdev" data-frame-start="131" data-frame-end="155" data-accent="red">
       <div class="section-content">
         <article class="lab-board reveal">
           <header class="lab-head">
@@ -216,60 +303,11 @@
                 <span>Node.js</span>
                 <span>Three.js</span>
                 <span>PHP</span>
-                <span>React</span>
                 <span>TypeScript</span>
               </div>
             </aside>
           </div>
         </article>
-      </div>
-    </section>
-
-    <section class="section section-skills" id="skills" data-frame-start="146" data-frame-end="155" data-accent="red">
-      <div class="section-content content-right">
-        <div class="glass-card glass-card-skills reveal">
-          <h2>Skills</h2>
-          <p class="lead about-one">Bachelor in Applied Computer Science with a specialization in Digital Experience (UCLL) + one-year Indie Game Development (Syntra).</p>
-          <dl class="skill-list">
-            <div class="skill-row">
-              <dt>Engines</dt>
-              <dd>
-                <span class="brand">
-                  <span class="icon-chip">
-                    <img src="extra_images/unreal-engine-white-icon.webp" alt="" class="brand-icon">
-                  </span>
-                  Unreal Engine 5
-                </span>
-                <span class="brand">
-                  <span class="icon-chip">
-                    <img src="extra_images/unity-game-engine-icon.webp" alt="" class="brand-icon">
-                  </span>
-                  Unity
-                </span>
-              </dd>
-            </div>
-            <div class="skill-row">
-              <dt>Programming</dt>
-              <dd>Gameplay systems, C# / Blueprints, Server Management, Software Development, Web Development, Version Control</dd>
-            </div>
-            <div class="skill-row">
-              <dt>3D</dt>
-              <dd>Modeling, sculpting, retopology, rigging in Blender, Substance Painter</dd>
-            </div>
-            <div class="skill-row">
-              <dt>Interested in</dt>
-              <dd>Junior programmer · QA / playtest</dd>
-            </div>
-            <div class="skill-row">
-              <dt>GitHub</dt>
-              <dd>
-                <a href="https://github.com/VicMent" target="_blank" rel="noopener">VicMent</a>
-                <span>·</span>
-                <a href="https://github.com/VicMenten" target="_blank" rel="noopener">old account</a>
-              </dd>
-            </div>
-          </dl>
-        </div>
       </div>
     </section>
 

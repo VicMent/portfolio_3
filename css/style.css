@@ -283,6 +283,14 @@ img, video {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
   }
+
+  .nav-links {
+    margin-left: auto;
+  }
+
+  .nav-toggle {
+    display: none;
+  }
 }
 
 .nav-logo {
@@ -341,6 +349,17 @@ img, video {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
   border-radius: 4px;
+}
+
+.nav-indicator {
+  position: absolute;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: left 0.25s var(--ease-out), width 0.25s var(--ease-out);
 }
 
 .nav-cv {
@@ -438,11 +457,11 @@ img, video {
 
 /* Scroll pacing tuned to animation beats */
 .section-hero { min-height: 105vh; }
-.section-work { min-height: 130vh; }
-.section-about { min-height: 155vh; }
-.section-roid { min-height: 140vh; }
-.section-assets { min-height: 140vh; }
-.section-skills { min-height: 100vh; }
+.section-about-skills { min-height: 100vh; }
+.section-work { min-height: 125vh; }
+.section-unreal { min-height: 130vh; }
+.section-unity { min-height: 130vh; }
+.section-webdev { min-height: 125vh; }
 .section-contact { min-height: 100vh; }
 
 .section-content {
@@ -450,6 +469,25 @@ img, video {
   max-width: 1400px;
   margin: 0 auto;
   position: relative;
+}
+
+.about-skills-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  align-items: stretch;
+}
+
+.about-skills-grid .glass-card {
+  width: 100%;
+}
+
+.about-skills-grid .glass-card-about {
+  justify-self: end;
+}
+
+.about-skills-grid .glass-card-skills {
+  justify-self: start;
 }
 
 .content-left {
@@ -473,6 +511,11 @@ img, video {
 
 .section-assets {
   align-items: flex-end;
+}
+
+.section-unreal,
+.section-unity {
+  align-items: center;
 }
 
 /* ---- Hero ---- */
@@ -601,7 +644,7 @@ img, video {
 }
 
 .glass-card-about {
-  max-width: 520px;
+  max-width: 560px;
 }
 
 .glass-card-whisper {
@@ -1158,7 +1201,21 @@ img, video {
 }
 
 .glass-card-skills {
-  max-width: 420px;
+  max-width: 440px;
+}
+
+.lab-side h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin: 0 0 0.65rem;
+}
+
+.unity-board .lab-stage {
+  min-height: min(420px, 52vh);
 }
 
 .section[data-accent="red"] { --section-accent: #c41e3a; --section-glow: rgba(196, 30, 58, 0.25); }
@@ -1572,6 +1629,13 @@ img, video {
 }
 
 /* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .about-skills-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
 @media (max-width: 768px) {
   .nav-links {
     position: fixed;
@@ -1656,8 +1720,9 @@ img, video {
     justify-content: center;
   }
 
-  .section-about .content-left {
-    justify-content: flex-start;
+  .about-skills-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .glass-card {
