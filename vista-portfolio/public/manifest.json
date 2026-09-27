@@ -1,0 +1,43 @@
+{
+  "name": "Vic Menten - IT & Indie Game Programmer",
+  "short_name": "Vic Menten",
+  "description": "Interactive Windows Vista-style portfolio showcasing game development and web development projects.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#0078d7",
+  "orientation": "landscape-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-512.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["portfolio", "developer", "games"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Portfolio",
+      "short_name": "Portfolio",
+      "description": "View all projects",
+      "url": "/?view=portfolio",
+      "icons": [{ "src": "/icons/icon-512.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Contact",
+      "short_name": "Contact",
+      "description": "Get in touch",
+      "url": "/?view=contact",
+      "icons": [{ "src": "/icons/icon-512.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Résumé",
+      "short_name": "Résumé",
+      "description": "View CV",
+      "url": "/?view=resume",
+      "icons": [{ "src": "/icons/icon-512.svg", "sizes": "any" }]
+    }
+  ]
+}
