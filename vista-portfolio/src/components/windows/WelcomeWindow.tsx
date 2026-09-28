@@ -2,15 +2,17 @@ import { useWindowStore } from '../../stores/windowStore';
 import { portfolioData } from '../../data/portfolio';
 import { AppWindow } from './AppWindow';
 import { AuroraText } from '../magicui/AuroraText';
+import { BlurText } from '../magicui/BlurText';
+import { NumberTicker } from '../magicui/NumberTicker';
 import { IconCloud } from '../magicui/IconCloud';
 import { BorderBeam } from '../magicui/BorderBeam';
 import { Github, Linkedin } from '../vista/BrandIcons';
 import { Gamepad2, Mail, FileText, FolderOpen } from 'lucide-react';
 
 const STATS = [
-  { value: '3', label: 'Engines', color: 'var(--aero-blue)' },
-  { value: '4', label: 'Projects', color: 'var(--aero-teal)' },
-  { value: '2', label: 'Degrees', color: 'var(--progress-green)' },
+  { value: 3, label: 'Engines', color: 'var(--aero-blue)' },
+  { value: 4, label: 'Projects', color: 'var(--aero-teal)' },
+  { value: 2, label: 'Degrees', color: 'var(--progress-green)' },
 ];
 
 const SOCIALS = [
@@ -43,19 +45,23 @@ export function WelcomeWindow({ window: win }: { window: any }) {
             <AuroraText className="block text-4xl font-extrabold tracking-tight">
               {personal.name}
             </AuroraText>
-            <p className="mt-2 text-lg font-medium text-[var(--aero-blue-light)]">{personal.title}</p>
-            <p className="mt-1 text-sm text-gray-400">{personal.location}</p>
+            <BlurText
+              as="p"
+              text={personal.title}
+              className="mt-2 block text-lg font-medium text-[var(--aero-blue-light)]"
+            />
+            <p className="mt-1 text-sm text-[var(--text-muted)]">{personal.location}</p>
           </div>
 
-          <p className="text-sm leading-relaxed text-gray-300">{personal.bio}</p>
+          <p className="text-sm leading-relaxed text-[var(--text-secondary)]">{personal.bio}</p>
 
           <div className="grid grid-cols-3 gap-3">
             {STATS.map((stat) => (
               <div key={stat.label} className="aero-surface rounded-xl px-2 py-3">
                 <div className="text-2xl font-bold" style={{ color: stat.color }}>
-                  {stat.value}
+                  <NumberTicker value={stat.value} />
                 </div>
-                <div className="mt-0.5 text-[11px] uppercase tracking-wide text-gray-400">
+                <div className="mt-0.5 text-[11px] uppercase tracking-wide text-[var(--text-muted)]">
                   {stat.label}
                 </div>
               </div>
@@ -91,7 +97,7 @@ export function WelcomeWindow({ window: win }: { window: any }) {
                 aria-label={label}
                 className="aero-surface flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:border-[var(--aero-blue)]"
               >
-                <Icon size={18} className="text-gray-200" />
+                <Icon size={18} className="text-[var(--text-primary)]" />
               </a>
             ))}
           </div>
@@ -110,7 +116,7 @@ export function WelcomeWindow({ window: win }: { window: any }) {
             />
           </div>
 
-          <p className="rounded-lg aero-surface px-4 py-2.5 text-xs text-gray-400">
+          <p className="rounded-lg aero-surface px-4 py-2.5 text-xs text-[var(--text-muted)]">
             <span className="text-[var(--aero-blue-light)]">Tip:</span> double-click desktop icons, press{' '}
             <kbd className="rounded aero-surface px-1">Start</kbd> to browse, or hit{' '}
             <kbd className="rounded aero-surface px-1">Win</kbd> + <kbd className="rounded aero-surface px-1">Tab</kbd>{' '}

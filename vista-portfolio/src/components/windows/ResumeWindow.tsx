@@ -3,6 +3,10 @@ import { portfolioData } from '../../data/portfolio';
 import { AppWindow } from './AppWindow';
 import { AuroraText } from '../magicui/AuroraText';
 import { BorderBeam } from '../magicui/BorderBeam';
+import { BlurText } from '../magicui/BlurText';
+import { NumberTicker } from '../magicui/NumberTicker';
+import { AnimatedCircularProgress } from '../magicui/AnimatedCircularProgress';
+import { AnimatedBeam } from '../magicui/AnimatedBeam';
 import { Github, Linkedin } from '../vista/BrandIcons';
 import { Gamepad2, Mail, FileText, Download, Printer, ExternalLink } from 'lucide-react';
 
@@ -13,6 +17,14 @@ const SECTIONS: Array<{ id: SectionId; label: string; icon: string }> = [
   { id: 'experience', label: 'Experience', icon: '💼' },
   { id: 'skills', label: 'Skills', icon: '⚡' },
   { id: 'projects', label: 'Projects', icon: '📁' },
+];
+
+/** Headline numbers, shown as rings on the Skills tab. */
+const RINGS = [
+  { label: 'C# / Unity', value: 90, color: '#5cc98d' },
+  { label: 'Unreal / C++', value: 80, color: '#8ab4f8' },
+  { label: 'Web / TS', value: 88, color: '#5cc9f0' },
+  { label: '3D / Blender', value: 70, color: '#f0a35c' },
 ];
 
 const SKILLS: Array<{ name: string; level: number; color: string }> = [
@@ -108,7 +120,7 @@ export function ResumeWindow({ window: win }: { window: any }) {
     <AppWindow scroll={false}>
       <div className="flex h-full min-h-0">
         {/* Sidebar */}
-        <nav className="hidden w-52 shrink-0 flex-col border-r border-[var(--glass-border)] bg-black/25 p-2 sm:flex">
+        <nav className="hidden w-52 shrink-0 flex-col border-r border-[var(--glass-border)] bg-[var(--surface-raised)] p-2 sm:flex">
           {SECTIONS.map((item) => (
             <button
               key={item.id}
@@ -117,8 +129,8 @@ export function ResumeWindow({ window: win }: { window: any }) {
               aria-current={section === item.id}
               className={`flex items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
                 section === item.id
-                  ? 'bg-[var(--selection-blue)] font-medium text-white ring-1 ring-[var(--aero-blue)]'
-                  : 'text-gray-300 hover:bg-white/10'
+                  ? 'bg-[var(--selection-blue)] font-medium text-[var(--text-primary)] ring-1 ring-[var(--aero-blue)]'
+                  : 'text-[var(--text-secondary)] hover:bg-white/10'
               }`}
             >
               <span aria-hidden="true">{item.icon}</span>
@@ -150,7 +162,7 @@ export function ResumeWindow({ window: win }: { window: any }) {
                     {personal.name}
                   </AuroraText>
                   <p className="text-sm font-medium text-[var(--aero-blue-light)]">{personal.title}</p>
-                  <p className="text-xs text-gray-400">{personal.location}</p>
+                  <p className="text-xs text-[var(--text-muted)]">{personal.location}</p>
                 </div>
               </div>
               <button
@@ -173,7 +185,7 @@ export function ResumeWindow({ window: win }: { window: any }) {
                     type="button"
                     onClick={() => setSection(item.id)}
                     className={`rounded-full px-3 py-1 text-xs transition-colors ${
-                      section === item.id ? 'bg-[var(--aero-blue)] text-white' : 'aero-surface text-gray-300'
+                      section === item.id ? 'bg-[var(--aero-blue)] text-[var(--text-primary)]' : 'aero-surface text-[var(--text-secondary)]'
                     }`}
                   >
                     {item.label}
@@ -190,14 +202,14 @@ export function ResumeWindow({ window: win }: { window: any }) {
                       className="h-40 w-40 shrink-0 rounded-xl object-cover ring-1 ring-white/15"
                       loading="lazy"
                     />
-                    <div className="min-w-0 space-y-3 text-sm leading-relaxed text-gray-300">
+                    <div className="min-w-0 space-y-3 text-sm leading-relaxed text-[var(--text-secondary)]">
                       <p>{personal.bio}</p>
-                      <p className="text-gray-400">{personal.personalNote}</p>
+                      <p className="text-[var(--text-muted)]">{personal.personalNote}</p>
                     </div>
                   </div>
 
                   <div className="aero-surface rounded-xl px-5 py-4">
-                    <h3 className="mb-3 text-sm font-semibold text-white">Contact</h3>
+                    <h3 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">Contact</h3>
                     <div className="grid gap-2 sm:grid-cols-2">
                       {contactRow.map(({ Icon, label, href }) => (
                         <a
@@ -205,7 +217,7 @@ export function ResumeWindow({ window: win }: { window: any }) {
                           href={href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-[13px] text-gray-300 transition-colors hover:text-white"
+                          className="flex items-center gap-2 text-[13px] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
                         >
                           <Icon size={14} className="shrink-0 text-[var(--aero-blue)]" />
                           <span className="truncate">{label}</span>
@@ -215,7 +227,7 @@ export function ResumeWindow({ window: win }: { window: any }) {
                   </div>
 
                   <div className="aero-surface rounded-xl px-5 py-4">
-                    <h3 className="mb-3 text-sm font-semibold text-white">Education</h3>
+                    <h3 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">Education</h3>
                     <div className="grid gap-3 sm:grid-cols-2">
                       {personal.education.map((edu) => (
                         <div key={edu.school} className="flex items-center gap-3">
@@ -226,13 +238,22 @@ export function ResumeWindow({ window: win }: { window: any }) {
                             loading="lazy"
                           />
                           <div className="min-w-0">
-                            <p className="truncate text-sm font-medium text-white">{edu.name}</p>
+                            <p className="truncate text-sm font-medium text-[var(--text-primary)]">{edu.name}</p>
                             <p className="text-xs text-[var(--aero-blue-light)]">{edu.school}</p>
                           </div>
                         </div>
                       ))}
                     </div>
                   </div>
+
+                  <AnimatedBeam
+                    nodes={[
+                      { id: 'edu', label: 'Education', sublabel: 'UCLL + Syntra', icon: '🎓' },
+                      { id: 'exp', label: 'Gameplay engineering', sublabel: 'UE5, Unity, C# / C++', icon: '🎮' },
+                      { id: 'art', label: '3D & art', sublabel: 'Blender, Substance Painter', icon: '🎨' },
+                      { id: 'web', label: 'Web', sublabel: 'React, TypeScript, Three.js', icon: '🌐' },
+                    ]}
+                  />
                 </div>
               )}
 
@@ -241,12 +262,12 @@ export function ResumeWindow({ window: win }: { window: any }) {
                   {EXPERIENCE.map((job) => (
                     <li key={job.role} className="aero-surface rounded-xl border-l-2 border-l-[var(--aero-blue)] px-5 py-4">
                       <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                        <h3 className="text-base font-semibold text-white">{job.role}</h3>
-                        <span className="text-[11px] text-gray-400">{job.when}</span>
+                        <h3 className="text-base font-semibold text-[var(--text-primary)]">{job.role}</h3>
+                        <span className="text-[11px] text-[var(--text-muted)]">{job.when}</span>
                       </div>
                       <p className="text-sm text-[var(--aero-blue-light)]">{job.org}</p>
-                      <p className="mt-1 font-mono text-[11px] text-gray-500">{job.stack}</p>
-                      <p className="mt-2 text-sm leading-relaxed text-gray-300">{job.body}</p>
+                      <p className="mt-1 font-mono text-[11px] text-[var(--text-muted)]">{job.stack}</p>
+                      <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">{job.body}</p>
                     </li>
                   ))}
                 </ol>
@@ -254,18 +275,38 @@ export function ResumeWindow({ window: win }: { window: any }) {
 
               {section === 'skills' && (
                 <div className="space-y-6">
+                  <div className="aero-surface rounded-xl px-5 py-5">
+                    <h3 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">
+                      Where I am strongest
+                    </h3>
+                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                      {RINGS.map((ring) => (
+                        <AnimatedCircularProgress
+                          key={ring.label}
+                          value={ring.value}
+                          color={ring.color}
+                          label={ring.label}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
                   <div className="aero-surface rounded-xl px-5 py-4">
-                    <h3 className="mb-4 text-sm font-semibold text-white">Technical</h3>
+                    <h3 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Technical</h3>
                     <div className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
                       {SKILLS.map((skill) => (
                         <div key={skill.name}>
                           <div className="mb-1 flex items-center justify-between text-[13px]">
-                            <span className="truncate text-gray-300">{skill.name}</span>
-                            <span className="ml-2 shrink-0 font-mono text-[11px] text-gray-400">
-                              {skill.level}
-                            </span>
+                            <span className="truncate text-[var(--text-secondary)]">{skill.name}</span>
+                            <NumberTicker
+                              className="ml-2 shrink-0 font-mono text-[11px] text-[var(--text-muted)]"
+                              value={skill.level}
+                            />
                           </div>
-                          <div className="h-1.5 overflow-hidden rounded-full bg-black/40">
+                          <div
+                            className="h-1.5 overflow-hidden rounded-full"
+                            style={{ background: 'var(--surface-raised)' }}
+                          >
                             <div
                               className="h-full rounded-full transition-[width] duration-700"
                               style={{
@@ -280,17 +321,21 @@ export function ResumeWindow({ window: win }: { window: any }) {
                   </div>
 
                   <div className="aero-surface rounded-xl px-5 py-4">
-                    <h3 className="mb-4 text-sm font-semibold text-white">Creative</h3>
+                    <h3 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Creative</h3>
                     <div className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
                       {CREATIVE.map((skill) => (
                         <div key={skill.name}>
                           <div className="mb-1 flex items-center justify-between text-[13px]">
-                            <span className="truncate text-gray-300">{skill.name}</span>
-                            <span className="ml-2 shrink-0 font-mono text-[11px] text-gray-400">
-                              {skill.level}
-                            </span>
+                            <span className="truncate text-[var(--text-secondary)]">{skill.name}</span>
+                            <NumberTicker
+                              className="ml-2 shrink-0 font-mono text-[11px] text-[var(--text-muted)]"
+                              value={skill.level}
+                            />
                           </div>
-                          <div className="h-1.5 overflow-hidden rounded-full bg-black/40">
+                          <div
+                            className="h-1.5 overflow-hidden rounded-full"
+                            style={{ background: 'var(--surface-raised)' }}
+                          >
                             <div
                               className="h-full rounded-full bg-gradient-to-r from-[var(--aero-teal)] to-[#5cb85c]"
                               style={{ width: `${skill.level}%` }}
@@ -308,10 +353,10 @@ export function ResumeWindow({ window: win }: { window: any }) {
                   {PROJECTS.map((project) => (
                     <article key={project.title} className="aero-surface rounded-xl px-5 py-4">
                       <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                        <h3 className="text-base font-semibold text-white">{project.title}</h3>
-                        <span className="text-[11px] text-gray-400">{project.meta}</span>
+                        <h3 className="text-base font-semibold text-[var(--text-primary)]">{project.title}</h3>
+                        <span className="text-[11px] text-[var(--text-muted)]">{project.meta}</span>
                       </div>
-                      <p className="mt-2 text-sm leading-relaxed text-gray-300">{project.body}</p>
+                      <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">{project.body}</p>
                       {project.href && (
                         <a
                           href={project.href}
@@ -326,8 +371,8 @@ export function ResumeWindow({ window: win }: { window: any }) {
                   ))}
 
                   <div className="aero-surface rounded-xl px-5 py-4">
-                    <h3 className="mb-2 text-sm font-semibold text-white">In this portfolio</h3>
-                    <p className="text-sm text-gray-400">
+                    <h3 className="mb-2 text-sm font-semibold text-[var(--text-primary)]">In this portfolio</h3>
+                    <p className="text-sm text-[var(--text-muted)]">
                       {projects.length} projects, each opening as a window you can drag, resize,
                       minimise and tile inside this desktop.
                     </p>

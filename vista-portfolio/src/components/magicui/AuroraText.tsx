@@ -3,27 +3,26 @@ import { cn } from '../../utils/helpers';
 /**
  * Animated gradient text.
  *
- * The palette is deliberately light: this sits on the dark window surface,
- * and mid-tone blues previously disappeared into the glass.
+ * The palette comes from CSS custom properties so it can be deepened in the
+ * Aero Light theme — the light-on-dark stops vanish against a light surface.
  */
 export function AuroraText({
   className,
   children,
-  colors = ['#ffffff', '#bfe4ff', '#7ee7e7', '#ffffff', '#cfe4ff'],
   duration = 9,
+  as: Tag = 'span',
 }: {
   className?: string;
   children: React.ReactNode;
-  colors?: string[];
   duration?: number;
+  as?: 'span' | 'h1' | 'h2' | 'h3' | 'p';
 }) {
-  const gradient = `linear-gradient(100deg, ${colors.join(', ')}, ${colors[0]})`;
-
   return (
-    <span
+    <Tag
       className={cn('inline-block', className)}
       style={{
-        backgroundImage: gradient,
+        backgroundImage:
+          'linear-gradient(100deg, var(--aurora-1), var(--aurora-2), var(--aurora-3), var(--aurora-4), var(--aurora-5), var(--aurora-1))',
         backgroundSize: '300% 100%',
         WebkitBackgroundClip: 'text',
         backgroundClip: 'text',
@@ -33,6 +32,6 @@ export function AuroraText({
       }}
     >
       {children}
-    </span>
+    </Tag>
   );
 }

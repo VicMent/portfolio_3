@@ -1,43 +1,28 @@
 {
-  "name": "Vic Menten - IT & Indie Game Programmer",
+  "name": "Vic Menten — IT & Indie Game Programmer",
   "short_name": "Vic Menten",
-  "description": "Interactive Windows Vista-style portfolio showcasing game development and web development projects.",
+  "description": "An interactive Windows Vista desktop: drag, resize and tile real windows showcasing game and web development work.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#0d0d0d",
+  "orientation": "any",
+  "background_color": "#0b1622",
   "theme_color": "#0078d7",
-  "orientation": "landscape-primary",
+  "categories": ["portfolio", "developer", "games", "productivity"],
   "icons": [
-    {
-      "src": "/icons/icon-512.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
+    { "src": "/icons/icon-72.png", "sizes": "72x72", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
-  "categories": ["portfolio", "developer", "games"],
-  "screenshots": [],
   "shortcuts": [
-    {
-      "name": "Portfolio",
-      "short_name": "Portfolio",
-      "description": "View all projects",
-      "url": "/?view=portfolio",
-      "icons": [{ "src": "/icons/icon-512.svg", "sizes": "any" }]
-    },
-    {
-      "name": "Contact",
-      "short_name": "Contact",
-      "description": "Get in touch",
-      "url": "/?view=contact",
-      "icons": [{ "src": "/icons/icon-512.svg", "sizes": "any" }]
-    },
-    {
-      "name": "Résumé",
-      "short_name": "Résumé",
-      "description": "View CV",
-      "url": "/?view=resume",
-      "icons": [{ "src": "/icons/icon-512.svg", "sizes": "any" }]
-    }
+    { "name": "Portfolio", "short_name": "Portfolio", "url": "/?app=portfolio", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Résumé", "short_name": "Résumé", "url": "/?app=resume", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Contact", "short_name": "Contact", "url": "/?app=contact", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
   ]
 }

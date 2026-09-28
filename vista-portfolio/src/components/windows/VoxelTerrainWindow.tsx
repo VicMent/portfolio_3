@@ -4,6 +4,7 @@ import { AppWindow } from './AppWindow';
 import { AuroraText } from '../magicui/AuroraText';
 import { BorderBeam } from '../magicui/BorderBeam';
 import { Terminal } from '../magicui/Terminal';
+import { CodeBlock } from '../magicui/CodeBlock';
 import { AnimatedList } from '../magicui/AnimatedList';
 
 type Tab = 'overview' | 'features' | 'code';
@@ -99,8 +100,8 @@ export function VoxelTerrainWindow() {
               aria-current={tab === t.id}
               className={`rounded-md px-3 py-1.5 text-[12.5px] transition-colors ${
                 tab === t.id
-                  ? 'bg-[var(--selection-blue)] text-white ring-1 ring-[var(--aero-blue)]'
-                  : 'text-gray-300 hover:bg-white/10'
+                  ? 'bg-[var(--selection-blue)] text-[var(--text-primary)] ring-1 ring-[var(--aero-blue)]'
+                  : 'text-[var(--text-secondary)] hover:bg-white/10'
               }`}
             >
               {t.label}
@@ -115,6 +116,7 @@ export function VoxelTerrainWindow() {
                 <div className="aspect-video overflow-hidden rounded-xl bg-black">
                   <video
                     src={project.video}
+                    poster={project.poster}
                     controls
                     muted
                     loop
@@ -123,7 +125,7 @@ export function VoxelTerrainWindow() {
                     className="h-full w-full object-cover"
                   />
                 </div>
-                <p className="text-sm leading-relaxed text-gray-300">{project.description}</p>
+                <p className="text-sm leading-relaxed text-[var(--text-secondary)]">{project.description}</p>
                 <div className="grid grid-cols-3 gap-3">
                   {[
                     { v: '∞', l: 'World size', c: 'var(--aero-teal)' },
@@ -132,7 +134,7 @@ export function VoxelTerrainWindow() {
                   ].map((s) => (
                     <div key={s.l} className="aero-surface rounded-xl px-3 py-3 text-center">
                       <div className="text-xl font-bold" style={{ color: s.c }}>{s.v}</div>
-                      <div className="mt-0.5 text-[11px] uppercase tracking-wide text-gray-400">{s.l}</div>
+                      <div className="mt-0.5 text-[11px] uppercase tracking-wide text-[var(--text-muted)]">{s.l}</div>
                     </div>
                   ))}
                 </div>
@@ -150,7 +152,7 @@ export function VoxelTerrainWindow() {
                         className="mt-1.5 h-2 w-2 shrink-0 rounded-full"
                         style={{ background: 'var(--aero-teal)' }}
                       />
-                      <span className="text-[13.5px] text-gray-200">{feature}</span>
+                      <span className="text-[13.5px] text-[var(--text-primary)]">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -182,8 +184,8 @@ export function VoxelTerrainWindow() {
                         onClick={() => setSnippet(i)}
                         className={`rounded-md px-2.5 py-1.5 font-mono text-[11.5px] transition-colors ${
                           snippet === i
-                            ? 'bg-[var(--aero-blue)] text-white'
-                            : 'aero-surface text-gray-300 hover:bg-white/10'
+                            ? 'bg-[var(--aero-blue)] text-[var(--text-primary)]'
+                            : 'aero-surface text-[var(--text-secondary)] hover:bg-white/10'
                         }`}
                       >
                         {s.file}
@@ -191,19 +193,12 @@ export function VoxelTerrainWindow() {
                     ))}
                   </div>
 
-                  <div className="overflow-hidden rounded-xl border border-white/12 bg-[#0d1117]">
-                    <div className="flex items-center justify-between border-b border-white/10 bg-black/40 px-3 py-1.5">
-                      <span className="font-mono text-[11px] text-gray-400">
-                        {SNIPPETS[snippet].file}
-                      </span>
-                      <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] text-gray-400">
-                        {SNIPPETS[snippet].language}
-                      </span>
-                    </div>
-                    <pre className="overflow-x-auto p-4 text-[12px] leading-relaxed">
-                      <code className="text-gray-200">{SNIPPETS[snippet].code}</code>
-                    </pre>
-                  </div>
+                  <CodeBlock
+                    key={SNIPPETS[snippet].file}
+                    code={SNIPPETS[snippet].code}
+                    language="csharp"
+                    filename={SNIPPETS[snippet].file}
+                  />
                 </div>
               </div>
             )}
@@ -224,7 +219,7 @@ export function TechChips({ items }: { items: readonly string[] }) {
         {items.map((t) => (
           <span
             key={t}
-            className="rounded border border-white/12 bg-black/25 px-2 py-1 text-[11.5px] text-gray-200"
+            className="rounded border border-[var(--surface-border)] bg-[var(--surface-raised)] px-2 py-1 text-[11.5px] text-[var(--text-primary)]"
           >
             {t}
           </span>

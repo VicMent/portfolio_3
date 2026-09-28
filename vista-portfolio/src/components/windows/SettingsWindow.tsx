@@ -31,8 +31,8 @@ export function SettingsWindow() {
   const Row = ({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) => (
     <div className="flex items-center justify-between gap-6 py-3 border-b border-[var(--glass-border)] last:border-b-0">
       <div className="min-w-0">
-        <p className="text-sm font-medium text-white">{label}</p>
-        {hint && <p className="text-xs text-gray-400 mt-0.5">{hint}</p>}
+        <p className="text-sm font-medium text-[var(--text-primary)]">{label}</p>
+        {hint && <p className="text-xs text-[var(--text-muted)] mt-0.5">{hint}</p>}
       </div>
       <div className="shrink-0">{children}</div>
     </div>
@@ -73,8 +73,8 @@ export function SettingsWindow() {
               onClick={() => setSection(item.id)}
               className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm transition-colors ${
                 section === item.id
-                  ? 'bg-[var(--selection-blue)] border border-[var(--aero-blue)] text-white'
-                  : 'text-gray-300 hover:bg-white/10'
+                  ? 'bg-[var(--selection-blue)] border border-[var(--aero-blue)] text-[var(--text-primary)]'
+                  : 'text-[var(--text-secondary)] hover:bg-white/10'
               }`}
             >
               <span>{item.icon}</span>
@@ -83,7 +83,7 @@ export function SettingsWindow() {
           ))}
           <button
             onClick={resetToDefaults}
-            className="w-full mt-4 px-3 py-2 rounded-lg text-left text-sm text-gray-300 hover:bg-white/10 transition-colors"
+            className="w-full mt-4 px-3 py-2 rounded-lg text-left text-sm text-[var(--text-secondary)] hover:bg-white/10 transition-colors"
           >
             ↺ Reset to defaults
           </button>
@@ -92,12 +92,12 @@ export function SettingsWindow() {
         <div className="flex-1 p-6 overflow-y-auto">
           {section === 'appearance' && (
             <div>
-              <h3 className="text-lg font-semibold text-white mb-1">Appearance</h3>
-              <p className="text-sm text-gray-400 mb-4">Personalise the Aero look.</p>
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-1">Appearance</h3>
+              <p className="text-sm text-[var(--text-muted)] mb-4">Personalise the Aero look.</p>
 
               <div className="aero-surface rounded-xl px-5">
                 <div className="py-4">
-                  <p className="text-sm font-medium text-white mb-3">Accent colour</p>
+                  <p className="text-sm font-medium text-[var(--text-primary)] mb-3">Accent colour</p>
                   <div className="flex flex-wrap gap-2">
                     {ACCENTS.map((accent) => (
                       <button
@@ -127,7 +127,7 @@ export function SettingsWindow() {
                       className="w-36 accent-[var(--aero-blue)]"
                       aria-label="Glass intensity"
                     />
-                    <span className="text-xs text-gray-400 w-8 text-right">
+                    <span className="text-xs text-[var(--text-muted)] w-8 text-right">
                       {glassIntensity.toFixed(1)}
                     </span>
                   </div>
@@ -138,8 +138,8 @@ export function SettingsWindow() {
 
           {section === 'sound' && (
             <div>
-              <h3 className="text-lg font-semibold text-white mb-1">Sound</h3>
-              <p className="text-sm text-gray-400 mb-4">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-1">Sound</h3>
+              <p className="text-sm text-[var(--text-muted)] mb-4">
                 System sounds are generated in the browser — no audio files to download.
               </p>
               <div className="aero-surface rounded-xl px-5">
@@ -159,7 +159,7 @@ export function SettingsWindow() {
                       className="w-36 accent-[var(--aero-blue)] disabled:opacity-40"
                       aria-label="Volume"
                     />
-                    <span className="text-xs text-gray-400 w-8 text-right">
+                    <span className="text-xs text-[var(--text-muted)] w-8 text-right">
                       {Math.round(volume * 100)}%
                     </span>
                   </div>
@@ -170,8 +170,8 @@ export function SettingsWindow() {
 
           {section === 'accessibility' && (
             <div>
-              <h3 className="text-lg font-semibold text-white mb-1">Accessibility</h3>
-              <p className="text-sm text-gray-400 mb-4">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-1">Accessibility</h3>
+              <p className="text-sm text-[var(--text-muted)] mb-4">
                 Your system&apos;s reduced-motion preference is respected automatically.
               </p>
               <div className="aero-surface rounded-xl px-5">
@@ -179,7 +179,7 @@ export function SettingsWindow() {
                   <Toggle checked={animationsEnabled} onChange={setAnimationsEnabled} label="Animations" />
                 </Row>
               </div>
-              <p className="text-xs text-gray-400 mt-4 leading-relaxed">
+              <p className="text-xs text-[var(--text-muted)] mt-4 leading-relaxed">
                 Tip: press <kbd className="px-1.5 py-0.5 rounded aero-surface text-[11px]">Alt</kbd> +{' '}
                 <kbd className="px-1.5 py-0.5 rounded aero-surface text-[11px]">S</kbd> to open
                 Settings from anywhere.

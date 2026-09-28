@@ -8,6 +8,7 @@ export interface ProjectControl {
 
 export interface ProjectClip {
   src: string;
+  poster?: string;
   kind: 'video' | 'image';
   label: string;
 }
@@ -21,6 +22,8 @@ export interface Project {
   description: string;
   /** Preview asset — an image or a video; `isVideo` tells them apart. */
   video: string;
+  /** Poster shown before a video loads, and while it is buffering. */
+  poster?: string;
   role: string;
   status: string;
   tech: string[];
@@ -138,8 +141,8 @@ export const portfolioData: {
       video: '/RoidRager2.png',
       role: 'Solo developer',
       clips: [
-        { src: '/RoidRager3.mp4', kind: 'video', label: 'Gameplay clip' },
-        { src: '/RoidRager4.mp4', kind: 'video', label: 'Gameplay clip' },
+        { src: '/media/roid3.mp4', poster: '/media/roid3-poster.jpg', kind: 'video', label: 'Gameplay clip' },
+        { src: '/media/roid4.mp4', poster: '/media/roid4-poster.jpg', kind: 'video', label: 'Gameplay clip' },
         { src: '/RoidRager2.png', kind: 'image', label: 'Title screen' },
         { src: '/RoidRager1.png', kind: 'image', label: 'In-game still' },
       ],
@@ -155,7 +158,8 @@ export const portfolioData: {
       summary: 'An infinite, chunk-based voxel world with caves, water and custom meshing.',
       description:
         'A Bachelor project: chunks stream in and out around the player, terrain comes from layered Perlin noise with procedurally carved caves, meshes are built with exposed-face culling, and I wrote the animated water and portal shaders on top.',
-      video: '/unity_project.mp4',
+      video: '/media/unity.mp4',
+      poster: '/media/unity-poster.jpg',
       features: [
         'Chunk streaming around the player',
         'Layered terrain and carved caves',
@@ -176,7 +180,8 @@ export const portfolioData: {
       summary: 'Responsive, accessible web experiences — this desktop is one of them.',
       description:
         'I build modular, accessible front-ends with React, TypeScript and Three.js, backed by Node. This portfolio is a windowed desktop environment: real drag-and-resize windows, a taskbar, a Start menu and a sidebar, all on a synthetic audio API and a canvas globe.',
-      video: '/website.mp4',
+      video: '/media/website.mp4',
+      poster: '/media/website-poster.jpg',
       tech: ['React', 'TypeScript', 'Three.js', 'Node.js', 'Tailwind CSS', 'Vite', 'Zustand'],
       role: 'Freelance / personal',
       status: 'Ongoing',

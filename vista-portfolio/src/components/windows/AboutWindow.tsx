@@ -33,8 +33,8 @@ export function AboutWindow() {
             className={cn(
               'flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-[13px] transition-colors',
               tab === item.id
-                ? 'bg-[var(--selection-blue)] font-medium text-white ring-1 ring-[var(--aero-blue)]'
-                : 'text-gray-300 hover:bg-white/10'
+                ? 'bg-[var(--selection-blue)] font-medium text-[var(--text-primary)] ring-1 ring-[var(--aero-blue)]'
+                : 'text-[var(--text-secondary)] hover:bg-white/10'
             )}
           >
             <span aria-hidden="true">{item.icon}</span>
@@ -73,7 +73,7 @@ export function AboutWindow() {
                 {personal.name}
               </AuroraText>
               <p className="mt-1 font-medium text-[var(--aero-blue-light)]">{personal.title}</p>
-              <p className="mt-1 text-sm text-gray-400">{personal.location}</p>
+              <p className="mt-1 text-sm text-[var(--text-muted)]">{personal.location}</p>
 
               <div className="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">
                 {contactRow.map(({ label, href, Icon, tint }) => (
@@ -82,7 +82,7 @@ export function AboutWindow() {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="aero-surface flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] text-gray-200 transition-colors hover:border-[var(--aero-blue)] hover:text-white"
+                    className="aero-surface flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] text-[var(--text-primary)] transition-colors hover:border-[var(--aero-blue)] hover:text-[var(--text-primary)]"
                   >
                     <Icon size={12} style={{ color: tint }} />
                     {label}
@@ -93,9 +93,9 @@ export function AboutWindow() {
           </div>
 
           <div className="aero-surface rounded-xl px-5 py-4">
-            <h3 className="mb-2 text-sm font-semibold text-white">About me</h3>
-            <p className="text-sm leading-relaxed text-gray-300">{personal.bio}</p>
-            <p className="mt-3 text-sm leading-relaxed text-gray-400">{personal.personalNote}</p>
+            <h3 className="mb-2 text-sm font-semibold text-[var(--text-primary)]">About me</h3>
+            <p className="text-sm leading-relaxed text-[var(--text-secondary)]">{personal.bio}</p>
+            <p className="mt-3 text-sm leading-relaxed text-[var(--text-muted)]">{personal.personalNote}</p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3">
@@ -108,7 +108,7 @@ export function AboutWindow() {
                 <div className="text-2xl font-bold" style={{ color: stat.color }}>
                   {stat.value}
                 </div>
-                <div className="mt-0.5 text-[11px] uppercase tracking-wide text-gray-400">{stat.label}</div>
+                <div className="mt-0.5 text-[11px] uppercase tracking-wide text-[var(--text-muted)]">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -136,10 +136,10 @@ export function AboutWindow() {
                 {skills.engines.map((engine) => (
                   <div
                     key={engine.name}
-                    className="flex items-center gap-2 rounded-lg border border-white/15 bg-black/25 px-3 py-2"
+                    className="flex items-center gap-2 rounded-lg border border-white/15 bg-[var(--surface-raised)] px-3 py-2"
                   >
                     <img src={engine.icon} alt="" className="h-6 w-6 object-contain" loading="lazy" />
-                    <span className="text-[13px] text-gray-200">{engine.name}</span>
+                    <span className="text-[13px] text-[var(--text-primary)]">{engine.name}</span>
                   </div>
                 ))}
               </div>
@@ -158,7 +158,7 @@ export function AboutWindow() {
                   href={personal.links.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 rounded-full border border-white/15 bg-black/25 px-3 py-1.5 text-[12px] text-gray-200 transition-colors hover:border-[var(--aero-blue)]"
+                  className="flex items-center gap-1.5 rounded-full border border-white/15 bg-[var(--surface-raised)] px-3 py-1.5 text-[12px] text-[var(--text-primary)] transition-colors hover:border-[var(--aero-blue)]"
                 >
                   <Github size={13} /> @VicMent
                 </a>
@@ -166,7 +166,7 @@ export function AboutWindow() {
                   href={personal.links.githubOld}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 rounded-full border border-white/15 bg-black/25 px-3 py-1.5 text-[12px] text-gray-400 transition-colors hover:border-[var(--aero-blue)]"
+                  className="flex items-center gap-1.5 rounded-full border border-white/15 bg-[var(--surface-raised)] px-3 py-1.5 text-[12px] text-[var(--text-muted)] transition-colors hover:border-[var(--aero-blue)]"
                 >
                   <Github size={13} /> Older account
                 </a>
@@ -190,15 +190,15 @@ export function AboutWindow() {
                   loading="lazy"
                 />
                 <div className="min-w-0">
-                  <p className="font-semibold text-white">{edu.name}</p>
+                  <p className="font-semibold text-[var(--text-primary)]">{edu.name}</p>
                   <p className="text-sm text-[var(--aero-blue-light)]">{edu.school}</p>
                 </div>
               </div>
             ))}
 
             <div className="aero-surface rounded-xl px-5 py-4">
-              <h4 className="mb-2 text-sm font-semibold text-white">Also studied</h4>
-              <ul className="space-y-1.5 text-sm text-gray-300">
+              <h4 className="mb-2 text-sm font-semibold text-[var(--text-primary)]">Also studied</h4>
+              <ul className="space-y-1.5 text-sm text-[var(--text-secondary)]">
                 <li>· One-year specialisation in Indie Game Development (Syntra)</li>
                 <li>· Self-taught web development — React, TypeScript, Node</li>
                 <li>· 3D art through Blender and Substance Painter</li>
@@ -240,7 +240,7 @@ function SkillRow({
         {items.map((item) => (
           <span
             key={item}
-            className="rounded-md border border-white/12 bg-black/25 px-2 py-1 text-[12px] text-gray-200"
+            className="rounded-md border border-[var(--surface-border)] bg-[var(--surface-raised)] px-2 py-1 text-[12px] text-[var(--text-primary)]"
           >
             {item}
           </span>

@@ -39,7 +39,7 @@ export function EthicalLabsWindow() {
               type="button"
               onClick={toggle}
               aria-label={playing ? 'Pause' : 'Play'}
-              className="aero-surface flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:bg-white/20"
+              className="aero-surface flex h-9 w-9 items-center justify-center rounded-lg text-[var(--text-primary)] transition-colors hover:bg-white/20"
             >
               {playing ? <Pause size={15} /> : <Play size={15} />}
             </button>
@@ -52,7 +52,7 @@ export function EthicalLabsWindow() {
                 setMuted(el.muted);
               }}
               aria-label={muted ? 'Unmute' : 'Mute'}
-              className="aero-surface flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:bg-white/20"
+              className="aero-surface flex h-9 w-9 items-center justify-center rounded-lg text-[var(--text-primary)] transition-colors hover:bg-white/20"
             >
               {muted ? <VolumeX size={15} /> : <Volume2 size={15} />}
             </button>
@@ -60,7 +60,7 @@ export function EthicalLabsWindow() {
               type="button"
               onClick={() => videoRef.current?.requestFullscreen?.().catch(() => undefined)}
               aria-label="Fullscreen"
-              className="aero-surface flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:bg-white/20"
+              className="aero-surface flex h-9 w-9 items-center justify-center rounded-lg text-[var(--text-primary)] transition-colors hover:bg-white/20"
             >
               <Maximize size={15} />
             </button>
@@ -86,7 +86,7 @@ export function EthicalLabsWindow() {
               </div>
             </header>
 
-            <p className="text-sm leading-relaxed text-gray-300">{project.description}</p>
+            <p className="text-sm leading-relaxed text-[var(--text-secondary)]">{project.description}</p>
 
             <div>
               <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--aero-blue-light)]">
@@ -100,10 +100,10 @@ export function EthicalLabsWindow() {
                       control.warning ? 'ring-1 ring-amber-400/40' : ''
                     }`}
                   >
-                    <kbd className="shrink-0 rounded border border-white/20 bg-black/40 px-1.5 py-0.5 font-mono text-[10.5px] text-white">
+                    <kbd className="shrink-0 rounded border border-white/20 bg-black/40 px-1.5 py-0.5 font-mono text-[10.5px] text-[var(--text-primary)]">
                       {control.key}
                     </kbd>
-                    <span className="truncate text-[12px] text-gray-300">{control.action}</span>
+                    <span className="truncate text-[12px] text-[var(--text-secondary)]">{control.action}</span>
                     {control.warning && <span className="text-[10px] text-amber-300">⚠</span>}
                   </div>
                 ))}
@@ -141,7 +141,7 @@ export function EthicalLabsWindow() {
               </h3>
               <div className="flex flex-wrap gap-1.5">
                 {project.tech.map((t) => (
-                  <span key={t} className="rounded border border-white/12 bg-black/25 px-2 py-1 text-[11.5px] text-gray-200">
+                  <span key={t} className="rounded border border-[var(--surface-border)] bg-[var(--surface-raised)] px-2 py-1 text-[11.5px] text-[var(--text-primary)]">
                     {t}
                   </span>
                 ))}
@@ -166,8 +166,8 @@ function Rail({ title, rows }: { title: string; rows: Array<[string, string]> })
       <dl className="space-y-1.5">
         {rows.map(([k, v]) => (
           <div key={k} className="flex items-baseline justify-between gap-3">
-            <dt className="shrink-0 text-[11.5px] text-gray-500">{k}</dt>
-            <dd className="truncate text-right text-[12px] text-gray-200">{v}</dd>
+            <dt className="shrink-0 text-[11.5px] text-[var(--text-muted)]">{k}</dt>
+            <dd className="truncate text-right text-[12px] text-[var(--text-primary)]">{v}</dd>
           </div>
         ))}
       </dl>

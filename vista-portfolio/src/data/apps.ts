@@ -1,16 +1,12 @@
-import {
-  WelcomeWindow,
-  AboutWindow,
-  PortfolioWindow,
-  EthicalLabsWindow,
-  RoidRagerWindow,
-  VoxelTerrainWindow,
-  WebDevWindow,
-  ContactWindow,
-  ResumeWindow,
-  SettingsWindow,
-  RunWindow,
-} from '../components/windows';
+import { lazy } from 'react';
+// Imported directly rather than through the barrel: re-exporting them from
+// `windows/index.ts` would make them statically reachable and defeat the
+// code splitting below.
+import { WelcomeWindow } from '../components/windows/WelcomeWindow';
+import { AboutWindow } from '../components/windows/AboutWindow';
+import { PortfolioWindow } from '../components/windows/PortfolioWindow';
+import { ContactWindow } from '../components/windows/ContactWindow';
+import { SettingsWindow } from '../components/windows/SettingsWindow';
 import { APP_META, type AppMeta } from './appMeta';
 
 /**
@@ -18,19 +14,25 @@ import { APP_META, type AppMeta } from './appMeta';
  *
  * Import this only from the render layer (App.tsx). The window store uses
  * `data/appMeta` instead so it never pulls the whole component tree in.
+ *
+ * The heavier windows (code viewer, canvas globe, media players) are lazily
+ * loaded so they land in their own chunks and only download when opened.
  */
+const lazyFrom = (loader: () => Promise<Record<string, unknown>>, name: string) =>
+  lazy(async () => ({ default: (await loader())[name] as React.ComponentType<any> }));
+
 const COMPONENTS: Record<string, React.ComponentType<any>> = {
   welcome: WelcomeWindow,
-  portfolio: PortfolioWindow,
-  'ethical-labs': EthicalLabsWindow,
-  'roid-rager': RoidRagerWindow,
-  'voxel-terrain': VoxelTerrainWindow,
-  'web-dev': WebDevWindow,
   about: AboutWindow,
-  resume: ResumeWindow,
+  portfolio: PortfolioWindow,
   contact: ContactWindow,
   settings: SettingsWindow,
-  run: RunWindow,
+  'ethical-labs': lazyFrom(() => import('../components/windows/EthicalLabsWindow'), 'EthicalLabsWindow'),
+  'roid-rager': lazyFrom(() => import('../components/windows/RoidRagerWindow'), 'RoidRagerWindow'),
+  'voxel-terrain': lazyFrom(() => import('../components/windows/VoxelTerrainWindow'), 'VoxelTerrainWindow'),
+  'web-dev': lazyFrom(() => import('../components/windows/WebDevWindow'), 'WebDevWindow'),
+  resume: lazyFrom(() => import('../components/windows/ResumeWindow'), 'ResumeWindow'),
+  run: lazyFrom(() => import('../components/windows/RunWindow'), 'RunWindow'),
 };
 
 export type AppDefinition = AppMeta & { component: React.ComponentType<any> };

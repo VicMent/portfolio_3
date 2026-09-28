@@ -17,10 +17,13 @@ interface WindowStore {
   windows: Record<string, WindowState>;
   order: string[];
   focusedWindowId: string | null;
+  /** Windows mid exit-animation; removed from `windows` a moment later. */
+  closingIds: string[];
   zCounter: number;
 
   openWindow: (appId: string, overrides?: OpenOverrides) => string;
   closeWindow: (id: string) => void;
+  finalizeClose: (id: string) => void;
   closeAll: () => void;
   minimizeWindow: (id: string) => void;
   toggleMaximize: (id: string) => void;
@@ -91,6 +94,7 @@ export const useWindowStore = create<WindowStore>()((set, get) => ({
   windows: {},
   order: [],
   focusedWindowId: null,
+  closingIds: [],
   // Windows use inline z-index values, so this counter must sit above the
   // static stacking of the shell (desktop 0, sidebar 20, handles 70).
   zCounter: 100,
@@ -129,7 +133,6 @@ export const useWindowStore = create<WindowStore>()((set, get) => ({
       : nextCascadePosition(Object.keys(get().windows).length, size);
 
     const zCounter = get().zCounter + 1;
-    const focusedWindowId = get().focusedWindowId;
 
     const newWindow: WindowState = {
       id,
@@ -163,14 +166,25 @@ export const useWindowStore = create<WindowStore>()((set, get) => ({
         order: [...state.order, id],
         focusedWindowId: id,
         zCounter,
-        ...(focusedWindowId ? {} : {}),
+        // Re-opening mid-close should cancel the pending exit.
+        closingIds: state.closingIds.filter((w) => w !== id),
       };
     });
 
     return id;
   },
 
+  /**
+   * Mark a window as closing. It stays mounted (so it can animate out) and is
+   * dropped by `finalizeClose` once the exit transition has finished.
+   */
   closeWindow: (id) =>
+    set((state) => {
+      if (!state.windows[id] || state.closingIds.includes(id)) return state;
+      return { closingIds: [...state.closingIds, id] };
+    }),
+
+  finalizeClose: (id) =>
     set((state) => {
       if (!state.windows[id]) return state;
       const windows = { ...state.windows };
@@ -189,10 +203,15 @@ export const useWindowStore = create<WindowStore>()((set, get) => ({
         windows[focusedWindowId] = { ...windows[focusedWindowId], isFocused: true };
       }
 
-      return { windows, order, focusedWindowId };
+      return {
+        windows,
+        order,
+        focusedWindowId,
+        closingIds: state.closingIds.filter((w) => w !== id),
+      };
     }),
 
-  closeAll: () => set({ windows: {}, order: [], focusedWindowId: null }),
+  closeAll: () => set({ windows: {}, order: [], focusedWindowId: null, closingIds: [] }),
 
   minimizeWindow: (id) =>
     set((state) => {

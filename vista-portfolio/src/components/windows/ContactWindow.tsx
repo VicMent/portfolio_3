@@ -57,7 +57,7 @@ export function ContactWindow({ window: win, onClose }: { window: any; onClose: 
             </div>
             <div className="min-w-0">
               <AuroraText className="block text-xl font-bold">{contact.headline}</AuroraText>
-              <p className="mt-1 text-sm text-gray-400">{contact.subtext}</p>
+              <p className="mt-1 text-sm text-[var(--text-muted)]">{contact.subtext}</p>
             </div>
           </div>
         </header>
@@ -69,8 +69,8 @@ export function ContactWindow({ window: win, onClose }: { window: any; onClose: 
               className="aero-surface block rounded-xl px-5 py-4 text-center transition-colors hover:border-[var(--aero-blue)]"
             >
               <Mail size={22} className="mx-auto text-[var(--aero-blue)]" />
-              <p className="mt-2 text-sm font-medium text-white">{email}</p>
-              <p className="mt-1 inline-flex items-center gap-1 text-[11px] text-gray-400">
+              <p className="mt-2 text-sm font-medium text-[var(--text-primary)]">{email}</p>
+              <p className="mt-1 inline-flex items-center gap-1 text-[11px] text-[var(--text-muted)]">
                 Open your mail app <ArrowUpRight size={11} />
               </p>
             </a>
@@ -85,7 +85,7 @@ export function ContactWindow({ window: win, onClose }: { window: any; onClose: 
             </button>
 
             <div>
-              <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+              <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
                 Elsewhere
               </p>
               <div className="grid grid-cols-2 gap-2">
@@ -101,21 +101,21 @@ export function ContactWindow({ window: win, onClose }: { window: any; onClose: 
                     className="aero-surface flex flex-col items-center gap-2 rounded-xl px-3 py-4 transition-colors hover:border-[var(--aero-blue)]"
                   >
                     <Icon size={20} style={{ color: tint }} />
-                    <span className="text-xs font-medium text-white">{label}</span>
+                    <span className="text-xs font-medium text-[var(--text-primary)]">{label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="aero-surface rounded-xl px-4 py-3 text-xs text-gray-400">
-              <p className="mb-1 font-semibold text-gray-300">What I&apos;m looking for</p>
+            <div className="aero-surface rounded-xl px-4 py-3 text-xs text-[var(--text-muted)]">
+              <p className="mb-1 font-semibold text-[var(--text-secondary)]">What I&apos;m looking for</p>
               Junior gameplay programming, generalist IT or QA / playtest roles — ideally on a
               small team where I can keep learning fast.
             </div>
           </div>
         </div>
 
-        <footer className="shrink-0 border-t border-[var(--glass-border)] px-6 py-3 text-center text-[11px] text-gray-500">
+        <footer className="shrink-0 border-t border-[var(--glass-border)] px-6 py-3 text-center text-[11px] text-[var(--text-muted)]">
           {contact.footer}
         </footer>
       </div>

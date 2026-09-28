@@ -235,6 +235,84 @@ await step('mobile viewport renders full-screen windows', async () => {
   if (box.width > 400) throw new Error(`window not full width on mobile: ${box.width}px`);
 });
 
+await step('mobile Start opens the app drawer', async () => {
+  await page.getByRole('button', { name: 'Start' }).click();
+  const drawer = page.getByRole('dialog', { name: 'All applications' });
+  await drawer.waitFor({ timeout: 3000 });
+  const items = await drawer.locator('button').count();
+  if (items < 5) throw new Error(`drawer only had ${items} apps`);
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(350);
+});
+
+await step('theme toggle switches to Aero Light', async () => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.waitForTimeout(300);
+  await page.getByRole('button', { name: /Switch to Aero Light/ }).click();
+  await page.waitForTimeout(350);
+  const scheme = await page.evaluate(() => document.documentElement.dataset.scheme);
+  if (scheme !== 'light') throw new Error(`scheme is "${scheme}"`);
+  const surface = await page.evaluate(() =>
+    getComputedStyle(document.documentElement).getPropertyValue('--surface-bg').trim()
+  );
+  if (!surface) throw new Error('light theme did not set --surface-bg');
+});
+
+await step('Aero Light keeps body text readable', async () => {
+  const about = page.locator('[data-desktop-icon="about"]');
+  await about.dblclick();
+  await page.waitForTimeout(500);
+  const contrast = await page.evaluate(() => {
+    const surface = getComputedStyle(document.documentElement).getPropertyValue('--surface-bg');
+    const text = getComputedStyle(document.documentElement).getPropertyValue('--text-primary');
+    return { surface, text };
+  });
+  // Crude sanity check: light scheme must not pair dark text with a dark surface.
+  const dark = (v) => {
+    const m = v.match(/(\d+)[,\s]+(\d+)[,\s]+(\d+)/);
+    if (!m) return null;
+    const [r, g, b] = m.slice(1).map(Number);
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const bg = dark(contrast.surface);
+  const fg = dark(contrast.text);
+  if (bg === null || fg === null) return;
+  if (fg <= bg) throw new Error(`text (${contrast.text}) is not lighter than surface (${contrast.surface})`);
+});
+
+await step('shut down shows the safe-to-turn-off screen', async () => {
+  await page.getByRole('button', { name: 'Switch to Aero Dark' }).click();
+  await page.waitForTimeout(200);
+  await page.getByRole('button', { name: 'Shut down' }).click();
+  await page.waitForTimeout(400);
+  await page.getByText(/now safe to turn off/i).waitFor({ timeout: 3000 });
+});
+
+await step('power on returns to the desktop', async () => {
+  await page.getByRole('button', { name: 'Turn on' }).click();
+  await page.waitForTimeout(500);
+  await page.waitForSelector('[role="toolbar"]', { timeout: 4000 });
+  await page.getByRole('dialog', { name: 'Welcome Center' }).waitFor({ timeout: 4000 });
+});
+
+await step('idle desktop runs the turntable screensaver', async () => {
+  // `?idle=2` shortens the inactivity window so this is testable.
+  await page.goto(`http://localhost:${PORT}/?idle=2`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('[role="toolbar"]');
+  await page.waitForTimeout(600);
+  // Close the Welcome Center so the desktop is empty, then go idle.
+  await page.getByRole('button', { name: 'Close' }).first().click();
+  await page.waitForTimeout(3200);
+  const saver = page.locator('video[poster*="turntable"]');
+  await saver.waitFor({ timeout: 5000 });
+  // Any interaction dismisses it.
+  await page.mouse.move(700, 500);
+  await page.waitForTimeout(400);
+  if (await saver.isVisible().catch(() => false)) {
+    throw new Error('screensaver did not dismiss on interaction');
+  }
+});
+
 await browser.close();
 server.close();
 

@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface ThemeState {
+  /** 'dark' is the default Aero look; 'light' is the classic Vista frame. */
+  scheme: 'dark' | 'light';
   accentColor: string;
   glassIntensity: number;
   animationsEnabled: boolean;
@@ -9,6 +11,8 @@ interface ThemeState {
   highContrast: boolean;
   soundEnabled: boolean;
   volume: number;
+  toggleScheme: () => void;
+  setScheme: (scheme: 'dark' | 'light') => void;
   setAccentColor: (color: string) => void;
   setGlassIntensity: (value: number) => void;
   setAnimationsEnabled: (value: boolean) => void;
@@ -20,6 +24,7 @@ interface ThemeState {
 }
 
 const DEFAULTS = {
+  scheme: 'dark' as const,
   accentColor: '#0078d7',
   glassIntensity: 1,
   animationsEnabled: true,
@@ -33,6 +38,8 @@ export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
       ...DEFAULTS,
+      toggleScheme: () => set((s) => ({ scheme: s.scheme === 'dark' ? 'light' : 'dark' })),
+      setScheme: (scheme) => set({ scheme }),
       setAccentColor: (accentColor) => set({ accentColor }),
       setGlassIntensity: (glassIntensity) =>
         set({ glassIntensity: clamp01(glassIntensity, 0, 2) }),

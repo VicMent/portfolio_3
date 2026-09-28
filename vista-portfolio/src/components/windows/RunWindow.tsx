@@ -56,8 +56,8 @@ export function RunWindow({ onClose }: { window?: unknown; onClose: () => void }
         <div className="flex items-start gap-4">
           <img src="/favicon.svg" alt="" className="w-12 h-12 shrink-0" />
           <div className="min-w-0 flex-1">
-            <h2 className="text-white font-semibold text-lg leading-tight">What do you want to open?</h2>
-            <p className="text-gray-300 text-sm mt-1">
+            <h2 className="text-[var(--text-primary)] font-semibold text-lg leading-tight">What do you want to open?</h2>
+            <p className="text-[var(--text-secondary)] text-sm mt-1">
               Type the name of a program, folder or document, and Windows will open it for you.
             </p>
           </div>
@@ -86,7 +86,7 @@ export function RunWindow({ onClose }: { window?: unknown; onClose: () => void }
                   className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-[var(--selection-blue)] transition-colors"
                 >
                   <span aria-hidden="true">{app.icon}</span>
-                  <span className="text-sm text-white truncate">{app.title}</span>
+                  <span className="text-sm text-[var(--text-primary)] truncate">{app.title}</span>
                 </button>
               </li>
             ))}

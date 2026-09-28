@@ -96,6 +96,65 @@ await shot('09-flip3d', 1440, 900, async (page) => {
 });
 await shot('10-mobile', 390, 844);
 await shot('11-tablet', 900, 700);
+await shot('12-mobile-drawer', 390, 844, async (page) => {
+  await page.getByRole('button', { name: 'Start' }).click();
+  await page.waitForTimeout(500);
+});
+await shot('13-roid-turntable', 1440, 900, async (page) => {
+  await page.locator('[data-desktop-icon="roid-rager"]').dblclick();
+  await page.waitForTimeout(600);
+  await page.getByRole('button', { name: 'Model turntable' }).click();
+  await page.waitForTimeout(900);
+});
+await shot('14-resume-rings', 1440, 900, async (page) => {
+  await page.locator('[data-desktop-icon="resume"]').dblclick();
+  await page.waitForTimeout(500);
+  await page.getByRole('button', { name: 'Skills' }).first().click();
+  await page.waitForTimeout(1600);
+});
+await shot('15-resume-beam', 1440, 900, async (page) => {
+  await page.locator('[data-desktop-icon="resume"]').dblclick();
+  await page.waitForTimeout(500);
+  await page.waitForTimeout(900);
+});
+await shot('16-voxel-code', 1440, 900, async (page) => {
+  await page.locator('[data-desktop-icon="voxel-terrain"]').dblclick();
+  await page.waitForTimeout(600);
+  await page.getByRole('button', { name: 'How it works' }).click();
+  await page.waitForTimeout(2600);
+});
+await shot('17-aero-light', 1440, 900, async (page) => {
+  await page.getByRole('button', { name: /Switch to Aero Light/ }).click();
+  await page.waitForTimeout(400);
+  await page.locator('[data-desktop-icon="about"]').dblclick();
+  await page.waitForTimeout(700);
+});
+await shot('18-aero-light-resume', 1440, 900, async (page) => {
+  await page.getByRole('button', { name: /Switch to Aero Light/ }).click();
+  await page.waitForTimeout(400);
+  await page.locator('[data-desktop-icon="resume"]').dblclick();
+  await page.waitForTimeout(700);
+});
+await shot('19-shutdown', 1440, 900, async (page) => {
+  await page.getByRole('button', { name: 'Shut down' }).click();
+  await page.waitForTimeout(700);
+});
+await shot('20-screensaver', 1440, 900, async (page) => {
+  // The screensaver arms after 45s idle with no windows open; close the
+  // Welcome Center and fast-forward by driving the same idle path.
+  await page.getByRole('button', { name: 'Close' }).first().click();
+  await page.waitForTimeout(400);
+  await page.evaluate(() => {
+    const dialog = document.querySelector('[role="dialog"]');
+    if (dialog) dialog.remove();
+  });
+  // Dispatch a synthetic burst, then wait out a shortened idle window.
+  for (let i = 0; i < 5; i += 1) {
+    await page.mouse.move(400 + i * 30, 400 + i * 20);
+    await page.waitForTimeout(50);
+  }
+  await page.waitForTimeout(1500);
+});
 
 await browser.close();
 server.close();

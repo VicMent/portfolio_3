@@ -6,6 +6,7 @@ const ACCENT_SWATCHES = ['#0078d7', '#6a3fb5', '#4a5568', '#0f9b8e', '#d1462f', 
 
 /** Pushes theme state into CSS custom properties and the audio engine. */
 export function useAeroTheme() {
+  const scheme = useThemeStore((s) => s.scheme);
   const accentColor = useThemeStore((s) => s.accentColor);
   const glassIntensity = useThemeStore((s) => s.glassIntensity);
   const animationsEnabled = useThemeStore((s) => s.animationsEnabled);
@@ -13,6 +14,12 @@ export function useAeroTheme() {
   const highContrast = useThemeStore((s) => s.highContrast);
   const soundEnabled = useThemeStore((s) => s.soundEnabled);
   const volume = useThemeStore((s) => s.volume);
+
+  useEffect(() => {
+    document.documentElement.dataset.scheme = scheme;
+    const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]:not([media])');
+    if (meta) meta.content = scheme === 'dark' ? '#0b1622' : '#e8eef5';
+  }, [scheme]);
 
   useEffect(() => {
     const root = document.documentElement;

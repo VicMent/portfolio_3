@@ -2,38 +2,92 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <title>Vic Menten — IT &amp; Indie Game Programmer</title>
+    <meta
+      name="description"
+      content="An interactive Windows Vista desktop: drag, resize and tile real windows showcasing Vic Menten's Unreal Engine 5, Unity and web development work."
+    />
+    <meta
+      name="keywords"
+      content="Vic Menten, game developer, Unreal Engine 5, Unity, C#, C++, TypeScript, React, portfolio, Belgium"
+    />
+    <meta name="author" content="Vic Menten" />
+    <link rel="canonical" href="https://vicmenten.dev/" />
+
+    <!-- Colour the browser UI to match the desktop -->
+    <meta name="theme-color" content="#0b1622" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#0078d7" media="(prefers-color-scheme: light)" />
+    <meta name="color-scheme" content="dark light" />
+
+    <!-- Icons: PNG first, SVG as a modern fallback -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#0078d7" />
-    <meta name="description" content="Vic Menten - IT & Indie Game Programmer. Interactive Windows Vista-style portfolio featuring Unreal Engine 5, Unity, and Web Development projects." />
-    <meta name="keywords" content="Vic Menten, game developer, Unreal Engine, Unity, web developer, portfolio, C#, C++, TypeScript, React" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Vic Menten - IT & Indie Game Programmer" />
-    <meta property="og:description" content="Interactive Windows Vista-style portfolio showcasing game development and web development projects." />
-    <meta property="og:image" content="/og-image.svg" />
-    <meta property="og:url" content="https://vicmenten.dev" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Vic Menten - IT & Indie Game Programmer" />
-    <meta name="twitter:description" content="Interactive Windows Vista-style portfolio showcasing game development and web development projects." />
-    <meta name="twitter:image" content="/og-image.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" media="print" onload="this.media='all'" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
-    <link rel="apple-touch-icon" href="/icons/icon-512.svg" />
-    <title>Vic Menten - IT & Indie Game Programmer</title>
+
+    <!-- Social sharing: PNG, because most platforms refuse SVG previews -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Vic Menten" />
+    <meta property="og:url" content="https://vicmenten.dev/" />
+    <meta property="og:title" content="Vic Menten — IT &amp; Indie Game Programmer" />
+    <meta
+      property="og:description"
+      content="An interactive Windows Vista desktop: drag, resize and tile real windows showcasing game and web development work."
+    />
+    <meta property="og:image" content="https://vicmenten.dev/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Vic Menten OS — a Windows Vista style portfolio desktop" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Vic Menten — IT &amp; Indie Game Programmer" />
+    <meta
+      name="twitter:description"
+      content="An interactive Windows Vista desktop showcasing game and web development work."
+    />
+    <meta name="twitter:image" content="https://vicmenten.dev/og-image.png" />
+
+    <!-- Warm up the two heaviest assets so first paint is not waiting on them -->
+    <link rel="preload" href="/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/syne-600.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/vista.jpg" as="image" />
+
     <style>
-      /* Critical CSS for instant render */
-      html, body, #root { height: 100%; width: 100%; margin: 0; padding: 0; overflow: hidden; background: #0d0d0d; }
-      * { box-sizing: border-box; }
-      @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+      /* Paint the desktop colour before any CSS lands, avoiding a white flash */
+      html,
+      body,
+      #root {
+        height: 100%;
+        margin: 0;
+        background: #0b1622;
       }
     </style>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <div style="padding: 3rem; color: #f0f0f0; font-family: system-ui, sans-serif">
+        <h1>Vic Menten — IT &amp; Indie Game Programmer</h1>
+        <p>
+          This portfolio is an interactive desktop experience and needs JavaScript. The essentials:
+        </p>
+        <ul>
+          <li>Unreal Engine 5 — Totally Ethical Labs, Roid Rager</li>
+          <li>Unity / C# — Procedural voxel terrain generator</li>
+          <li>Web — React, TypeScript, Three.js</li>
+        </ul>
+        <p>
+          <a style="color: #6cb6ff" href="mailto:vic.menten@gmail.com">vic.menten@gmail.com</a>
+          ·
+          <a style="color: #6cb6ff" href="https://github.com/VicMent">GitHub</a>
+          ·
+          <a style="color: #6cb6ff" href="/Vic_Menten_CV.pdf">Résumé (PDF)</a>
+        </p>
+      </div>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

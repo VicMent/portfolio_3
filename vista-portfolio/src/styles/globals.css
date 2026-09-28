@@ -16,10 +16,25 @@
   --glass-border: rgba(255, 255, 255, 0.22);
   --glass-blur: blur(20px) saturate(180%);
 
-  /* Dark surface — window interiors and cards within them. */
-  --surface-bg: rgba(9, 15, 24, 0.78);
+  /* Dark surface — window interiors and cards within them.
+     Opaque enough that animated glows from windows behind do not ghost
+     through as soft blobs, translucent enough to still read as glass. */
+  --surface-bg: rgba(9, 15, 24, 0.93);
   --surface-border: rgba(255, 255, 255, 0.12);
   --surface-raised: rgba(255, 255, 255, 0.06);
+
+  /* Semantic text tokens, so the light theme only has to flip these. */
+  --text-primary: #f2f6fb;
+  --text-secondary: #c3ccd8;
+  --text-muted: #8d99a8;
+  --text-inverse: #0d141d;
+
+  /* Aurora gradient stops — light enough to read on the dark surface. */
+  --aurora-1: #ffffff;
+  --aurora-2: #bfe4ff;
+  --aurora-3: #7ee7e7;
+  --aurora-4: #ffffff;
+  --aurora-5: #cfe4ff;
 
   --aero-blue: #0078d7;
   --aero-blue-dark: #005a9e;
@@ -43,6 +58,40 @@
     --glass-bg: rgba(10, 16, 24, 0.6);
     --glass-border: rgba(255, 255, 255, 0.16);
   }
+}
+
+/* ------------------------------------------- Aero Light (classic Vista) */
+
+:root[data-scheme='light'] {
+  --glass-bg: rgba(255, 255, 255, 0.42);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-blur: blur(22px) saturate(160%);
+
+  --surface-bg: rgba(247, 250, 253, 0.95);
+  --surface-border: rgba(15, 32, 52, 0.14);
+  --surface-raised: rgba(15, 32, 52, 0.05);
+
+  --text-primary: #0f1c2b;
+  --text-secondary: #33465c;
+  --text-muted: #64748b;
+  --text-inverse: #f2f6fb;
+
+  /* The dark-surface gradient disappears on a light surface, so deepen it. */
+  --aurora-1: #0b3d66;
+  --aurora-2: #0f6fb8;
+  --aurora-3: #0e8f88;
+  --aurora-4: #1b4f8a;
+  --aurora-5: #0b3d66;
+
+  --aero-blue-dark: #0b4d8f;
+  --aero-blue-light: #1f7fd0;
+  --progress-track: rgba(15, 32, 52, 0.12);
+}
+
+/* The shell's own chrome inverts so the title bars stay legible on a light
+   window surface, and text on the (still dark) wallpaper stays readable. */
+:root[data-scheme='light'] .aero-surface {
+  background: var(--surface-bg);
 }
 
 @media (prefers-contrast: more) {
@@ -157,12 +206,14 @@ kbd {
  * The wallpaper is bright and saturated, so light-on-light glass made body
  * copy unreadable. Windows get a dark scrim instead; the shell keeps the
  * lighter Aero glass.
+ *
+ * Deliberately no `backdrop-filter` here: these cards sit on top of an
+ * already-opaque window surface, so blurring only cost GPU time and produced
+ * sibling-sampling artifacts (a soft ghost copy of neighbouring cards).
  */
 @utility aero-surface {
   background: var(--surface-bg);
   border: 1px solid var(--surface-border);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
 }
 
 @utility aero-button {

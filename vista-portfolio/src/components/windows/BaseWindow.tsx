@@ -6,13 +6,14 @@ import {
   useRef,
   useState,
 } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '../../utils/helpers';
 import { WindowChrome } from '../vista/WindowChrome';
 import { useWindowStore, TASKBAR_HEIGHT, getUsableViewport } from '../../stores/windowStore';
 import { useDesktopStore } from '../../stores/desktopStore';
 import type { WindowState } from '../../data/types';
 import { playOpenSound, playCloseSound, playMinimizeSound, playMaximizeSound } from '../../utils/sound';
-import { useIsMobile } from '../../hooks/useMediaQuery';
+import { useIsMobile, usePrefersReducedMotion } from '../../hooks/useMediaQuery';
 
 type ResizeDir = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
 
@@ -47,20 +48,28 @@ function useIsMobileViewport() {
 export function BaseWindow({
   window: win,
   children,
+  closing = false,
 }: {
   window: WindowState;
   children: ReactNode;
+  /** True while the window is playing its exit animation. */
+  closing?: boolean;
 }) {
   const frameRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<DragState | null>(null);
   const resizeRef = useRef<ResizeState | null>(null);
   const [snapHint, setSnapHint] = useState<null | 'left' | 'right' | 'maximize'>(null);
+  /** Kept mounted for a beat after minimising so the fly-out can play. */
+  const [minimising, setMinimising] = useState(false);
+  /** Offset from the window's centre to its taskbar button, for the fly-out. */
+  const [flyTo, setFlyTo] = useState<{ dx: number; dy: number } | null>(null);
 
   const { focusWindow, closeWindow, minimizeWindow, toggleMaximize, moveWindow, resizeWindow, snapWindow } =
     useWindowStore();
 
   const isMobile = useIsMobileViewport();
   const sidebarOpen = useDesktopStore((s) => s.sidebarOpen);
+  const reduceMotion = usePrefersReducedMotion();
 
   // Only play the open sound for genuinely new windows, once.
   const openedRef = useRef(false);
@@ -69,6 +78,31 @@ export function BaseWindow({
     openedRef.current = true;
     playOpenSound();
   }, []);
+
+  // Minimise: measure the taskbar button, animate towards it, then unmount.
+  useEffect(() => {
+    if (!win.isMinimized) return;
+    const el = document.querySelector<HTMLElement>(`[data-taskbar-item="${win.id}"]`);
+    const frame = frameRef.current;
+    if (el && frame) {
+      const button = el.getBoundingClientRect();
+      const box = frame.getBoundingClientRect();
+      setFlyTo({
+        dx: button.left + button.width / 2 - (box.left + box.width / 2),
+        dy: button.top + button.height / 2 - (box.top + box.height / 2),
+      });
+    } else {
+      setFlyTo(null);
+    }
+    setMinimising(true);
+    const timer = window.setTimeout(() => setMinimising(false), 260);
+    return () => clearTimeout(timer);
+  }, [win.isMinimized, win.id]);
+
+  // Leaving a minimised state resets the fly-out offset.
+  useEffect(() => {
+    if (!win.isMinimized) setFlyTo(null);
+  }, [win.isMinimized]);
 
   const viewport = useMemo(() => getUsableViewport(), [sidebarOpen, isMobile]);
 
@@ -299,7 +333,8 @@ export function BaseWindow({
     }
   }, [win.id, win.isResizable, toggleMaximize]);
 
-  if (win.isMinimized) return null;
+  // Stay mounted briefly while the minimise animation plays.
+  if (win.isMinimized && !minimising) return null;
 
   const maximized = win.isMaximized || isMobile;
   const frameStyle: React.CSSProperties = maximized
@@ -342,6 +377,24 @@ export function BaseWindow({
         />
       )}
 
+      <motion.div
+        className="pointer-events-none fixed inset-0"
+        style={{ zIndex: win.zIndex }}
+        initial={reduceMotion ? false : { opacity: 0, scale: 0.94 }}
+        animate={
+          closing
+            ? { opacity: 0, scale: 0.96, transition: { duration: 0.16, ease: 'easeIn' } }
+            : win.isMinimized && minimising
+              ? {
+                  opacity: 0,
+                  scale: 0.08,
+                  x: flyTo?.dx ?? 0,
+                  y: flyTo?.dy ?? viewport.h,
+                  transition: { duration: 0.26, ease: [0.4, 0, 0.2, 1] },
+                }
+              : { opacity: 1, scale: 1, x: 0, y: 0, transition: { type: 'spring', stiffness: 420, damping: 34 } }
+        }
+      >
       <div
         ref={frameRef}
         role="dialog"
@@ -349,13 +402,11 @@ export function BaseWindow({
         aria-modal={false}
         onPointerDown={() => focusWindow(win.id)}
         className={cn(
-          'fixed flex flex-col overflow-hidden',
-          win.isFocused ? 'z-40' : 'z-30',
+          'pointer-events-auto fixed flex flex-col overflow-hidden',
           !win.isFocused && 'opacity-95'
         )}
         style={{
           ...frameStyle,
-          zIndex: win.zIndex,
           borderRadius: maximized ? 0 : 7,
           boxShadow: win.isFocused
             ? '0 18px 50px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,120,215,0.55)'
@@ -395,11 +446,9 @@ export function BaseWindow({
             />
           ))}
       </div>
+      </motion.div>
     </>
   );
 }
 
 BaseWindow.displayName = 'BaseWindow';
-
-/** Convenience wrapper used by every content window. */
-export { useWindowStore };
