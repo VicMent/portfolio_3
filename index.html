@@ -9,8 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
+  <!-- Fixed background layers -->
   <canvas id="scroll-canvas" aria-hidden="true"></canvas>
   <div class="canvas-vignette" aria-hidden="true"></div>
   <div class="noise-overlay" aria-hidden="true"></div>
@@ -18,6 +20,7 @@
   <div class="ambient-glow glow-2" aria-hidden="true"></div>
   <div class="ambient-glow glow-3" aria-hidden="true"></div>
 
+  <!-- Loader -->
   <div class="loader" id="loader" aria-label="Loading">
     <div class="loader-ring" aria-hidden="true">
       <div class="loader-ring-inner"></div>
@@ -32,6 +35,7 @@
     </div>
   </div>
 
+  <!-- Navigation -->
   <nav class="nav" id="nav">
     <a href="#hero" class="nav-logo">Vic Menten</a>
     <ul class="nav-links">
@@ -49,10 +53,12 @@
   </nav>
   <div class="nav-backdrop" aria-hidden="true"></div>
 
+  <!-- Scroll progress -->
   <div class="scroll-progress" aria-hidden="true">
     <div class="scroll-progress-fill" id="scroll-progress-fill"></div>
   </div>
 
+  <!-- Dock -->
   <aside class="dock" aria-label="Quick links">
     <a href="https://vic-ment.itch.io/totally-ethical-labs" target="_blank" rel="noopener">Play</a>
     <a href="cv.html">CV</a>
@@ -61,8 +67,8 @@
     <a href="https://github.com/VicMenten" target="_blank" rel="noopener">GitHub</a>
   </aside>
 
-  <main class="scroll-container" id="scroll-container">
-
+  <div id="fullpage">
+    <!-- ============================ HERO ============================ -->
     <section class="section section-hero" id="hero" data-frame-start="0" data-frame-end="20" data-accent="red">
       <div class="section-content hero-content">
         <p class="eyebrow reveal"></p>
@@ -81,6 +87,7 @@
       </div>
     </section>
 
+    <!-- ======================= ABOUT & SKILLS ======================= -->
     <section class="section section-about-skills" id="about-skills" data-frame-start="21" data-frame-end="45" data-accent="red">
       <div class="section-content about-skills-grid">
         <article class="glass-card glass-card-about reveal" id="about">
@@ -151,189 +158,109 @@
       </div>
     </section>
 
+    <!-- ==================== WORK · TOTALLY ETHICAL LABS ==================== -->
     <section class="section section-work" id="work" data-frame-start="46" data-frame-end="70" data-accent="red">
-      <div class="section-content">
-        <article class="lab-board reveal">
-          <header class="lab-head">
-            <div class="lab-head-meta">
-              <span class="project-tag">Finished · UE5 jam</span>
-            </div>
-            <div class="lab-stamp" aria-hidden="true">Specimen 07</div>
-            <div class="lab-head-copy">
-              <h2>Totally Ethical Labs</h2>
-              <p>2026 · one-week jam. Turn an invincible alien into your upgrade fund in this Windows build.</p>
-            </div>
-          </header>
+      <div class="section-header reveal">
+        <span class="project-tag">Finished · UE5 Jam</span>
+        <h2>Totally Ethical Labs</h2>
+        <p class="project-desc">2026 · One-week jam. Turn an invincible alien into your upgrade fund in this Windows build. I handled most of the programming while my fellow student Bert created the assets.</p>
+      </div>
 
-          <div class="lab-stage">
-            <figure class="lab-hero">
-              <img src="extra_images/ethicallabs_project.png" alt="Totally Ethical Labs: an alien pinned under a lab table">
-              <div class="lab-scan" aria-hidden="true"></div>
-              <div class="lab-brackets" aria-hidden="true"></div>
-              <figcaption>Lab cam 01 · live feed</figcaption>
-            </figure>
-            <aside class="lab-side">
-              <p class="lab-kicker">My work</p>
-              <p>I handled most of the programming, while my fellow student Bert created the assets. The one-week scope leaves a few charming bugs.</p>
-              <a class="project-link" href="https://vic-ment.itch.io/totally-ethical-labs" target="_blank" rel="noopener">
-                Download on itch.io
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </a>
-              <p class="project-note">No WebGL · jam zip</p>
-              <iframe
-                class="itch-embed"
-                src="https://itch.io/embed/4458837?linkback=true&amp;bg_color=0d0d0d&amp;fg_color=f0f0f0&amp;link_color=c41e3a&amp;border_color=333333"
-                title="Totally Ethical Labs on itch.io"
-                loading="lazy"></iframe>
-            </aside>
-          </div>
+      <div class="carousel-stack reveal">
+        <div class="marquee marquee-work"></div>
+      </div>
 
-          <ul class="lab-keys" aria-label="Controls">
-            <li><kbd>WASD</kbd> Move</li>
-            <li><kbd>E</kbd> Pickup</li>
-            <li class="lab-keys-warn"><kbd>V</kbd> Magnet</li>
-            <li><kbd>LMB</kbd> Attack</li>
-            <li><kbd>RMB</kbd> Aim</li>
-          </ul>
-        </article>
+      <div class="project-links">
+        <a class="project-link" href="https://vic-ment.itch.io/totally-ethical-labs" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Download on itch.io
+        </a>
+        <span class="project-note">No WebGL · Jam zip · Windows</span>
       </div>
     </section>
 
+    <!-- ========================= UNREAL · ROID RAGER ========================= -->
     <section class="section section-unreal" id="unreal" data-frame-start="71" data-frame-end="100" data-accent="red">
-      <div class="section-content">
-        <article class="roid-board reveal">
-          <header class="roid-head">
-            <div class="roid-head-meta">
-              <span class="project-tag">Learned at Syntra · In progress</span>
-            </div>
-            <div class="roid-head-copy">
-              <h2>Unreal Engine</h2>
-              <p>I learned Unreal Engine at Syntra and am currently developing <strong>Roid Rager</strong>, a retro-styled FPS wave-survival game.</p>
-            </div>
-          </header>
-          <div class="roid-mosaic">
-            <figure class="roid-tile roid-tile-clip">
-              <video src="extra_images/RoidRager3.mp4" muted loop playsinline preload="metadata" data-autoplay></video>
-              <figcaption>Clip</figcaption>
-            </figure>
-            <figure class="roid-tile roid-tile-clip">
-              <video src="extra_images/RoidRager4.mp4" muted loop playsinline preload="metadata" data-autoplay></video>
-              <figcaption>Clip</figcaption>
-            </figure>
-            <figure class="roid-tile roid-tile-logo">
-              <img src="extra_images/RoidRager2.png" alt="Roid Rager title">
-            </figure>
-            <figure class="roid-tile roid-tile-play">
-              <img src="extra_images/RoidRager1.png" alt="Roid Rager gameplay still">
-              <figcaption>Gameplay</figcaption>
-            </figure>
-          </div>
-        </article>
+      <div class="section-header reveal">
+        <span class="project-tag">Learned at Syntra · In Progress</span>
+        <h2>Unreal Engine · Roid Rager</h2>
+        <p class="project-desc">Retro-styled FPS wave-survival. Procedural asteroid fields, upgrade trees, neon combat and synthwave aesthetics.</p>
+      </div>
+
+      <div class="carousel-stack reveal">
+        <div class="marquee marquee-unreal"></div>
+      </div>
+
+      <div class="project-links">
+        <span class="project-status">In Development · Unreal Engine 5 · Blueprints + C++</span>
       </div>
     </section>
 
+    <!-- ================== UNITY · PROCEDURAL VOXEL TERRAIN ================== -->
     <section class="section section-unity" id="unity" data-frame-start="101" data-frame-end="130" data-accent="red">
-      <div class="section-content">
-        <article class="lab-board unity-board reveal">
-          <header class="lab-head">
-            <div class="lab-head-meta">
-              <span class="project-tag">Learned first · UCLL</span>
-            </div>
-            <div class="lab-head-copy">
-              <h2>Unity</h2>
-              <p>I learned Unity through my Bachelor in IT at UCLL, where the Digital Experience track included courses in 3D graphics and VR/AR.</p>
-            </div>
-          </header>
-          <div class="lab-stage">
-            <figure class="lab-hero">
-              <video src="extra_images/unity_project.mp4" muted loop playsinline preload="metadata" data-autoplay></video>
-              <div class="lab-scan" aria-hidden="true"></div>
-              <div class="lab-brackets" aria-hidden="true"></div>
-              <figcaption>Procedural terrain · preview</figcaption>
-            </figure>
-            <aside class="lab-side">
-              <p class="lab-kicker">Featured project</p>
-              <h3>Procedural Voxel Terrain Generator</h3>
-              <p>A Unity and C# system that generates infinite, chunk-based worlds with Perlin noise, layered terrain, caves, animated water, and a custom portal effect.</p>
-              <ul class="feature-list">
-                <li>Chunk streaming around the player</li>
-                <li>Layered blocks and procedurally carved caves</li>
-                <li>Custom meshes with exposed-face culling</li>
-                <li>First-person movement and flying controls</li>
-                <li>Animated water and portal shaders</li>
-              </ul>
-              <div class="tech-tags">
-                <span>Unity</span>
-                <span>C#</span>
-                <span>Perlin noise</span>
-                <span>Chunk streaming</span>
-              </div>
-            </aside>
-          </div>
-        </article>
+      <div class="section-header reveal">
+        <span class="project-tag">Learned at UCLL · Bachelor Project</span>
+        <h2>Unity · Procedural Voxel Terrain</h2>
+        <p class="project-desc">Infinite chunk-based worlds. Perlin noise, cave carving, animated water, custom portal shaders and hand-written C# systems.</p>
+      </div>
+
+      <div class="carousel-stack reveal">
+        <div class="marquee marquee-unity"></div>
+      </div>
+
+      <div class="project-links">
+        <ul class="feature-list-inline">
+          <li><span>Unity 2022</span></li>
+          <li><span>C# / Burst / Jobs</span></li>
+          <li><span>Custom SRP</span></li>
+          <li><span>Compute Shaders</span></li>
+        </ul>
       </div>
     </section>
 
+    <!-- ============================ WEB DEV ============================ -->
     <section class="section section-webdev" id="webdev" data-frame-start="131" data-frame-end="155" data-accent="red">
-      <div class="section-content">
-        <article class="lab-board reveal">
-          <header class="lab-head">
-            <div class="lab-head-meta">
-              <span class="project-tag">Web Development</span>
-            </div>
-            <div class="lab-head-copy">
-              <h2>Web Development</h2>
-              <p>Building responsive, modular web experiences with clean code and solid UX.</p>
-            </div>
-          </header>
-          <div class="lab-stage">
-            <figure class="lab-hero">
-              <video src="extra_images/website.mp4" muted loop playsinline preload="metadata" data-autoplay></video>
-              <div class="lab-scan" aria-hidden="true"></div>
-              <div class="lab-brackets" aria-hidden="true"></div>
-              <figcaption>Site preview 01</figcaption>
-            </figure>
-            <aside class="lab-side">
-              <p class="lab-kicker">What I do</p>
-              <p>I build performant, accessible websites and web apps. Responsive layouts, clean architecture, and attention to detail.</p>
-              <div class="tech-tags">
-                <span>HTML/CSS</span>
-                <span>JavaScript</span>
-                <span>React</span>
-                <span>Node.js</span>
-                <span>Three.js</span>
-                <span>PHP</span>
-                <span>TypeScript</span>
-              </div>
-            </aside>
-          </div>
-        </article>
+      <div class="section-header reveal">
+        <span class="project-tag">Web Development Portfolio</span>
+        <h2>Web Development</h2>
+        <p class="project-desc">Responsive, modular experiences with clean architecture, solid UX and performance as a default rather than an afterthought.</p>
+      </div>
+
+      <div class="carousel-stack reveal">
+        <div class="marquee marquee-webdev"></div>
+      </div>
+
+      <div class="project-links">
+        <ul class="feature-list-inline">
+          <li><span>HTML5 / CSS3</span></li>
+          <li><span>JavaScript / TypeScript</span></li>
+          <li><span>React / Next.js</span></li>
+          <li><span>Node.js / PHP</span></li>
+          <li><span>Three.js / GSAP</span></li>
+          <li><span>WCAG 2.1 AA</span></li>
+        </ul>
       </div>
     </section>
 
+    <!-- ============================ CONTACT ============================ -->
     <section class="section section-contact" id="contact" data-frame-start="156" data-frame-end="169" data-accent="red">
       <div class="section-content content-center">
         <div class="glass-card reveal contact-card">
-          <h2>Let’s talk</h2>
+          <h2>Let's talk</h2>
           <p class="lead">Open to entry-level and junior roles: gameplay programming, generalist IT, QA.</p>
           <div class="contact-links">
             <a href="https://www.linkedin.com/in/vicmenten" target="_blank" rel="noopener" class="contact-btn primary">LinkedIn</a>
             <a href="https://vic-ment.itch.io" target="_blank" rel="noopener" class="contact-btn secondary">itch.io</a>
             <a href="https://github.com/VicMent" target="_blank" rel="noopener" class="contact-btn secondary">GitHub</a>
             <a href="cv.html" class="contact-btn secondary">CV</a>
-            <!-- email -->
-            <a href="mailto:vic.menten@gmail.com" target="_blank" rel="noopener" class="contact-btn secondary">Email</a>
+            <a href="mailto:vic.menten@gmail.com" class="contact-btn secondary">Email</a>
           </div>
-          <p class="contact-footer">© 2026 Vic Menten · Herselt, Belgium · Message me on LinkedIn or send an email</p>
+          <p class="contact-footer">&copy; 2026 Vic Menten · Herselt, Belgium · Message me on LinkedIn or send an email</p>
         </div>
       </div>
     </section>
+  </div>
 
-  </main>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
   <script src="js/app.js" type="module"></script>
 </body>
 </html>

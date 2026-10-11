@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#0d0d0d"/>
+  <!-- Aurora background -->
+  <ellipse cx="240" cy="126" rx="400" ry="200" fill="#0078d7" opacity="0.15"/>
+  <ellipse cx="960" cy="504" rx="350" ry="180" fill="#00b4b4" opacity="0.1"/>
+  <ellipse cx="600" cy="315" rx="300" ry="150" fill="#5cb85c" opacity="0.08"/>
+  <!-- Grid pattern -->
+  <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+    <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(0,120,215,0.03)" stroke-width="1"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#grid)" opacity="0.5"/>
+  
+  <!-- Window frame -->
+  <rect x="200" y="100" width="800" height="430" rx="16" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.2)" stroke-width="2" filter="drop-shadow(0 20px 40px rgba(0,0,0,0.4))"/>
+  <!-- Title bar -->
+  <rect x="200" y="100" width="800" height="48" rx="16" fill="linear-gradient(180deg, #4a90d9 0%, #2573bc 100%)">
+    <animate attributeName="ry" values="16;0;16" dur="10s" repeatCount="indefinite" />
+  </rect>
+  <!-- Title bar buttons -->
+  <circle cx="224" cy="124" r="8" fill="#e81123"/>
+  <circle cx="248" cy="124" r="8" fill="#ffb900"/>
+  <circle cx="272" cy="124" r="8" fill="#5cb85c"/>
+  <!-- Window title -->
+  <text x="280" y="130" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="white">Vic Menten — Portfolio</text>
+  
+  <!-- Content area -->
+  <text x="600" y="220" text-anchor="middle" font-family="system-ui, sans-serif" font-size="48" font-weight="800" fill="white">
+    <tspan x="600" dy="0">Vic Menten</tspan>
+    <tspan x="600" dy="56" font-size="24" font-weight="400" fill="#00b4b4">IT & Indie Game Programmer</tspan>
+  </text>
+  
+  <!-- Tech tags -->
+  <g font-family="system-ui, sans-serif" font-size="14" fill="white">
+    <rect x="450" y="280" width="120" height="36" rx="18" fill="rgba(0,120,215,0.3)" stroke="#0078d7" stroke-width="1"/>
+    <text x="510" y="304" text-anchor="middle" font-weight="500">Unreal Engine 5</text>
+    <rect x="590" y="280" width="100" height="36" rx="18" fill="rgba(0,0,0,0.3)" stroke="#000" stroke-width="1"/>
+    <text x="640" y="304" text-anchor="middle" font-weight="500">Unity</text>
+    <rect x="710" y="280" width="110" height="36" rx="18" fill="rgba(0,120,215,0.3)" stroke="#0078d7" stroke-width="1"/>
+    <text x="765" y="304" text-anchor="middle" font-weight="500">React/TS</text>
+    <rect x="450" y="330" width="90" height="36" rx="18" fill="rgba(0,180,180,0.3)" stroke="#00b4b4" stroke-width="1"/>
+    <text x="495" y="354" text-anchor="middle" font-weight="500">Three.js</text>
+    <rect x="560" y="330" width="80" height="36" rx="18" fill="rgba(92,184,92,0.3)" stroke="#5cb85c" stroke-width="1"/>
+    <text x="600" y="354" text-anchor="middle" font-weight="500">C#</text>
+  </g>
+  
+  <!-- Decorative window preview -->
+  <rect x="350" y="380" width="200" height="150" rx="8" fill="rgba(0,0,0,0.4)" stroke="rgba(0,120,215,0.3)" stroke-width="1"/>
+  <rect x="650" y="380" width="200" height="150" rx="8" fill="rgba(0,0,0,0.4)" stroke="rgba(0,180,180,0.3)" stroke-width="1"/>
+  
+  <!-- Bottom text -->
+  <text x="600" y="560" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="500" fill="rgba(255,255,255,0.7)">
+    Interactive Windows Vista Desktop Portfolio
+  </text>
+  <text x="600" y="590" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="rgba(255,255,255,0.4)">
+    vicmenten.dev • Herselt, Belgium
+  </text>
+</svg>

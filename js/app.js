@@ -1,21 +1,23 @@
-// Scroll-scrubbed canvas. Frames load in background; page is interactive immediately.
+// Section-scrubbed frame animation. Preloads frames, advances per section.
 
-const VIDEO_PATH = 'animation.webm';
+const FRAME_DIR = 'animation/';
+const FRAME_COUNT = 170; // 0001-0170
 
-class ScrollAnimation {
-  constructor(canvas) {
+class FrameAnimation {
+  constructor(canvas, totalSections = 7) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d', { alpha: false });
-    this.video = document.createElement('video');
-    this.video.muted = true;
-    this.video.playsInline = true;
-    this.video.preload = 'auto';
-    this.video.src = VIDEO_PATH;
+    this.frames = [];
+    this.currentFrame = 0;
+    this.targetFrame = 0;
+    this.currentSection = 0;
+    this.totalFrames = FRAME_COUNT;
+    this.totalSections = totalSections;
+    this.framesPerSection = Math.ceil(FRAME_COUNT / (totalSections - 1)); // 28 frames per transition (170/6)
     this.isReady = false;
-    this.duration = 0;
-    this.targetTime = 0;
-    this.smoothTime = 0;
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.loadedCount = 0;
+    this.externallyDriven = false; // Prevent tick() from fighting manual frame control
 
     this._resize();
     window.addEventListener('resize', () => this._resize());
@@ -38,121 +40,333 @@ class ScrollAnimation {
 
     const statuses = [
       'INITIALIZING',
-      'LOADING ASSETS',
-      'DECODING FRAMES',
+      'LOADING FRAMES',
+      'DECODING IMAGES',
       'PREPARING CANVAS',
       'ALMOST READY',
     ];
 
-    await new Promise((resolve) => {
-      const onMeta = () => {
-        this.duration = this.video.duration;
-        this.isReady = true;
-        this.video.removeEventListener('loadedmetadata', onMeta);
-        resolve();
-      };
+    const frameUrls = [];
+    for (let i = 1; i <= 170; i++) {
+      const num = String(i).padStart(4, '0');
+      frameUrls.push(`${FRAME_DIR}${num}.png`);
+    }
 
-      const onProgress = () => {
-        if (this.video.buffered.length > 0) {
-          const buffered = this.video.buffered.end(this.video.buffered.length - 1);
-          const pct = Math.min(100, Math.round((buffered / this.video.duration) * 100));
+    await Promise.all(frameUrls.map((url, index) => {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          this.frames[index] = img;
+          this.loadedCount++;
+          const pct = Math.round((this.loadedCount / this.totalFrames) * 100);
           if (barFill) barFill.style.width = `${pct}%`;
           if (percentText) percentText.textContent = `${pct}%`;
           const idx = Math.min(statuses.length - 1, Math.floor(pct / (100 / statuses.length)));
           if (statusText) statusText.textContent = statuses[idx];
-        }
-      };
+          resolve();
+        };
+        img.onerror = () => {
+          this.loadedCount++;
+          resolve();
+        };
+        img.src = url;
+      });
+    }));
 
-      this.video.addEventListener('loadedmetadata', onMeta);
-      this.video.addEventListener('progress', onProgress);
-      this.video.addEventListener('error', () => {
-        console.warn('Animation video failed to load');
-        this.video.removeEventListener('loadedmetadata', onMeta);
-        this.video.removeEventListener('progress', onProgress);
-        resolve();
-      }, { once: true });
-      this.video.load();
-    });
-
-    this.video.currentTime = 0;
+    this.isReady = true;
+    this.currentFrame = 0;
+    this.targetFrame = 0;
     this._render();
 
     if (barFill) barFill.style.width = '100%';
     if (percentText) percentText.textContent = '100%';
     if (statusText) statusText.textContent = 'READY';
 
-    await new Promise(r => setTimeout(r, 500));
+    await new Promise(r => setTimeout(r, 300));
     if (loader) loader.classList.add('hidden');
   }
 
-  _drawCover(el) {
+  _drawCover(img) {
+    if (!img) return;
     const cw = window.innerWidth;
     const ch = window.innerHeight;
-    const vw = el.videoWidth || el.naturalWidth || el.width || 1536;
-    const vh = el.videoHeight || el.naturalHeight || el.height || 864;
+    const vw = img.naturalWidth || img.width || 1536;
+    const vh = img.naturalHeight || img.height || 864;
     const scale = Math.max(cw / vw, ch / vh);
     const w = vw * scale;
     const h = vh * scale;
     const x = (cw - w) / 2;
     const y = (ch - h) / 2;
-    this.ctx.drawImage(el, x, y, w, h);
+    this.ctx.drawImage(img, x, y, w, h);
   }
 
   _render() {
     this.ctx.fillStyle = '#0d0d0d';
     this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-    this._drawCover(this.video);
+    const frameIndex = Math.floor(this.currentFrame);
+    const frame = this.frames[frameIndex];
+    if (frame) {
+      this._drawCover(frame);
+    }
   }
 
-  setProgress(progress) {
-    const raw = progress * this.duration;
-    this.targetTime = raw;
+  goToSection(sectionIndex) {
+    if (!this.isReady) return;
+    this.currentSection = Math.max(0, Math.min(sectionIndex, this.totalSections - 1));
+    this.targetFrame = Math.min(this.totalFrames - 1, this.currentSection * this.framesPerSection);
+  }
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reducedMotion) {
-      this.smoothTime = raw;
-    } else {
-      const diff = raw - this.smoothTime;
-      this.smoothTime += diff * 0.18;
-      if (Math.abs(diff) < 0.05) this.smoothTime = raw;
+  nextSection() {
+    if (this.currentSection < this.totalSections - 1) {
+      this.goToSection(this.currentSection + 1);
+    }
+  }
+
+  prevSection() {
+    if (this.currentSection > 0) {
+      this.goToSection(this.currentSection - 1);
     }
   }
 
   tick() {
-    if (!this.isReady || !this.duration) return;
+    if (!this.isReady || this.externallyDriven) return;
 
-    if (Math.abs(this.targetTime - this.smoothTime) > 0.05) {
-      const diff = this.targetTime - this.smoothTime;
-      this.smoothTime += diff * 0.18;
+    const diff = this.targetFrame - this.currentFrame;
+    const absDiff = Math.abs(diff);
+    
+    if (absDiff > 0.5) {
+      // Fast interpolation for smooth frame-by-frame playback during transitions
+      const lerpFactor = 0.35;
+      this.currentFrame += diff * lerpFactor;
+      
+      // Ensure we advance at least 1 frame per tick when far from target
+      if (absDiff > 2) {
+        const minStep = Math.sign(diff) * 1;
+        if (Math.abs(this.currentFrame - (this.currentFrame - diff * lerpFactor)) < 1) {
+          this.currentFrame += minStep;
+        }
+      }
+    } else {
+      this.currentFrame = this.targetFrame;
     }
 
-    const target = Math.max(0, Math.min(this.duration, this.smoothTime));
-    if (Math.abs(this.video.currentTime - target) > 0.03) {
-      this.video.currentTime = target;
-    }
-
+    const frameIndex = Math.max(0, Math.min(this.totalFrames - 1, Math.floor(this.currentFrame)));
     this._render();
   }
 }
 
+// Plays only the most-visible video inside each carousel row, so we never
+// decode several clips at once while the rows are scrolling.
 class AutoplayClips {
   constructor() {
-    const videos = document.querySelectorAll('[data-autoplay]');
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.rows = new Map();
+    this.ratios = new WeakMap();
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const video = entry.target;
-        if (!reduced && entry.isIntersecting && entry.intersectionRatio > 0.2) {
-          video.play().catch(() => {});
-        } else {
-          video.pause();
-        }
-      });
-    }, { threshold: [0, 0.2, 0.5] });
+    document.querySelectorAll('[data-autoplay]').forEach((video) => {
+      const row = video.closest('.marquee');
+      if (!row) return;
+      if (!this.rows.has(row)) this.rows.set(row, new Set());
+      this.rows.get(row).add(video);
+      this.ratios.set(video, 0);
+    });
 
-    videos.forEach((video) => observer.observe(video));
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        const touchedRows = new Set();
+
+        entries.forEach((entry) => {
+          this.ratios.set(entry.target, entry.isIntersecting ? entry.intersectionRatio : 0);
+          const row = entry.target.closest('.marquee');
+          if (row) touchedRows.add(row);
+        });
+
+        touchedRows.forEach((row) => this._syncRow(row));
+      },
+      { threshold: [0, 0.25, 0.5, 0.75] }
+    );
+
+    this.rows.forEach((clips) => clips.forEach((clip) => this.observer.observe(clip)));
   }
+
+  _syncRow(row) {
+    const clips = this.rows.get(row);
+    if (!clips) return;
+
+    let best = null;
+    let bestRatio = 0.4; // only autoplay when clearly in view
+
+    clips.forEach((clip) => {
+      const ratio = this.ratios.get(clip) || 0;
+      if (ratio > bestRatio) {
+        bestRatio = ratio;
+        best = clip;
+      }
+    });
+
+    clips.forEach((clip) => {
+      if (clip === best && !this.reduced) {
+        if (clip.paused) clip.play().catch(() => {});
+      } else if (!clip.paused) {
+        clip.pause();
+      }
+    });
+  }
+}
+
+// ---------------------------------------------------------------
+// Double-layered full-bleed infinite carousels.
+// Slides are generated from the lists below, so dropping in real
+// assets later is just a matter of adding another entry.
+//   kind: 'img' | 'video' | 'ph'  ('ph' = themed placeholder)
+// ---------------------------------------------------------------
+const CAROUSEL_THEMES = {
+  work: [
+    'linear-gradient(135deg, #c41e3a33, #7B21A833)',
+    'linear-gradient(135deg, #7B21A833, #1a1a2e)',
+    'linear-gradient(135deg, #1a1a2e, #16213e)',
+  ],
+  unreal: [
+    'linear-gradient(135deg, #7B21A833, #c41e3a33)',
+    'linear-gradient(135deg, #0f0f23, #1a1a2e)',
+    'linear-gradient(135deg, #1a1a2e, #7B21A833)',
+  ],
+  unity: [
+    'linear-gradient(135deg, #1B9A5933, #0d4d2e)',
+    'linear-gradient(135deg, #0d2b4d, #1a3a5c)',
+    'linear-gradient(135deg, #2d5a27, #1B9A5933)',
+  ],
+  webdev: [
+    'linear-gradient(135deg, #4F46E533, #7C3AED33)',
+    'linear-gradient(135deg, #7C3AED33, #1a1a2e)',
+    'linear-gradient(135deg, #1a1a2e, #4F46E533)',
+  ],
+};
+
+const CAROUSEL_DATA = [
+  {
+    key: 'work',
+    container: '.marquee-work',
+    items: [
+      { kind: 'img', src: 'extra_images/ethicallabs_project.png', alt: 'Totally Ethical Labs gameplay' },
+      { kind: 'video', src: 'extra_images/TEL-bug.mp4', alt: 'Totally Ethical Labs bug fix' },
+      { kind: 'img', src: 'extra_images/TEL%20-%20logo.png', alt: 'Totally Ethical Labs logo' },
+      { kind: 'video', src: 'extra_images/tel_animation.mp4', alt: 'Totally Ethical Labs animation' },
+      { kind: 'img', src: 'extra_images/tel-image.png', alt: 'Totally Ethical Labs screenshot' },
+      { kind: 'img', src: 'extra_images/tel-image%202.png', alt: 'Totally Ethical Labs environment' },
+      { kind: 'ph', label: 'Magnet Ability' },
+      { kind: 'ph', label: 'Concept Art · Environment' },
+      { kind: 'ph', label: 'Character · Specimen 07' },
+      { kind: 'ph', label: 'UI / HUD Design' },
+      { kind: 'ph', label: 'Weapon Tuning' },
+      { kind: 'ph', label: 'Lab Architecture' },
+      { kind: 'ph', label: 'VFX · Pickup Pull' },
+    ],
+  },
+  {
+    key: 'unreal',
+    container: '.marquee-unreal',
+    items: [
+      { kind: 'video', src: 'extra_images/RoidRager3.mp4', poster: 'extra_images/RoidRager3-poster.jpg', alt: 'Roid Rager gameplay clip' },
+      { kind: 'video', src: 'extra_images/RoidRager4.mp4', poster: 'extra_images/RoidRager4-poster.jpg', alt: 'Roid Rager boss clip' },
+      { kind: 'img', src: 'extra_images/RoidRager2.png', alt: 'Roid Rager title screen' },
+      { kind: 'img', src: 'extra_images/RoidRager1.png', alt: 'Roid Rager gameplay still' },
+      { kind: 'video', src: 'extra_images/RoidRager%20-%20tazer.mp4', alt: 'Roid Rager tazer weapon' },
+      { kind: 'video', src: 'extra_images/roidrager-slots.mp4', alt: 'Roid Rager slot machine' },
+      { kind: 'video', src: 'extra_images/roidrager-menu.mp4', alt: 'Roid Rager main menu' },
+      { kind: 'video', src: 'extra_images/roidrager-beer.mp4', alt: 'Roid Rager beer pickup' },
+      { kind: 'img', src: 'extra_images/roidrager-pig.png', alt: 'Roid Rager pig enemy' },
+      { kind: 'img', src: 'extra_images/roidrager3.png', alt: 'Roid Rager gameplay screenshot' },
+      { kind: 'img', src: 'extra_images/roidrager4.png', alt: 'Roid Rager boss screenshot' },
+    ],
+  },
+  {
+    key: 'unity',
+    container: '.marquee-unity',
+    items: [
+      { kind: 'video', src: 'extra_images/unity_project.mp4', poster: 'extra_images/unity_project-poster.jpg', alt: 'Procedural voxel terrain generator' },
+      { kind: 'video', src: 'extra_images/unity_script.mp4', alt: 'Unity voxel scripting' },
+      { kind: 'video', src: 'extra_images/unity-animation.mp4', alt: 'Unity character animation' },
+      { kind: 'img', src: 'extra_images/image3%20unity.png', alt: 'Unity project screenshot' },
+      { kind: 'img', src: 'extra_images/unity%20cave.png', alt: 'Unity cave generation' },
+      { kind: 'img', src: 'extra_images/unity%20layers.png', alt: 'Unity terrain layers' },
+      { kind: 'img', src: 'extra_images/unity%20map.png', alt: 'Unity voxel map' },
+      { kind: 'img', src: 'extra_images/unity-character.png', alt: 'Unity character' },
+    ],
+  },
+  {
+    key: 'webdev',
+    container: '.marquee-webdev',
+    items: [
+      { kind: 'video', src: 'extra_images/website.mp4', poster: 'extra_images/website-poster.jpg', alt: 'This portfolio site' },
+      { kind: 'video', src: 'extra_images/portfolio_site_1.mp4', alt: 'Portfolio site v1' },
+      { kind: 'video', src: 'extra_images/old_porfoliosite.mp4', alt: 'Old portfolio site' },
+      { kind: 'video', src: 'extra_images/kermisfuif_website.mp4', alt: 'Kermisfuif website' },
+      { kind: 'video', src: 'extra_images/jorismenten_2_website.mp4', alt: 'Joris Menten website' },
+      { kind: 'img', src: 'extra_images/clampy2.0%20-%20web.png', alt: 'Clampy 2.0 website' },
+      { kind: 'img', src: 'extra_images/web%20game.png', alt: 'Web game project' },
+      { kind: 'ph', label: 'Tablet · 768px' },
+      { kind: 'ph', label: 'React / Next.js' },
+      { kind: 'ph', label: 'TypeScript / Vite' },
+      { kind: 'ph', label: 'Three.js Scenes' },
+      { kind: 'ph', label: 'GSAP Motion' },
+    ],
+  },
+];
+
+// Builds one marquee track: the row's tiles repeated `copies` times so
+// the track is at least twice the container wide and the -50% translateX
+// keyframe loops back to an identical frame (seamless, no jump).
+function buildMarqueeTrack(items, theme, copies) {
+  const track = document.createElement('div');
+  track.className = 'marquee-track';
+
+  for (let c = 0; c < copies; c += 1) {
+    items.forEach((item, i) => {
+      const tile = document.createElement('div');
+      tile.className = 'marquee-tile';
+
+      if (item.kind === 'ph') {
+        const media = document.createElement('div');
+        media.className = 'tile-media placeholder-tile';
+        media.style.background = theme[i % theme.length];
+        const label = document.createElement('span');
+        label.textContent = item.label;
+        media.appendChild(label);
+        tile.appendChild(media);
+      } else {
+        const media = document.createElement('div');
+        media.className = 'tile-media';
+
+        if (item.kind === 'video') {
+          const video = document.createElement('video');
+          video.src = item.src;
+          if (item.poster) video.poster = item.poster;
+          video.muted = true;
+          video.loop = true;
+          video.playsInline = true;
+          video.preload = 'none';
+          if (item.alt) video.setAttribute('aria-label', item.alt);
+          video.setAttribute('data-autoplay', '');
+          video.setAttribute('muted', '');
+          media.appendChild(video);
+        } else {
+          const img = document.createElement('img');
+          img.src = item.src;
+          img.alt = item.alt || '';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          media.appendChild(img);
+        }
+
+        tile.appendChild(media);
+      }
+
+      track.appendChild(tile);
+    });
+  }
+
+  return track;
 }
 
 class PortfolioApp {
@@ -166,27 +380,383 @@ class PortfolioApp {
     this.navIndicator.className = 'nav-indicator';
     this.navLinksContainer = document.querySelector('.nav-links');
 
-    this.animation = new ScrollAnimation(this.canvas);
+    this.animation = new FrameAnimation(this.canvas, this.sections.length);
+    this.fullpage = null;
+    this.currentSectionIndex = 0;
+    this.ambientAnimations = [];
+    this._triggeredSections = new Set();
 
     this._init();
   }
 
   _init() {
-    this.animation.start().then(() => this._onScroll());
-    this._bindEvents();
-    this._initMagneticButtons();
-    this._initParallaxFloat();
-    this._initTiltEffect();
-    this._initGSAP();
-    this._initLenis();
-    new AutoplayClips();
-    this._loop();
-    this._updateNavIndicator();
+    this.animation.start().then(() => {
+      this._initFullPage();
+      this._bindEvents();
+      this._initMagneticButtons();
+      this._initTiltEffect();
+      // this._initGSAP(); // Disabled - conflicts with FullPage.js
+      this._initAnimeAmbient();
+      this._initCarousels();
+      new AutoplayClips();
+      this._loop();
+      this._updateNavIndicator();
+      
+      // Trigger animations for first section immediately
+      const firstSection = document.querySelector('#hero');
+      if (firstSection) {
+        this._triggerSectionAnimations(firstSection);
+      }
+    });
+  }
+
+  _initFullPage() {
+    // Custom snappy section scroll - no external dependency
+    console.log('[ScrollSnap] Initializing custom section snap');
+    this._initSectionSnap();
+  }
+
+  _initSectionSnap() {
+    this.isScrolling = false;
+    this.scrollTimeout = null;
+    this.currentSectionIndex = 0;
+    this.sections = document.querySelectorAll('.section');
+    this.sectionPositions = [];
+    
+    console.log('[SectionSnap] Found sections:', this.sections.length);
+    this.sections.forEach((s, i) => console.log(`[SectionSnap] Section ${i}:`, s.id, 'height:', s.offsetHeight));
+    
+    // Calculate section positions
+    this._updateSectionPositions();
+    window.addEventListener('resize', () => this._updateSectionPositions());
+    
+    // Wheel/touch scroll with snapping
+    window.addEventListener('wheel', (e) => this._onWheel(e), { passive: false });
+    window.addEventListener('touchstart', (e) => this._touchStart = e.touches[0].clientY, { passive: true });
+    window.addEventListener('touchend', (e) => this._onTouchEnd(e), { passive: true });
+    
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => this._onKeydown(e));
+    
+    // Click navigation
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          const index = Array.from(this.sections).indexOf(target);
+          if (index !== -1) this._snapToSection(index);
+          this._closeMobileNav();
+        }
+      });
+    });
+    
+    // Scroll progress tracking (for animation)
+    window.addEventListener('scroll', () => this._onNativeScroll(), { passive: true });
+  }
+
+  _updateSectionPositions() {
+    this.sectionPositions = Array.from(this.sections).map(section => {
+      const rect = section.getBoundingClientRect();
+      return rect.top + window.scrollY;
+    });
+    console.log('[SectionSnap] Positions:', this.sectionPositions);
+  }
+
+  _onWheel(e) {
+    if (this.isScrolling) return;
+    
+    e.preventDefault();
+    
+    const direction = e.deltaY > 0 ? 1 : -1;
+    const nextIndex = Math.max(0, Math.min(this.sections.length - 1, this.currentSectionIndex + direction));
+    
+    console.log('[Wheel] currentIndex:', this.currentSectionIndex, 'nextIndex:', nextIndex, 'deltaY:', e.deltaY);
+    
+    if (nextIndex !== this.currentSectionIndex) {
+      this._snapToSection(nextIndex);
+    }
+  }
+
+  _onTouchEnd(e) {
+    if (this.isScrolling || !this._touchStart) return;
+    
+    const touchEnd = e.changedTouches[0].clientY;
+    const diff = this._touchStart - touchEnd;
+    this._touchStart = null;
+    
+    if (Math.abs(diff) > 50) {
+      const direction = diff > 0 ? 1 : -1;
+      const nextIndex = Math.max(0, Math.min(this.sections.length - 1, this.currentSectionIndex + direction));
+      if (nextIndex !== this.currentSectionIndex) {
+        this._snapToSection(nextIndex);
+      }
+    }
+  }
+
+  _onKeydown(e) {
+    const scrollKeys = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' ', 'Home', 'End'];
+    if (!scrollKeys.includes(e.key)) return;
+    
+    e.preventDefault();
+    
+    let nextIndex = this.currentSectionIndex;
+    
+    if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+      nextIndex = Math.min(this.sections.length - 1, this.currentSectionIndex + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      nextIndex = Math.max(0, this.currentSectionIndex - 1);
+    } else if (e.key === 'Home') {
+      nextIndex = 0;
+    } else if (e.key === 'End') {
+      nextIndex = this.sections.length - 1;
+    }
+    
+    if (nextIndex !== this.currentSectionIndex) {
+      this._snapToSection(nextIndex);
+    }
+  }
+
+  _snapToSection(index) {
+    if (this.isScrolling) return;
+    
+    this.isScrolling = true;
+    this.currentSectionIndex = index;
+    
+    const targetY = this.sectionPositions[index];
+    
+    // Calculate frame range for this transition
+    const startFrame = this.animation.isReady ? this.animation.currentFrame : 0;
+    const endFrame = this.animation.isReady 
+      ? Math.min(this.animation.totalFrames - 1, index * this.animation.framesPerSection)
+      : 0;
+    const frameDistance = endFrame - startFrame;
+    
+    // Update nav immediately
+    this._updateNavForSection(index);
+    
+    // Trigger section entrance animations
+    const targetSection = this.sections[index];
+    if (targetSection) {
+      this._triggerSectionAnimations(targetSection);
+    }
+    
+    if (this.animation.isReady) {
+      this.animation.goToSection(index);
+    }
+    
+    // Smooth scroll with custom easing - also drive frame animation
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    const duration = 800;
+    const startTime = performance.now();
+    let lastFrame = -1;
+    
+    const animate = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Linear - no easing
+      
+      // Prevent tick() from fighting manual frame control
+      if (this.animation.isReady) this.animation.externallyDriven = true;
+      
+      // Drive scroll
+      window.scrollTo(0, startY + distance * progress);
+      
+      // Drive frame animation in perfect sync
+      if (this.animation.isReady && frameDistance !== 0) {
+        this.animation.currentFrame = startFrame + frameDistance * progress;
+        const frameIndex = Math.floor(this.animation.currentFrame);
+        if (frameIndex !== lastFrame) {
+          lastFrame = frameIndex;
+        }
+        this.animation._render();
+      }
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        // Release frame control back to tick()
+        if (this.animation.isReady) this.animation.externallyDriven = false;
+        
+        this.isScrolling = false;
+        this._updateSectionPositions();
+        // Ensure exact final frame
+        if (this.animation.isReady) {
+          this.animation.currentFrame = endFrame;
+          this.animation.targetFrame = endFrame;
+          this.animation._render();
+        }
+      }
+    };
+    
+    requestAnimationFrame(animate);
+  }
+
+  _onNativeScroll() {
+    // Update progress bar and nav based on scroll position
+    const scrollY = window.scrollY;
+    const progress = this._getScrollProgress(scrollY);
+    this.progressFill.style.width = `${progress * 100}%`;
+    
+    // Update nav based on which section is most visible
+    const viewportCenter = scrollY + window.innerHeight / 2;
+    let closestIndex = 0;
+    let closestDist = Infinity;
+    
+    this.sectionPositions.forEach((pos, i) => {
+      const section = this.sections[i];
+      const sectionCenter = pos + section.offsetHeight / 2;
+      const dist = Math.abs(viewportCenter - sectionCenter);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestIndex = i;
+      }
+    });
+    
+    if (closestIndex !== this.currentSectionIndex && !this.isScrolling) {
+      console.log('[NativeScroll] scrollY:', scrollY, 'closestIndex:', closestIndex);
+      this.currentSectionIndex = closestIndex;
+      this._updateNavForSection(closestIndex);
+      if (this.animation.isReady) {
+        this.animation.goToSection(closestIndex);
+      }
+    }
+  }
+
+  _getScrollProgress(scrollY) {
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (docHeight <= 0) return 0;
+    return Math.max(0, Math.min(1, scrollY / docHeight));
+  }
+
+  _updateNavForSection(index) {
+    const section = this.sections[index];
+    if (!section) return;
+    
+    this.nav.classList.toggle('scrolled', index > 0);
+    this._updateActiveNav(section.id);
+    this._updateNavAccent(index);
+  }
+
+  _getScrollProgress(scrollY) {
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (docHeight <= 0) return 0;
+    return Math.max(0, Math.min(1, scrollY / docHeight));
+  }
+
+  _updateHeroFade(scrollY) {
+    if (!this.heroContent) return;
+    const fade = Math.min(1, scrollY / (window.innerHeight * 0.55));
+    this.heroContent.style.opacity = String(1 - fade);
+    this.heroContent.style.transform = `translateY(${fade * 16}px)`;
+    this.heroContent.style.pointerEvents = fade > 0.85 ? 'none' : 'auto';
+  }
+
+  _updateActiveNav(activeSectionId) {
+    const navMap = {
+      hero: ['hero'],
+      'about-skills': ['about-skills'],
+      work: ['work'],
+      unreal: ['unreal'],
+      unity: ['unity'],
+      webdev: ['webdev'],
+      contact: ['contact'],
+    };
+
+    const activeIds = navMap[activeSectionId] || ['hero'];
+    document.querySelectorAll('.nav-links a').forEach((link) => {
+      const href = link.getAttribute('href')?.slice(1);
+      link.classList.toggle('active', activeIds.includes(href));
+    });
+
+    if (this._navIndicatorUpdate) this._navIndicatorUpdate();
+  }
+
+  _updateNavAccent(sectionIndexOrProgress) {
+    // If called with section index (from FullPage.js)
+    const isSectionIndex = Number.isInteger(sectionIndexOrProgress) && sectionIndexOrProgress >= 0 && sectionIndexOrProgress < this.sections.length;
+    let progress = isSectionIndex 
+      ? sectionIndexOrProgress / (this.sections.length - 1)
+      : sectionIndexOrProgress;
+
+    const accentMap = [
+      { start: 0, end: 0.15, accent: '#c41e3a' },
+      { start: 0.15, end: 0.35, accent: '#c41e3a' },
+      { start: 0.35, end: 0.55, accent: '#c41e3a' },
+      { start: 0.55, end: 0.75, accent: '#c41e3a' },
+      { start: 0.75, end: 1, accent: '#c41e3a' },
+    ];
+
+    let currentAccent = '#c41e3a';
+    for (const item of accentMap) {
+      if (progress >= item.start && progress < item.end) {
+        currentAccent = item.accent;
+        break;
+      }
+    }
+
+    document.documentElement.style.setProperty('--nav-accent', currentAccent);
+  }
+
+  _updateParallax(scrollY) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return;
+
+    document.querySelectorAll('.parallax-float').forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      const center = rect.top + rect.height / 2;
+      const offset = (center - window.innerHeight / 2) * 0.04;
+      el.style.transform = `translateY(${offset}px) scale(1.04)`;
+    });
+  }
+
+  _triggerSectionAnimations(section) {
+    if (typeof anime === 'undefined') return;
+
+    // Animate each section's entrance only once
+    if (this._triggeredSections.has(section)) return;
+    this._triggeredSections.add(section);
+
+    const reveals = section.querySelectorAll('.reveal');
+    reveals.forEach((el, index) => {
+      // Carousels get a clean fade-up: no tilt, so the tile grid never looks skewed
+      const isCarousel = el.classList.contains('carousel-stack');
+
+      // Reset initial state
+      el.style.opacity = '0';
+      el.style.transform = isCarousel
+        ? 'translateY(40px) scale(0.98)'
+        : 'translateY(40px) rotate(-3deg) scale(0.95)';
+      
+      anime({
+        targets: el,
+        opacity: [0, 1],
+        translateY: [40, 0],
+        ...(isCarousel ? {} : { rotate: [{ value: (Math.random() - 0.5) * 6, duration: 0 }, 0] }),
+        scale: isCarousel ? [0.98, 1] : [0.95, 1],
+        duration: 1000,
+        delay: index * 80,
+        easing: 'easeOutExpo',
+        complete: () => {
+          el.classList.add('is-visible');
+        }
+      });
+    });
+
+    const heroContent = section.querySelector('.hero-content');
+    if (heroContent) {
+      anime({
+        targets: heroContent,
+        opacity: 1,
+        translateY: 0,
+        duration: 1200,
+        easing: 'easeOutExpo',
+      });
+    }
   }
 
   _bindEvents() {
-    window.addEventListener('scroll', () => this._onScroll(), { passive: true });
-
     document.querySelectorAll('a[href^="#"]').forEach((link) => {
       const href = link.getAttribute('href');
       if (!href || href === '#') return;
@@ -194,7 +764,12 @@ class PortfolioApp {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const target = document.querySelector(href);
-        if (target) {
+        if (target && this.fullpage && this.fullpage.api) {
+          const anchor = href.slice(1);
+          this.fullpage.api.moveTo(anchor);
+          this._closeMobileNav();
+        } else if (target) {
+          // Fallback: scroll to section
           target.scrollIntoView({ behavior: 'smooth' });
           this._closeMobileNav();
         }
@@ -251,16 +826,6 @@ class PortfolioApp {
     });
   }
 
-  _initParallaxFloat() {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return;
-
-    const floaters = document.querySelectorAll('.parallax-float, .lab-hero img, .roid-tile img, .roid-tile video');
-    floaters.forEach((el) => {
-      el.classList.add('parallax-float');
-    });
-  }
-
   _initTiltEffect() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) return;
@@ -281,186 +846,6 @@ class PortfolioApp {
       card.addEventListener('mouseleave', () => {
         card.style.transform = '';
       });
-    });
-  }
-
-  _initGSAP() {
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-      console.warn('GSAP or ScrollTrigger not loaded');
-      return;
-    }
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return;
-
-    const reveals = document.querySelectorAll('.reveal');
-
-    const sectionAnims = {
-      'hero':       { x: 0, y: 40, rotate: 0, scale: 1 },
-      'work':       { x: -80, y: 60, rotate: -3, scale: 0.95 },
-      'about':      { x: 80, y: 60, rotate: 3, scale: 0.95 },
-      'skills':     { x: -80, y: 60, rotate: -3, scale: 0.95 },
-      'unreal':     { x: -80, y: 50, rotate: -2, scale: 0.96 },
-      'unity':      { x: 80, y: 50, rotate: 2, scale: 0.96 },
-      'webdev':     { x: -80, y: 50, rotate: -2, scale: 0.96 },
-      'contact':    { x: 60, y: 40, rotate: 1, scale: 0.98 },
-    };
-
-    reveals.forEach((el, index) => {
-      const parent = el.closest('.section');
-      if (!parent) return;
-
-      const sectionId = parent.id || 'hero';
-      const anim = sectionAnims[el.id] || sectionAnims[sectionId] || sectionAnims['hero'];
-      const isHero = sectionId === 'hero';
-
-      const fromVars = {
-        opacity: 0,
-        x: anim.x,
-        y: anim.y,
-        rotate: anim.rotate,
-        scale: anim.scale,
-      };
-
-      const toVars = {
-        opacity: 1,
-        x: 0,
-        y: 0,
-        rotate: 0,
-        scale: 1,
-        duration: 1.1,
-        ease: 'power3.out',
-      };
-
-      if (isHero) {
-        toVars.delay = 0.2 + index * 0.1;
-      } else {
-        toVars.scrollTrigger = {
-          trigger: el,
-          start: 'top 90%',
-          end: 'top 15%',
-          scrub: 1.5,
-        };
-        toVars.delay = 0;
-      }
-
-      gsap.fromTo(el, fromVars, toVars);
-    });
-
-    const scrollDot = document.querySelector('.scroll-indicator-dot');
-    if (scrollDot) {
-      gsap.set(scrollDot, { y: 0, opacity: 1 });
-
-      const dotTl = gsap.timeline({ repeat: -1, repeatDelay: 0.3 });
-      dotTl.to(scrollDot, {
-        y: 43,
-        opacity: 0.2,
-        duration: 1.6,
-        ease: 'power2.in',
-      }).to(scrollDot, {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: 'power2.out',
-      });
-
-      ScrollTrigger.create({
-        trigger: '#hero',
-        start: 'top top',
-        end: 'bottom top',
-        onLeave: () => dotTl.pause(),
-        onEnterBack: () => dotTl.resume(),
-      });
-    }
-
-    ScrollTrigger.refresh();
-  }
-
-  _initLenis() {
-    if (!window.Lenis) {
-      console.warn('Lenis not loaded');
-      return;
-    }
-
-    this.lenis = new Lenis({
-      autoRaf: false,
-      lerp: 0.1,
-      smoothWheel: true,
-      syncTouch: false,
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
-    });
-
-    this.lenis.on('scroll', ({ animatedScroll }) => {
-      this._onScroll();
-      if (typeof ScrollTrigger !== 'undefined') {
-        ScrollTrigger.update();
-      }
-    });
-
-    window.addEventListener('keydown', (e) => {
-      const scrollKeys = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' '];
-      if (!scrollKeys.includes(e.key)) return;
-
-      e.preventDefault();
-      const viewportH = window.innerHeight;
-      const currentScroll = this.lenis.animatedScroll || window.scrollY;
-      let targetY = currentScroll;
-
-      if (e.key === 'ArrowDown') {
-        let best = null;
-        let bestDist = Infinity;
-        this.sections.forEach(section => {
-          const rect = section.getBoundingClientRect();
-          const sectionTop = rect.top + currentScroll;
-          if (sectionTop > currentScroll + viewportH * 0.15) {
-            const dist = sectionTop - currentScroll;
-            if (dist < bestDist) {
-              best = section;
-              bestDist = dist;
-            }
-          }
-        });
-        if (best) {
-          const rect = best.getBoundingClientRect();
-          const sectionTop = rect.top + currentScroll;
-          const sectionHeight = rect.height;
-          targetY = sectionTop + sectionHeight / 2 - viewportH / 2;
-        } else {
-          targetY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-        }
-      } else if (e.key === 'ArrowUp') {
-        let best = null;
-        let bestDist = Infinity;
-        this.sections.forEach(section => {
-          const rect = section.getBoundingClientRect();
-          const sectionTop = rect.top + currentScroll;
-          const sectionBottom = sectionTop + rect.height;
-          if (sectionBottom < currentScroll - viewportH * 0.15) {
-            const dist = currentScroll - sectionBottom;
-            if (dist < bestDist) {
-              best = section;
-              bestDist = dist;
-            }
-          }
-        });
-        if (best) {
-          const rect = best.getBoundingClientRect();
-          const sectionTop = rect.top + currentScroll;
-          const sectionHeight = rect.height;
-          targetY = sectionTop + sectionHeight / 2 - viewportH / 2;
-        } else {
-          targetY = 0;
-        }
-      } else if (e.key === ' ' || e.key === 'PageDown') {
-        targetY = currentScroll + viewportH * 0.8;
-      } else if (e.key === 'PageUp') {
-        targetY = currentScroll - viewportH * 0.8;
-      }
-
-      this.lenis.scrollTo(targetY, { immediate: false });
     });
   }
 
@@ -487,40 +872,7 @@ class PortfolioApp {
     this._navIndicatorUpdate = updateIndicator;
   }
 
-  _getScrollProgress() {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    if (docHeight <= 0) return 0;
-    return Math.max(0, Math.min(1, scrollTop / docHeight));
-  }
-
-  _onScroll() {
-    const progress = this._getScrollProgress();
-
-    if (this.animation.isReady) {
-      this.animation.setProgress(progress);
-    }
-
-    this.progressFill.style.width = `${progress * 100}%`;
-    this.nav.classList.toggle('scrolled', window.scrollY > 60);
-
-    this._updateHeroFade();
-    this._updateActiveNav();
-    this._updateNavAccent(progress);
-    this._updateParallax();
-
-    if (this._navIndicatorUpdate) this._navIndicatorUpdate();
-  }
-
-  _updateHeroFade() {
-    if (!this.heroContent) return;
-    const fade = Math.min(1, window.scrollY / (window.innerHeight * 0.55));
-    this.heroContent.style.opacity = String(1 - fade);
-    this.heroContent.style.transform = `translateY(${fade * 16}px)`;
-    this.heroContent.style.pointerEvents = fade > 0.85 ? 'none' : 'auto';
-  }
-
-  _updateActiveNav() {
+  _updateActiveNav(activeSectionId) {
     const navMap = {
       hero: ['hero'],
       'about-skills': ['about-skills'],
@@ -531,38 +883,29 @@ class PortfolioApp {
       contact: ['contact'],
     };
 
-    const marker = window.scrollY + window.innerHeight * 0.4;
-    let activeSection = 'hero';
-
-    this.sections.forEach((section) => {
-      const top = section.getBoundingClientRect().top + window.scrollY;
-      const bottom = top + section.offsetHeight;
-      if (marker >= top && marker < bottom) activeSection = section.id;
-    });
-
-    if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
-      activeSection = 'contact';
-    }
-
-    const activeIds = navMap[activeSection] || ['hero'];
+    const activeIds = navMap[activeSectionId] || ['hero'];
     document.querySelectorAll('.nav-links a').forEach((link) => {
       const href = link.getAttribute('href')?.slice(1);
       link.classList.toggle('active', activeIds.includes(href));
     });
+
+    if (this._navIndicatorUpdate) this._navIndicatorUpdate();
   }
 
-  _updateNavAccent(progress) {
+  _updateNavAccent(sectionIndex) {
     const accentMap = [
-      { start: 0, end: 0.15, accent: '#c41e3a' },
-      { start: 0.15, end: 0.35, accent: '#c41e3a' },
-      { start: 0.35, end: 0.55, accent: '#c41e3a' },
-      { start: 0.55, end: 0.75, accent: '#c41e3a' },
-      { start: 0.75, end: 1, accent: '#c41e3a' },
+      { index: 0, accent: '#c41e3a' },
+      { index: 1, accent: '#c41e3a' },
+      { index: 2, accent: '#c41e3a' },
+      { index: 3, accent: '#c41e3a' },
+      { index: 4, accent: '#c41e3a' },
+      { index: 5, accent: '#c41e3a' },
+      { index: 6, accent: '#c41e3a' },
     ];
 
     let currentAccent = '#c41e3a';
     for (const item of accentMap) {
-      if (progress >= item.start && progress < item.end) {
+      if (sectionIndex === item.index) {
         currentAccent = item.accent;
         break;
       }
@@ -571,23 +914,215 @@ class PortfolioApp {
     document.documentElement.style.setProperty('--nav-accent', currentAccent);
   }
 
-  _updateParallax() {
+  _initAnimeAmbient() {
+    if (typeof anime === 'undefined') return;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) return;
 
-    const scrollY = window.scrollY;
-    document.querySelectorAll('.parallax-float').forEach((el) => {
-      const rect = el.getBoundingClientRect();
-      const center = rect.top + rect.height / 2;
-      const offset = (center - window.innerHeight / 2) * 0.04;
-      el.style.transform = `translateY(${offset}px) scale(1.04)`;
+    this._animateAmbientGlows();
+    this._animateFloatingParticles();
+    this._animateMorphingShapes();
+    this._animateTextStagger();
+    this._animateScrollIndicator();
+  }
+
+  _animateAmbientGlows() {
+    const glows = document.querySelectorAll('.ambient-glow');
+    glows.forEach((glow, i) => {
+      const anim = anime({
+        targets: glow,
+        translateX: [
+          { value: (Math.random() - 0.5) * 60, duration: 8000 + i * 2000, easing: 'easeInOutSine' },
+          { value: (Math.random() - 0.5) * 60, duration: 8000 + i * 2000, easing: 'easeInOutSine' }
+        ],
+        translateY: [
+          { value: (Math.random() - 0.5) * 60, duration: 10000 + i * 1500, easing: 'easeInOutSine' },
+          { value: (Math.random() - 0.5) * 60, duration: 10000 + i * 1500, easing: 'easeInOutSine' }
+        ],
+        scale: [
+          { value: 1 + (Math.random() - 0.5) * 0.3, duration: 12000 + i * 3000, easing: 'easeInOutSine' },
+          { value: 1 + (Math.random() - 0.5) * 0.3, duration: 12000 + i * 3000, easing: 'easeInOutSine' }
+        ],
+        opacity: [
+          { value: 0.08 + Math.random() * 0.12, duration: 6000 + i * 2000, easing: 'easeInOutSine' },
+          { value: 0.08 + Math.random() * 0.12, duration: 6000 + i * 2000, easing: 'easeInOutSine' }
+        ],
+        loop: true,
+        direction: 'alternate',
+        autoplay: true
+      });
+      this.ambientAnimations.push(anim);
+    });
+  }
+
+  _animateFloatingParticles() {
+    const heroSection = document.querySelector('#hero');
+    if (!heroSection) return;
+
+    const particleContainer = document.createElement('div');
+    particleContainer.className = 'ambient-particles';
+    particleContainer.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:hidden;';
+    heroSection.appendChild(particleContainer);
+
+    const particleCount = 20;
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      const size = Math.random() * 4 + 1;
+      particle.style.cssText = `
+        position:absolute;
+        width:${size}px;
+        height:${size}px;
+        background:rgba(196,30,58,${0.3 + Math.random() * 0.4});
+        border-radius:50%;
+        left:${Math.random() * 100}%;
+        top:${Math.random() * 100}%;
+        filter:blur(1px);
+      `;
+      particleContainer.appendChild(particle);
+
+      const anim = anime({
+        targets: particle,
+        translateX: (Math.random() - 0.5) * 200,
+        translateY: (Math.random() - 0.5) * 200,
+        scale: [1, 0.3, 1],
+        opacity: [0.6, 0.1, 0.6],
+        rotate: Math.random() * 360,
+        duration: 15000 + Math.random() * 10000,
+        easing: 'easeInOutSine',
+        loop: true,
+        direction: 'alternate',
+        delay: Math.random() * 5000,
+        autoplay: true
+      });
+      this.ambientAnimations.push(anim);
+    }
+  }
+
+  _animateMorphingShapes() {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach((section, sectionIndex) => {
+      const shapeContainer = document.createElement('div');
+      shapeContainer.className = 'morphing-shape';
+      shapeContainer.style.cssText = `
+        position:absolute;
+        width:300px;
+        height:300px;
+        border-radius:50%;
+        background:linear-gradient(135deg,rgba(196,30,58,0.08),rgba(123,33,168,0.05));
+        filter:blur(80px);
+        pointer-events:none;
+        z-index:0;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        opacity:0.6;
+      `;
+      section.appendChild(shapeContainer);
+
+      const anim = anime({
+        targets: shapeContainer,
+        borderRadius: ['50%', '30% 70% 70% 30% / 30% 30% 70% 70%', '50%'],
+        scale: [1, 1.3, 1],
+        rotate: [0, 120, 240, 360],
+        translateX: (Math.random() - 0.5) * 100,
+        translateY: (Math.random() - 0.5) * 100,
+        duration: 20000 + sectionIndex * 3000,
+        easing: 'easeInOutSine',
+        loop: true,
+        direction: 'alternate',
+        autoplay: true
+      });
+      this.ambientAnimations.push(anim);
+    });
+  }
+
+  _animateTextStagger() {
+    const headlines = document.querySelectorAll('h1, h2.lab-head-copy h2, h2.roid-head-copy h2, .glass-card h2');
+    headlines.forEach((headline) => {
+      if (headline.dataset.staggered) return;
+      headline.dataset.staggered = 'true';
+      
+      const text = headline.textContent;
+      if (text.length < 3) return;
+      
+      headline.innerHTML = text.split('').map(char => 
+        char === ' ' ? '<span class="char">&nbsp;</span>' : `<span class="char">${char}</span>`
+      ).join('');
+      
+      const chars = headline.querySelectorAll('.char');
+      const anim = anime({
+        targets: chars,
+        opacity: [0, 1],
+        translateY: [30, 0],
+        rotateX: [-90, 0],
+        scale: [0.8, 1],
+        duration: 800,
+        delay: anime.stagger(40, { start: 200 }),
+        easing: 'easeOutExpo',
+        autoplay: false
+      });
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            anim.play();
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      observer.observe(headline);
+    });
+  }
+
+  _animateScrollIndicator() {
+    if (typeof gsap !== 'undefined') return; // GSAP handles this
+    
+    const scrollDot = document.querySelector('.scroll-indicator-dot');
+    if (!scrollDot) return;
+
+    const anim = anime({
+      targets: scrollDot,
+      translateY: [0, 43],
+      opacity: [1, 0.2],
+      duration: 1600,
+      easing: 'easeInOutQuad',
+      loop: true,
+      direction: 'alternate',
+      autoplay: true
+    });
+    this.ambientAnimations.push(anim);
+  }
+
+  _initCarousels() {
+    const MARQUEE_COPIES = 2;
+
+    CAROUSEL_DATA.forEach((config) => {
+      const marquee = document.querySelector(config.container);
+      if (!marquee) return;
+
+      const theme = CAROUSEL_THEMES[config.key];
+
+      // Interleave the items: even indices scroll in the top row,
+      // odd indices in the bottom row, which runs the other way.
+      const topItems = config.items.filter((_, i) => i % 2 === 0);
+      const bottomItems = config.items.filter((_, i) => i % 2 === 1);
+
+      const topRow = document.createElement('div');
+      topRow.className = 'marquee-row marquee-row--top';
+      topRow.appendChild(buildMarqueeTrack(topItems, theme, MARQUEE_COPIES));
+
+      const bottomRow = document.createElement('div');
+      bottomRow.className = 'marquee-row marquee-row--bottom';
+      bottomRow.appendChild(buildMarqueeTrack(bottomItems, theme, MARQUEE_COPIES));
+
+      marquee.append(topRow, bottomRow);
     });
   }
 
   _loop(time) {
     if (this.lenis) {
       this.lenis.raf(time);
-      ScrollTrigger.update();
+      this._onScroll(this.lenis.animatedScroll || window.scrollY);
     }
     this.animation.tick();
     requestAnimationFrame((t) => this._loop(t));
