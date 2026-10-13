@@ -218,49 +218,24 @@ class AutoplayClips {
 // Double-layered full-bleed infinite carousels.
 // Slides are generated from the lists below, so dropping in real
 // assets later is just a matter of adding another entry.
-//   kind: 'img' | 'video' | 'ph'  ('ph' = themed placeholder)
+//   kind: 'img' | 'video'
 // ---------------------------------------------------------------
-const CAROUSEL_THEMES = {
-  work: [
-    'linear-gradient(135deg, #c41e3a33, #7B21A833)',
-    'linear-gradient(135deg, #7B21A833, #1a1a2e)',
-    'linear-gradient(135deg, #1a1a2e, #16213e)',
-  ],
-  unreal: [
-    'linear-gradient(135deg, #7B21A833, #c41e3a33)',
-    'linear-gradient(135deg, #0f0f23, #1a1a2e)',
-    'linear-gradient(135deg, #1a1a2e, #7B21A833)',
-  ],
-  unity: [
-    'linear-gradient(135deg, #1B9A5933, #0d4d2e)',
-    'linear-gradient(135deg, #0d2b4d, #1a3a5c)',
-    'linear-gradient(135deg, #2d5a27, #1B9A5933)',
-  ],
-  webdev: [
-    'linear-gradient(135deg, #4F46E533, #7C3AED33)',
-    'linear-gradient(135deg, #7C3AED33, #1a1a2e)',
-    'linear-gradient(135deg, #1a1a2e, #4F46E533)',
-  ],
-};
-
 const CAROUSEL_DATA = [
   {
     key: 'work',
     container: '.marquee-work',
     items: [
       { kind: 'img', src: 'extra_images/ethicallabs_project.png', alt: 'Totally Ethical Labs gameplay' },
-      { kind: 'video', src: 'extra_images/TEL-bug.mp4', alt: 'Totally Ethical Labs bug fix' },
+      { kind: 'video', src: 'extra_images/TEL-bug.mp4', poster: 'extra_images/TEL-bug-poster.jpg', alt: 'Totally Ethical Labs bug fix' },
       { kind: 'img', src: 'extra_images/TEL%20-%20logo.png', alt: 'Totally Ethical Labs logo' },
-      { kind: 'video', src: 'extra_images/tel_animation.mp4', alt: 'Totally Ethical Labs animation' },
       { kind: 'img', src: 'extra_images/tel-image.png', alt: 'Totally Ethical Labs screenshot' },
       { kind: 'img', src: 'extra_images/tel-image%202.png', alt: 'Totally Ethical Labs environment' },
-      { kind: 'ph', label: 'Magnet Ability' },
-      { kind: 'ph', label: 'Concept Art · Environment' },
-      { kind: 'ph', label: 'Character · Specimen 07' },
-      { kind: 'ph', label: 'UI / HUD Design' },
-      { kind: 'ph', label: 'Weapon Tuning' },
-      { kind: 'ph', label: 'Lab Architecture' },
-      { kind: 'ph', label: 'VFX · Pickup Pull' },
+      { kind: 'video', src: 'extra_images/TEL%20chair%20throwing/TEL%20chair%20throwing-1.mp4', poster: 'extra_images/TEL%20chair%20throwing/TEL%20chair%20throwing-1-poster.jpg', alt: 'Totally Ethical Labs magnet ability' },
+      { kind: 'video', src: 'extra_images/TEL%20intro%20scene/TEL%20intro%20scene-1.mp4', poster: 'extra_images/TEL%20intro%20scene/TEL%20intro%20scene-1-poster.jpg', alt: 'Totally Ethical Labs intro scene' },
+      { kind: 'video', src: 'extra_images/TEL%20main%20menu.mp4', poster: 'extra_images/TEL%20main%20menu-poster.jpg', alt: 'Totally Ethical Labs main menu' },
+      { kind: 'video', src: 'extra_images/TEL%20AK%20shooting%20gameplay/TEL%20AK%20shooting%20gameplay-1.mp4', poster: 'extra_images/TEL%20AK%20shooting%20gameplay/TEL%20AK%20shooting%20gameplay-1-poster.jpg', alt: 'Totally Ethical Labs AK shooting' },
+      { kind: 'video', src: 'extra_images/TEL%20research/TEL%20research-1.mp4', poster: 'extra_images/TEL%20research/TEL%20research-1-poster.jpg', alt: 'Totally Ethical Labs research' },
+      { kind: 'video', src: 'extra_images/TEL%20table%20smash/TEL%20table%20smash-1.mp4', poster: 'extra_images/TEL%20table%20smash/TEL%20table%20smash-1-poster.jpg', alt: 'Totally Ethical Labs table smash' },
     ],
   },
   {
@@ -271,10 +246,10 @@ const CAROUSEL_DATA = [
       { kind: 'video', src: 'extra_images/RoidRager4.mp4', poster: 'extra_images/RoidRager4-poster.jpg', alt: 'Roid Rager boss clip' },
       { kind: 'img', src: 'extra_images/RoidRager2.png', alt: 'Roid Rager title screen' },
       { kind: 'img', src: 'extra_images/RoidRager1.png', alt: 'Roid Rager gameplay still' },
-      { kind: 'video', src: 'extra_images/RoidRager%20-%20tazer.mp4', alt: 'Roid Rager tazer weapon' },
-      { kind: 'video', src: 'extra_images/roidrager-slots.mp4', alt: 'Roid Rager slot machine' },
-      { kind: 'video', src: 'extra_images/roidrager-menu.mp4', alt: 'Roid Rager main menu' },
-      { kind: 'video', src: 'extra_images/roidrager-beer.mp4', alt: 'Roid Rager beer pickup' },
+      { kind: 'video', src: 'extra_images/RoidRager%20-%20tazer.mp4', poster: 'extra_images/RoidRager%20-%20tazer-poster.jpg', alt: 'Roid Rager tazer weapon' },
+      { kind: 'video', src: 'extra_images/roidrager-slots.mp4', poster: 'extra_images/roidrager-slots-poster.jpg', alt: 'Roid Rager slot machine' },
+      { kind: 'video', src: 'extra_images/roidrager-menu.mp4', poster: 'extra_images/roidrager-menu-poster.jpg', alt: 'Roid Rager main menu' },
+      { kind: 'video', src: 'extra_images/roidrager-beer.mp4', poster: 'extra_images/roidrager-beer-poster.jpg', alt: 'Roid Rager beer pickup' },
       { kind: 'img', src: 'extra_images/roidrager-pig.png', alt: 'Roid Rager pig enemy' },
       { kind: 'img', src: 'extra_images/roidrager3.png', alt: 'Roid Rager gameplay screenshot' },
       { kind: 'img', src: 'extra_images/roidrager4.png', alt: 'Roid Rager boss screenshot' },
@@ -285,8 +260,8 @@ const CAROUSEL_DATA = [
     container: '.marquee-unity',
     items: [
       { kind: 'video', src: 'extra_images/unity_project.mp4', poster: 'extra_images/unity_project-poster.jpg', alt: 'Procedural voxel terrain generator' },
-      { kind: 'video', src: 'extra_images/unity_script.mp4', alt: 'Unity voxel scripting' },
-      { kind: 'video', src: 'extra_images/unity-animation.mp4', alt: 'Unity character animation' },
+      { kind: 'video', src: 'extra_images/unity_script.mp4', poster: 'extra_images/unity_script-poster.jpg', alt: 'Unity voxel scripting' },
+      { kind: 'video', src: 'extra_images/unity-animation.mp4', poster: 'extra_images/unity-animation-poster.jpg', alt: 'Unity character animation' },
       { kind: 'img', src: 'extra_images/image3%20unity.png', alt: 'Unity project screenshot' },
       { kind: 'img', src: 'extra_images/unity%20cave.png', alt: 'Unity cave generation' },
       { kind: 'img', src: 'extra_images/unity%20layers.png', alt: 'Unity terrain layers' },
@@ -299,17 +274,17 @@ const CAROUSEL_DATA = [
     container: '.marquee-webdev',
     items: [
       { kind: 'video', src: 'extra_images/website.mp4', poster: 'extra_images/website-poster.jpg', alt: 'This portfolio site' },
-      { kind: 'video', src: 'extra_images/portfolio_site_1.mp4', alt: 'Portfolio site v1' },
-      { kind: 'video', src: 'extra_images/old_porfoliosite.mp4', alt: 'Old portfolio site' },
-      { kind: 'video', src: 'extra_images/kermisfuif_website.mp4', alt: 'Kermisfuif website' },
-      { kind: 'video', src: 'extra_images/jorismenten_2_website.mp4', alt: 'Joris Menten website' },
+      { kind: 'video', src: 'extra_images/portfolio_site_1.mp4', poster: 'extra_images/portfolio_site_1-poster.jpg', alt: 'Portfolio site v1' },
+      { kind: 'video', src: 'extra_images/old_porfoliosite.mp4', poster: 'extra_images/old_porfoliosite-poster.jpg', alt: 'Old portfolio site' },
+      { kind: 'video', src: 'extra_images/kermisfuif_website.mp4', poster: 'extra_images/kermisfuif_website-poster.jpg', alt: 'Kermisfuif website' },
+      { kind: 'video', src: 'extra_images/jorismenten_2_website.mp4', poster: 'extra_images/jorismenten_2_website-poster.jpg', alt: 'Joris Menten website' },
       { kind: 'img', src: 'extra_images/clampy2.0%20-%20web.png', alt: 'Clampy 2.0 website' },
       { kind: 'img', src: 'extra_images/web%20game.png', alt: 'Web game project' },
-      { kind: 'ph', label: 'Tablet · 768px' },
-      { kind: 'ph', label: 'React / Next.js' },
-      { kind: 'ph', label: 'TypeScript / Vite' },
-      { kind: 'ph', label: 'Three.js Scenes' },
-      { kind: 'ph', label: 'GSAP Motion' },
+      { kind: 'img', src: 'extra_images/web%20page%20retro%20green.png', alt: 'Retro green web page' },
+      { kind: 'video', src: 'extra_images/web%20vm%20dev.mp4', poster: 'extra_images/web%20vm%20dev-poster.jpg', alt: 'Web development process' },
+      { kind: 'video', src: 'extra_images/vm%20development%20inro.mp4', poster: 'extra_images/vm%20development%20inro-poster.jpg', alt: 'Development intro' },
+      { kind: 'img', src: 'extra_images/web%203d%20model%20viewer.png', alt: 'Three.js 3D model viewer' },
+      { kind: 'img', src: 'extra_images/web%20orc.png', alt: 'Web orc character' },
     ],
   },
 ];
@@ -317,51 +292,40 @@ const CAROUSEL_DATA = [
 // Builds one marquee track: the row's tiles repeated `copies` times so
 // the track is at least twice the container wide and the -50% translateX
 // keyframe loops back to an identical frame (seamless, no jump).
-function buildMarqueeTrack(items, theme, copies) {
+function buildMarqueeTrack(items, copies) {
   const track = document.createElement('div');
   track.className = 'marquee-track';
 
   for (let c = 0; c < copies; c += 1) {
-    items.forEach((item, i) => {
+    items.forEach((item) => {
       const tile = document.createElement('div');
       tile.className = 'marquee-tile';
 
-      if (item.kind === 'ph') {
-        const media = document.createElement('div');
-        media.className = 'tile-media placeholder-tile';
-        media.style.background = theme[i % theme.length];
-        const label = document.createElement('span');
-        label.textContent = item.label;
-        media.appendChild(label);
-        tile.appendChild(media);
+      const media = document.createElement('div');
+      media.className = 'tile-media';
+
+      if (item.kind === 'video') {
+        const video = document.createElement('video');
+        video.src = item.src;
+        if (item.poster) video.poster = item.poster;
+        video.muted = true;
+        video.loop = true;
+        video.playsInline = true;
+        video.preload = 'none';
+        if (item.alt) video.setAttribute('aria-label', item.alt);
+        video.setAttribute('data-autoplay', '');
+        video.setAttribute('muted', '');
+        media.appendChild(video);
       } else {
-        const media = document.createElement('div');
-        media.className = 'tile-media';
-
-        if (item.kind === 'video') {
-          const video = document.createElement('video');
-          video.src = item.src;
-          if (item.poster) video.poster = item.poster;
-          video.muted = true;
-          video.loop = true;
-          video.playsInline = true;
-          video.preload = 'none';
-          if (item.alt) video.setAttribute('aria-label', item.alt);
-          video.setAttribute('data-autoplay', '');
-          video.setAttribute('muted', '');
-          media.appendChild(video);
-        } else {
-          const img = document.createElement('img');
-          img.src = item.src;
-          img.alt = item.alt || '';
-          img.loading = 'lazy';
-          img.decoding = 'async';
-          media.appendChild(img);
-        }
-
-        tile.appendChild(media);
+        const img = document.createElement('img');
+        img.src = item.src;
+        img.alt = item.alt || '';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        media.appendChild(img);
       }
 
+      tile.appendChild(media);
       track.appendChild(tile);
     });
   }
@@ -1100,8 +1064,6 @@ class PortfolioApp {
       const marquee = document.querySelector(config.container);
       if (!marquee) return;
 
-      const theme = CAROUSEL_THEMES[config.key];
-
       // Interleave the items: even indices scroll in the top row,
       // odd indices in the bottom row, which runs the other way.
       const topItems = config.items.filter((_, i) => i % 2 === 0);
@@ -1109,11 +1071,11 @@ class PortfolioApp {
 
       const topRow = document.createElement('div');
       topRow.className = 'marquee-row marquee-row--top';
-      topRow.appendChild(buildMarqueeTrack(topItems, theme, MARQUEE_COPIES));
+      topRow.appendChild(buildMarqueeTrack(topItems, MARQUEE_COPIES));
 
       const bottomRow = document.createElement('div');
       bottomRow.className = 'marquee-row marquee-row--bottom';
-      bottomRow.appendChild(buildMarqueeTrack(bottomItems, theme, MARQUEE_COPIES));
+      bottomRow.appendChild(buildMarqueeTrack(bottomItems, MARQUEE_COPIES));
 
       marquee.append(topRow, bottomRow);
     });

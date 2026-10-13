@@ -688,12 +688,11 @@ img, video {
 .scroll-indicator-dot {
   position: absolute;
   top: 0;
-  left: 50%;
+  left: calc(50% - 2.5px);
   width: 5px;
   height: 5px;
   background: var(--accent);
   border-radius: 50%;
-  transform: translate(-50%, 0);
   box-shadow: 0 0 8px var(--accent-glow), 0 0 16px var(--accent-glow);
 }
 
@@ -2575,7 +2574,7 @@ img, video {
   height: 100%;
   overflow: hidden;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.03);
+  background: #151515;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
 }
 
@@ -2586,26 +2585,6 @@ img, video {
   object-fit: cover;
   object-position: center;
   display: block;
-}
-
-/* Placeholder tiles inherit the same footprint as real media */
-.placeholder-tile {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 1rem;
-  color: var(--text-muted);
-  font-family: var(--font-body);
-  font-size: clamp(0.62rem, 0.95vw, 0.75rem);
-  font-weight: 500;
-  line-height: 1.35;
-  letter-spacing: 0.01em;
-  border: 1px solid var(--surface-border);
-  border-radius: 10px;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.03);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2661,8 +2640,7 @@ img, video {
   .marquee-tile {
     margin-right: 16px;
   }
-  .tile-media,
-  .placeholder-tile {
+  .tile-media {
     border-radius: 8px;
   }
   .section-work,
