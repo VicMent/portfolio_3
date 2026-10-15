@@ -2596,6 +2596,14 @@ img, video {
   border-radius: 10px;
   background: #151515;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  transition: box-shadow 0.3s var(--ease-out);
+}
+
+/* Subtle hover cue on carousel tiles: the hovered video is the one that plays.
+   The zoom is applied to the inner media so it stays clipped inside the
+   rounded frame and never gets cut off by the row's overflow:hidden. */
+.tile-media:hover {
+  box-shadow: 0 16px 48px rgba(196, 30, 58, 0.35);
 }
 
 .tile-media img,
@@ -2605,11 +2613,23 @@ img, video {
   object-fit: cover;
   object-position: center;
   display: block;
+  transition: transform 0.3s var(--ease-out), filter 0.3s var(--ease-out);
+}
+
+.tile-media:hover img,
+.tile-media:hover video {
+  transform: scale(1.04);
+  filter: brightness(1.05) saturate(1.1);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .marquee-track {
     animation: none;
+  }
+  .tile-media,
+  .tile-media img,
+  .tile-media video {
+    transition: none;
   }
 }
 

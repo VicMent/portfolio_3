@@ -162,6 +162,7 @@ class AutoplayClips {
     this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.rows = new Map();
     this.ratios = new WeakMap();
+    this.hoveredClip = null; // tile currently under the pointer, plays on hover
 
     document.querySelectorAll('[data-autoplay]').forEach((video) => {
       const row = video.closest('.marquee');
@@ -169,6 +170,20 @@ class AutoplayClips {
       if (!this.rows.has(row)) this.rows.set(row, new Set());
       this.rows.get(row).add(video);
       this.ratios.set(video, 0);
+
+      // Hover wins: the hovered tile's video plays and the rest of the
+      // row pauses, so only one clip ever plays at a time. On hover end
+      // we clear the priority and let visibility-based autoplay resume.
+      video.addEventListener('mouseenter', () => {
+        this.hoveredClip = video;
+        this._syncRow(row);
+      });
+      video.addEventListener('mouseleave', () => {
+        if (this.hoveredClip === video) {
+          this.hoveredClip = null;
+          this._syncRow(row);
+        }
+      });
     });
 
     this.observer = new IntersectionObserver(
@@ -193,19 +208,26 @@ class AutoplayClips {
     const clips = this.rows.get(row);
     if (!clips) return;
 
+    // The hovered tile takes priority; otherwise the most-visible clip plays.
     let best = null;
     let bestRatio = 0.4; // only autoplay when clearly in view
 
-    clips.forEach((clip) => {
-      const ratio = this.ratios.get(clip) || 0;
-      if (ratio > bestRatio) {
-        bestRatio = ratio;
-        best = clip;
-      }
-    });
+    if (this.hoveredClip && clips.has(this.hoveredClip)) {
+      best = this.hoveredClip;
+    } else {
+      clips.forEach((clip) => {
+        const ratio = this.ratios.get(clip) || 0;
+        if (ratio > bestRatio) {
+          bestRatio = ratio;
+          best = clip;
+        }
+      });
+    }
 
     clips.forEach((clip) => {
-      if (clip === best && !this.reduced) {
+      const isHovered = clip === this.hoveredClip;
+      const wantPlay = isHovered || (!this.reduced && clip === best);
+      if (wantPlay) {
         if (clip.paused) clip.play().catch(() => {});
       } else if (!clip.paused) {
         clip.pause();
