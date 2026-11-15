@@ -3,13 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Vic Menten - IT and indie game programmer working with Unity, Unreal Engine 5, and interactive web experiences.">
-  <title>Vic Menten</title>
+  <title>Vic Menten · IT &amp; Game Programmer</title>
+  <meta name="description" content="Portfolio of Vic Menten, an IT graduate and game programmer from Belgium working on web development, Unreal Engine 5 and Unity projects.">
+  <meta name="author" content="Vic Menten">
+  <meta name="theme-color" content="#0d0d0d">
+
+  <!-- Social preview (LinkedIn, Discord, ...). Use absolute URLs for og:image / og:url once the site has its own domain. -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Vic Menten · IT &amp; Game Programmer">
+  <meta property="og:description" content="Web development, Unreal Engine 5 and Unity projects by Vic Menten.">
+  <meta property="og:image" content="og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" href="frames/lg/0001.webp" as="image" media="(min-width: 901px)">
+  <link rel="preload" href="frames/sm/0001.webp" as="image" media="(max-width: 900px)">
   <link rel="stylesheet" href="css/style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
 </head>
 <body>
   <!-- Fixed background layers -->
@@ -21,13 +35,11 @@
   <div class="ambient-glow glow-3" aria-hidden="true"></div>
 
   <!-- Loader -->
-  <div class="loader" id="loader" aria-label="Loading">
-    <div class="loader-ring" aria-hidden="true">
-      <div class="loader-ring-inner"></div>
-    </div>
+  <div class="loader" id="loader" role="status" aria-label="Loading">
+    <div class="loader-ring" aria-hidden="true"></div>
     <div class="loader-content">
       <p class="loader-title">LOADING</p>
-      <p class="loader-status" id="loader-status">INITIALIZING</p>
+      <p class="loader-status" id="loader-status">Loading</p>
       <div class="loader-bar">
         <div class="loader-bar-fill" id="loader-bar-fill"></div>
       </div>
@@ -36,18 +48,18 @@
   </div>
 
   <!-- Navigation -->
-  <nav class="nav" id="nav">
+  <nav class="nav" id="nav" aria-label="Main">
     <a href="#hero" class="nav-logo">Vic Menten</a>
-    <ul class="nav-links">
-      <li><a href="#about-skills" data-section="about-skills">About &amp; Skills</a></li>
-      <li><a href="#webdev" data-section="webdev">Web Dev</a></li>
-      <li><a href="#work" data-section="work">Games</a></li>
-      <li><a href="#unreal" data-section="unreal">Unreal</a></li>
-      <li><a href="#unity" data-section="unity">Unity</a></li>
-      <li><a href="extra_images/Vic_Menten_CV.pdf" class="nav-cv" target="_blank" rel="noopener">CV</a></li>
-      <li><a href="#contact" data-section="contact" class="nav-cta">Contact</a></li>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#about-skills">About &amp; Skills</a></li>
+      <li><a href="#webdev">Web Dev</a></li>
+      <li><a href="#work">Games</a></li>
+      <li><a href="#unreal">Unreal</a></li>
+      <li><a href="#unity">Unity</a></li>
+      <li><a href="cv.html" class="nav-cv">CV</a></li>
+      <li><a href="#contact" class="nav-cta">Contact</a></li>
     </ul>
-    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+    <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-controls="nav-links" aria-expanded="false">
       <span></span><span></span>
     </button>
   </nav>
@@ -58,55 +70,48 @@
     <div class="scroll-progress-fill" id="scroll-progress-fill"></div>
   </div>
 
-  <!-- Dock -->
-  <aside class="dock" aria-label="Quick links">
-    <a href="https://vic-ment.itch.io/totally-ethical-labs" target="_blank" rel="noopener">Play</a>
-    <a href="cv.html">CV</a>
-    <a href="https://www.linkedin.com/in/vicmenten" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="https://vic-ment.itch.io" target="_blank" rel="noopener">itch.io</a>
-    <a href="https://github.com/VicMenten" target="_blank" rel="noopener">GitHub</a>
-  </aside>
-
-  <div id="fullpage">
+  <main id="fullpage">
     <!-- ============================ HERO ============================ -->
-    <section class="section section-hero" id="hero" data-frame-start="0" data-frame-end="20" data-accent="red">
-      <div class="section-content hero-content">
-        <p class="eyebrow reveal"></p>
-        <h1 class="hero-name reveal"></h1>
+    <section class="section section-hero" id="hero">
+      <div class="hero-content">
+        <!-- On desktop the 3D name in the background animation is the visual title; this heading
+             is for search engines and screen readers, and is shown as text on portrait phones. -->
+        <h1 class="hero-name">Vic Menten</h1>
         <p class="hero-sub reveal">Development Portfolio</p>
+        <p class="hero-meta reveal">Software · Web · Games</p>
         <div class="hero-actions reveal">
-          <a class="contact-btn primary" href="#work">Itch</a>
-          <a class="contact-btn secondary" href="cv.html">CV</a>
+          <a class="contact-btn primary" href="#webdev">View my work</a>
+          <a class="contact-btn secondary" href="https://vic-ment.itch.io/totally-ethical-labs" target="_blank" rel="noopener">Play my game</a>
         </div>
-        <a class="scroll-indicator reveal" href="#about-skills" aria-label="Scroll to next section">
+        <a class="scroll-indicator reveal" href="#about-skills" aria-label="Scroll to About &amp; Skills">
           <span class="scroll-indicator-text">Scroll</span>
-          <div class="scroll-indicator-line">
-            <div class="scroll-indicator-dot"></div>
-          </div>
+          <span class="scroll-indicator-line" aria-hidden="true">
+            <span class="scroll-indicator-dot"></span>
+          </span>
         </a>
       </div>
     </section>
 
     <!-- ======================= ABOUT & SKILLS ======================= -->
-    <section class="section section-about-skills" id="about-skills" data-frame-start="21" data-frame-end="45" data-accent="red">
+    <section class="section section-about-skills" id="about-skills">
       <div class="section-content about-skills-grid">
         <article class="glass-card glass-card-about reveal" id="about">
           <h2>About</h2>
           <p class="lead">I'm a 22-year-old IT graduate (Bachelor in Applied IT / Digital Experience at UCLL), focused on software and web development.</p>
           <p>On top of that, I completed a one-year specialization in Indie Game Development at Syntra. That gave me hands-on experience with game engines and a 3D art pipeline, so I can work on both the technical and the creative side.</p>
           <div class="about-aside">
-            <p>In my free time i enjoy going to the gym and being a scouts leader, which helped me build teamwork and leadership skills.</p>
+            <p>In my free time I enjoy going to the gym and being a scout leader, which helped me build teamwork and leadership skills.</p>
             <figure class="about-photo">
-              <img src="extra_images/me%20on%20a%20mountain%20top.jpeg" alt="On a mountain ridge">
+              <img src="extra_images/me%20on%20a%20mountain%20top.webp" alt="Vic on a mountain ridge" width="76" height="100" loading="lazy">
             </figure>
           </div>
           <div class="edu-row" aria-label="Education">
             <div class="edu-item">
-              <img src="extra_images/ucll_logo.png" alt="UCLL" class="edu-logo edu-logo-ucll">
-              <span>Bachelor TI</span>
+              <img src="extra_images/ucll_logo.png" alt="UCLL" class="edu-logo">
+              <span>Bachelor Applied IT</span>
             </div>
             <div class="edu-item">
-              <img src="extra_images/Synta-logo.png" alt="Syntra" class="edu-logo edu-logo-syntra">
+              <img src="extra_images/Synta-logo.png" alt="Syntra" class="edu-logo">
               <span>Indie Game Development</span>
             </div>
           </div>
@@ -114,7 +119,7 @@
 
         <aside class="glass-card glass-card-skills reveal" id="skills">
           <h2>Skills</h2>
-          <p class="lead about-one">A technical and creative foundation for building interactive experiences.</p>
+          <p class="lead">A technical and creative foundation for building interactive experiences.</p>
           <dl class="skill-list">
             <div class="skill-row">
               <dt>Programming &amp; Web</dt>
@@ -122,28 +127,24 @@
             </div>
             <div class="skill-row">
               <dt>Software Dev</dt>
-              <dd>Clean architecture, server management, software development, version control, testing &amp; deployment</dd>
+              <dd>Clean architecture, server management, version control, testing &amp; deployment</dd>
             </div>
             <div class="skill-row">
               <dt>Game Engines <span class="skill-extra">· extra</span></dt>
               <dd>
                 <span class="brand">
-                  <span class="icon-chip">
-                    <img src="extra_images/unreal-engine-white-icon.webp" alt="" class="brand-icon">
-                  </span>
+                  <span class="icon-chip"><img src="extra_images/unreal-engine-white-icon.webp" alt="" class="brand-icon"></span>
                   Unreal Engine 5
                 </span>
                 <span class="brand">
-                  <span class="icon-chip">
-                    <img src="extra_images/unity-game-engine-icon.webp" alt="" class="brand-icon">
-                  </span>
+                  <span class="icon-chip"><img src="extra_images/unity-game-engine-icon.webp" alt="" class="brand-icon"></span>
                   Unity
                 </span>
               </dd>
             </div>
             <div class="skill-row">
               <dt>3D Pipeline <span class="skill-extra">· extra</span></dt>
-              <dd>Modeling, sculpting, retopology, rigging in Blender, Substance Painter</dd>
+              <dd>Modeling, sculpting, retopology and rigging in Blender; texturing in Substance Painter</dd>
             </div>
             <div class="skill-row">
               <dt>Looking for</dt>
@@ -153,7 +154,7 @@
               <dt>GitHub</dt>
               <dd>
                 <a href="https://github.com/VicMent" target="_blank" rel="noopener">VicMent</a>
-                <span>·</span>
+                <span aria-hidden="true">·</span>
                 <a href="https://github.com/VicMenten" target="_blank" rel="noopener">old account</a>
               </dd>
             </div>
@@ -163,110 +164,112 @@
     </section>
 
     <!-- ============================ WEB DEV ============================ -->
-    <section class="section section-webdev" id="webdev" data-frame-start="46" data-frame-end="70" data-accent="red">
-      <div class="section-header reveal">
-        <span class="project-tag">Software &amp; Web Development</span>
+    <section class="section section-webdev" id="webdev">
+      <header class="section-header reveal">
+        <span class="project-tag">Software &amp; web development</span>
         <h2>Web Development</h2>
-        <p class="project-desc">Responsive, modular experiences, from client websites and web games to interactive 3D viewers, built with clean architecture, solid UX, and fast performance.</p>
-      </div>
+        <p class="project-desc">Responsive, modular experiences, from client websites and web games to interactive 3D viewers, built with clean architecture, solid UX and fast performance.</p>
+      </header>
 
       <div class="carousel-stack reveal">
         <div class="marquee marquee-webdev"></div>
       </div>
 
-      <div class="project-links">
-        <ul class="feature-list-inline">
-          <li><span>HTML5 / CSS3</span></li>
-          <li><span>JavaScript / TypeScript</span></li>
-          <li><span>React / Next.js</span></li>
-          <li><span>Node.js / PHP</span></li>
-          <li><span>Three.js / GSAP</span></li>
-          <li><span>WCAG 2.1 AA</span></li>
+      <div class="project-links reveal">
+        <ul class="feature-list-inline" aria-label="Technologies">
+          <li>HTML5 / CSS3</li>
+          <li>JavaScript / TypeScript</li>
+          <li>React / Next.js</li>
+          <li>Node.js / PHP</li>
+          <li>Three.js / GSAP</li>
+          <li>WCAG 2.1 AA</li>
         </ul>
       </div>
     </section>
 
-    <!-- ==================== WORK · TOTALLY ETHICAL LABS ==================== -->
-    <section class="section section-work" id="work" data-frame-start="71" data-frame-end="95" data-accent="red">
-      <div class="section-header reveal">
-        <span class="project-tag">Game Jam · side project</span>
-        <p class="game-group-label">Game development · personal &amp; academic project</p>
+    <!-- ==================== GAMES · TOTALLY ETHICAL LABS ==================== -->
+    <section class="section section-work" id="work">
+      <header class="section-header reveal">
+        <span class="project-tag">Game jam · 2026</span>
         <h2>Totally Ethical Labs</h2>
-        <p class="project-desc">2026 · One-week jam. Figure out a way too kill the invincible alien. I handled the programming while my fellow student Bert created the assets.</p>
-      </div>
+        <p class="project-desc">A one-week game jam: figure out a way to kill the invincible alien. I handled all the programming while fellow student Bert created the assets.</p>
+      </header>
 
       <div class="carousel-stack reveal">
         <div class="marquee marquee-work"></div>
       </div>
 
-      <div class="project-links">
+      <div class="project-links reveal">
         <a class="project-link" href="https://vic-ment.itch.io/totally-ethical-labs" target="_blank" rel="noopener">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           Download on itch.io
         </a>
-        <span class="project-note">No WebGL · Jam zip · Windows</span>
+        <span class="project-note">Windows · free download</span>
       </div>
     </section>
 
     <!-- ========================= UNREAL · ROID RAGER ========================= -->
-    <section class="section section-unreal" id="unreal" data-frame-start="96" data-frame-end="125" data-accent="red">
-      <div class="section-header reveal">
-        <span class="project-tag">Game dev · learning project</span>
-        <p class="game-group-label">Game development · personal &amp; academic project</p>
-        <h2>Unreal Engine · Roid Rager</h2>
-        <p class="project-desc">Retro-styled FPS wave-survival. Still in development.</p>
-      </div>
+    <section class="section section-unreal" id="unreal">
+      <header class="section-header reveal">
+        <span class="project-tag">Unreal Engine 5 · in development</span>
+        <h2>Roid Rager</h2>
+        <p class="project-desc">A retro-styled FPS wave-survival game, built with Blueprints and C++.</p>
+      </header>
 
       <div class="carousel-stack reveal">
         <div class="marquee marquee-unreal"></div>
       </div>
 
-      <div class="project-links">
-        <span class="project-status">In Development · Unreal Engine 5 · Blueprints + C++</span>
+      <div class="project-links reveal">
+        <ul class="feature-list-inline" aria-label="Technologies">
+          <li>Unreal Engine 5</li>
+          <li>Blueprints</li>
+          <li>C++</li>
+          <li>Blender</li>
+        </ul>
       </div>
     </section>
 
     <!-- ================== UNITY · PROCEDURAL VOXEL TERRAIN ================== -->
-    <section class="section section-unity" id="unity" data-frame-start="126" data-frame-end="155" data-accent="red">
-      <div class="section-header reveal">
-        <span class="project-tag">Game dev · academic project</span>
-        <p class="game-group-label">Game development · personal &amp; academic project</p>
-        <h2>Unity · Procedural Voxel Terrain</h2>
-        <p class="project-desc">Infinite chunk-based worlds. Perlin noise, cave carving, animated water, custom shaders and handwritten C# systems.</p>
-      </div>
+    <section class="section section-unity" id="unity">
+      <header class="section-header reveal">
+        <span class="project-tag">Unity · academic project</span>
+        <h2>Procedural Voxel Terrain</h2>
+        <p class="project-desc">Infinite chunk-based worlds with Perlin noise, cave carving, animated water, custom shaders and handwritten C# systems.</p>
+      </header>
 
       <div class="carousel-stack reveal">
         <div class="marquee marquee-unity"></div>
       </div>
 
-      <div class="project-links">
-        <ul class="feature-list-inline">
-          <li><span>Unity 2022</span></li>
-          <li><span>C# / Burst / Jobs</span></li>
-          <li><span>Custom SRP</span></li>
-          <li><span>Compute Shaders</span></li>
+      <div class="project-links reveal">
+        <ul class="feature-list-inline" aria-label="Technologies">
+          <li>Unity 2022</li>
+          <li>C# / Burst / Jobs</li>
+          <li>Custom SRP</li>
+          <li>Compute Shaders</li>
         </ul>
       </div>
     </section>
 
     <!-- ============================ CONTACT ============================ -->
-    <section class="section section-contact" id="contact" data-frame-start="156" data-frame-end="169" data-accent="red">
+    <section class="section section-contact" id="contact">
       <div class="section-content content-center">
-        <div class="glass-card reveal contact-card">
+        <div class="glass-card contact-card reveal">
           <h2>Let's talk</h2>
           <p class="lead">Open to entry-level and junior roles in software and web development and generalist IT, plus gameplay and technical programming positions at game studios.</p>
           <div class="contact-links">
-            <a href="https://www.linkedin.com/in/vicmenten" target="_blank" rel="noopener" class="contact-btn primary">LinkedIn</a>
-            <a href="https://vic-ment.itch.io" target="_blank" rel="noopener" class="contact-btn secondary">itch.io</a>
+            <a href="mailto:vicmenten@gmail.com" class="contact-btn primary">Email me</a>
+            <a href="https://www.linkedin.com/in/vicmenten" target="_blank" rel="noopener" class="contact-btn secondary">LinkedIn</a>
             <a href="https://github.com/VicMent" target="_blank" rel="noopener" class="contact-btn secondary">GitHub</a>
+            <a href="https://vic-ment.itch.io" target="_blank" rel="noopener" class="contact-btn secondary">itch.io</a>
             <a href="cv.html" class="contact-btn secondary">CV</a>
-            <a href="mailto:vic.menten@gmail.com" class="contact-btn secondary">Email</a>
           </div>
-          <p class="contact-footer">&copy; 2026 Vic Menten · Herselt, Belgium · Message me on LinkedIn or send an email</p>
+          <p class="contact-footer">&copy; 2026 Vic Menten · Herselt, Belgium</p>
         </div>
       </div>
     </section>
-  </div>
+  </main>
 
   <script src="js/app.js" type="module"></script>
 </body>
