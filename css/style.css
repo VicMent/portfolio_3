@@ -1,7 +1,3 @@
-/* =============================================================
-   Vic Menten — portfolio styles
-   ============================================================= */
-
 :root {
   --bg: #0d0d0d;
   --surface: rgba(12, 12, 12, 0.55);
@@ -71,10 +67,6 @@ button:focus-visible {
   border: 0;
 }
 
-/* ---------------------------------------------------------------
-   Fixed background layers
-   --------------------------------------------------------------- */
-
 #scroll-canvas {
   position: fixed;
   inset: 0;
@@ -105,7 +97,6 @@ button:focus-visible {
   background-size: 256px 256px;
 }
 
-/* Soft colour glows. Radial gradients instead of filter: blur() keep them cheap to animate. */
 .ambient-glow {
   position: fixed;
   border-radius: 50%;
@@ -157,10 +148,6 @@ button:focus-visible {
   pointer-events: none;
   z-index: 1;
 }
-
-/* ---------------------------------------------------------------
-   Loader
-   --------------------------------------------------------------- */
 
 .loader {
   position: fixed;
@@ -270,10 +257,6 @@ button:focus-visible {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.6; }
 }
-
-/* ---------------------------------------------------------------
-   Navigation
-   --------------------------------------------------------------- */
 
 .nav {
   position: fixed;
@@ -417,13 +400,6 @@ button:focus-visible {
   background: linear-gradient(90deg, var(--accent), #ff6b8a);
 }
 
-/* ---------------------------------------------------------------
-   Sections
-   Every section is at least one screen tall and centres its content.
-   When the content needs more room the section simply grows and the
-   script lets the visitor scroll through it before snapping on.
-   --------------------------------------------------------------- */
-
 .section {
   position: relative;
   z-index: 10;
@@ -448,7 +424,6 @@ button:focus-visible {
   justify-content: center;
 }
 
-/* Hero */
 .section-hero {
   justify-content: flex-end;
   padding-bottom: clamp(2.5rem, 7vh, 5rem);
@@ -553,10 +528,6 @@ button:focus-visible {
   box-shadow: 0 0 8px var(--accent-glow), 0 0 16px var(--accent-glow);
 }
 
-/* ---------------------------------------------------------------
-   Glass cards (About, Skills, Contact)
-   --------------------------------------------------------------- */
-
 .glass-card {
   position: relative;
   z-index: 1;
@@ -601,7 +572,6 @@ button:focus-visible {
   margin-bottom: 0.85rem;
 }
 
-/* About & Skills */
 .about-skills-grid {
   display: grid;
   grid-template-columns: minmax(0, 560px) minmax(0, 460px);
@@ -758,7 +728,6 @@ button:focus-visible {
   mix-blend-mode: normal;
 }
 
-/* Contact */
 .contact-card {
   max-width: 520px;
   text-align: center;
@@ -780,10 +749,6 @@ button:focus-visible {
 .glass-card .contact-footer {
   margin-bottom: 0;
 }
-
-/* ---------------------------------------------------------------
-   Buttons
-   --------------------------------------------------------------- */
 
 .contact-btn {
   display: inline-flex;
@@ -821,10 +786,6 @@ button:focus-visible {
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* ---------------------------------------------------------------
-   Project sections (Web Dev, Games, Unreal, Unity)
-   --------------------------------------------------------------- */
-
 .section-project {
   padding-left: 0;
   padding-right: 0;
@@ -839,7 +800,6 @@ button:focus-visible {
   text-align: center;
 }
 
-/* Dark halo behind the heading so it reads on any background frame. */
 .section-header::before {
   content: '';
   position: absolute;
@@ -896,7 +856,6 @@ button:focus-visible {
   gap: 0.75rem 1rem;
 }
 
-/* Logo used as a section title (Gruboom) */
 .project-logo-heading {
   line-height: 0;
   margin-bottom: 0.75rem;
@@ -911,7 +870,6 @@ button:focus-visible {
   filter: drop-shadow(0 6px 24px rgba(0, 0, 0, 0.7));
 }
 
-/* Which carousel row shows which project */
 .row-legend {
   display: flex;
   flex-wrap: wrap;
@@ -1018,7 +976,6 @@ button:focus-visible {
   color: var(--text);
 }
 
-/* Infinite two-row media carousels */
 .carousel-stack {
   position: relative;
   width: 100%;
@@ -1054,7 +1011,6 @@ button:focus-visible {
   animation-name: marquee-right;
 }
 
-/* Pause a row while the visitor is looking at one of its tiles. */
 .marquee-row:hover .marquee-track {
   animation-play-state: paused;
 }
@@ -1107,7 +1063,6 @@ button:focus-visible {
   transform: scale(1.04);
 }
 
-/* Small play badge on video tiles */
 .tile-media[data-kind="video"]::after {
   content: '';
   position: absolute;
@@ -1126,10 +1081,6 @@ button:focus-visible {
   opacity: 0;
 }
 
-/* ---------------------------------------------------------------
-   Entrance animations
-   --------------------------------------------------------------- */
-
 .reveal {
   opacity: 0;
   transform: translateY(32px);
@@ -1143,10 +1094,6 @@ button:focus-visible {
 .char {
   display: inline-block;
 }
-
-/* ---------------------------------------------------------------
-   Responsive
-   --------------------------------------------------------------- */
 
 @media (max-width: 1024px) {
   .about-skills-grid {

@@ -7,16 +7,12 @@
   <meta name="description" content="Portfolio of Vic Menten, an IT graduate from Belgium focused on web development, with games in Godot, Unreal Engine 5 and Unity.">
   <meta name="author" content="Vic Menten">
   <meta name="theme-color" content="#0d0d0d">
-
-  <!-- Social preview (LinkedIn, Discord, ...). Use absolute URLs for og:image / og:url once the site has its own domain. -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Vic Menten · IT &amp; Game Programmer">
   <meta property="og:description" content="Web development and game projects (Godot, Unreal Engine 5, Unity) by Vic Menten.">
   <meta property="og:image" content="og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
-
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -26,15 +22,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
 </head>
 <body>
-  <!-- Fixed background layers -->
   <canvas id="scroll-canvas" aria-hidden="true"></canvas>
   <div class="canvas-vignette" aria-hidden="true"></div>
   <div class="noise-overlay" aria-hidden="true"></div>
   <div class="ambient-glow glow-1" aria-hidden="true"></div>
   <div class="ambient-glow glow-2" aria-hidden="true"></div>
   <div class="ambient-glow glow-3" aria-hidden="true"></div>
-
-  <!-- Loader -->
   <div class="loader" id="loader" role="status" aria-label="Loading">
     <div class="loader-ring" aria-hidden="true"></div>
     <div class="loader-content">
@@ -46,8 +39,6 @@
       <p class="loader-percent" id="loader-percent">0%</p>
     </div>
   </div>
-
-  <!-- Navigation -->
   <nav class="nav" id="nav" aria-label="Main">
     <a href="#hero" class="nav-logo">Vic Menten</a>
     <ul class="nav-links" id="nav-links">
@@ -63,18 +54,12 @@
     </button>
   </nav>
   <div class="nav-backdrop" aria-hidden="true"></div>
-
-  <!-- Scroll progress -->
   <div class="scroll-progress" aria-hidden="true">
     <div class="scroll-progress-fill" id="scroll-progress-fill"></div>
   </div>
-
   <main id="fullpage">
-    <!-- ============================ HERO ============================ -->
     <section class="section section-hero" id="hero">
       <div class="hero-content">
-        <!-- On desktop the 3D name in the background animation is the visual title; this heading
-             is for search engines and screen readers, and is shown as text on portrait phones. -->
         <h1 class="hero-name">Vic Menten</h1>
         <p class="hero-sub reveal">Development Portfolio</p>
         <p class="hero-meta reveal">Software · Web · Games</p>
@@ -90,8 +75,6 @@
         </a>
       </div>
     </section>
-
-    <!-- ======================= ABOUT & SKILLS ======================= -->
     <section class="section section-about-skills" id="about-skills">
       <div class="section-content about-skills-grid">
         <article class="glass-card glass-card-about reveal" id="about">
@@ -115,7 +98,6 @@
             </div>
           </div>
         </article>
-
         <aside class="glass-card glass-card-skills reveal" id="skills">
           <h2>Skills</h2>
           <p class="lead">A technical and creative foundation for building interactive experiences.</p>
@@ -165,19 +147,15 @@
         </aside>
       </div>
     </section>
-
-    <!-- ============================ WEB DEV ============================ -->
     <section class="section section-project section-webdev" id="webdev">
       <header class="section-header reveal">
         <span class="project-tag">Main focus · software &amp; web development</span>
         <h2>Web Development</h2>
         <p class="project-desc">Responsive, modular experiences, from client websites and web games to interactive 3D viewers, built with clean architecture, solid UX and fast performance.</p>
       </header>
-
       <div class="carousel-stack reveal">
         <div class="marquee marquee-webdev"></div>
       </div>
-
       <div class="project-links reveal">
         <ul class="feature-list-inline" aria-label="Technologies">
           <li>HTML5 / CSS3</li>
@@ -189,19 +167,15 @@
         </ul>
       </div>
     </section>
-
-    <!-- ============================ GRUBOOM (GODOT) ============================ -->
     <section class="section section-project section-gruboom" id="gruboom">
       <header class="section-header reveal">
         <span class="project-tag">Godot 4 · current project</span>
         <h2 class="project-logo-heading"><img src="extra_images/gruboom/logo.webp" alt="Gruboom" class="project-logo" width="900" height="259"></h2>
         <p class="project-desc">A turn-based artillery game where little armies fight on an island in a puddle on the living-room table. Take turns, aim, and blow the fully destructible terrain apart until one team is left standing.</p>
       </header>
-
       <div class="carousel-stack reveal">
         <div class="marquee marquee-gruboom"></div>
       </div>
-
       <div class="project-links reveal">
         <ul class="feature-list-inline" aria-label="Highlights">
           <li>Destructible hex terrain</li>
@@ -218,19 +192,15 @@
         </div>
       </div>
     </section>
-
-    <!-- ==================== TOTALLY ETHICAL LABS (UE5) ==================== -->
     <section class="section section-project section-ethical-labs" id="ethical-labs">
       <header class="section-header reveal">
         <span class="project-tag">Unreal Engine 5 · game jam · 2026</span>
         <h2>Totally Ethical Labs</h2>
         <p class="project-desc">A one-week game jam: figure out a way to kill the invincible alien. I handled all the programming while fellow student Bert created the assets.</p>
       </header>
-
       <div class="carousel-stack reveal">
         <div class="marquee marquee-ethical-labs"></div>
       </div>
-
       <div class="project-links reveal">
         <div class="project-links-row">
           <a class="project-link" href="https://vic-ment.itch.io/totally-ethical-labs" target="_blank" rel="noopener">
@@ -241,19 +211,15 @@
         </div>
       </div>
     </section>
-
-    <!-- ===================== MORE GAME DEVELOPMENT ===================== -->
     <section class="section section-project section-games" id="games">
       <header class="section-header reveal">
         <span class="project-tag">Unreal Engine 5 · Unity</span>
         <h2>More Game Development</h2>
-        <p class="project-desc">Earlier projects from my game development training: a retro FPS in Unreal Engine 5 and a procedural voxel world in Unity.</p>
+        <p class="project-desc">Earlier projects i enjoyed working on: a retro FPS in Unreal Engine 5 and a procedural voxel world in Unity.</p>
       </header>
-
       <div class="carousel-stack reveal">
         <div class="marquee marquee-games"></div>
       </div>
-
       <div class="project-links reveal">
         <ul class="row-legend">
           <li><span class="row-legend-mark" aria-hidden="true">↑</span><strong>Roid Rager</strong> Retro FPS wave-survival · UE5 Blueprints + C++ · on hold</li>
@@ -261,13 +227,11 @@
         </ul>
       </div>
     </section>
-
-    <!-- ============================ CONTACT ============================ -->
     <section class="section section-contact" id="contact">
       <div class="section-content content-center">
         <div class="glass-card contact-card reveal">
           <h2>Let's talk</h2>
-          <p class="lead">Open to entry-level and junior roles in software and web development and generalist IT, plus gameplay and technical programming positions at game studios.</p>
+          <p class="lead">Open to entry-level and junior roles in software and web development, plus gameplay and technical programming positions at game studios.</p>
           <div class="contact-links">
             <a href="mailto:vicmenten@gmail.com" class="contact-btn primary">Email me</a>
             <a href="https://www.linkedin.com/in/vicmenten" target="_blank" rel="noopener" class="contact-btn secondary">LinkedIn</a>
@@ -279,7 +243,6 @@
       </div>
     </section>
   </main>
-
   <script src="js/app.js" type="module"></script>
 </body>
 </html>

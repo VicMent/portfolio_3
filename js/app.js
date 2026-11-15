@@ -1,23 +1,12 @@
-// Vic Menten portfolio
-//
-// The background is a 170-frame image sequence drawn to a fixed canvas.
-// The scroll position always decides which frame is shown, so the
-// animation follows the page whether the visitor snaps section by
-// section (desktop) or scrolls freely (phones, tablets).
-
 const FRAME_COUNT = 170;
 
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = () => window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-// Touch devices and narrow screens scroll natively instead of snapping.
 const useFreeScroll = () => window.matchMedia('(max-width: 768px), (pointer: coarse)').matches;
 
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
-// ---------------------------------------------------------------
-// Background frame sequence
-// ---------------------------------------------------------------
 class FrameAnimation {
   constructor(canvas, sectionCount) {
     this.canvas = canvas;
@@ -27,7 +16,6 @@ class FrameAnimation {
     this.target = 0;
     this.drawnImage = null;
     this.framesPerSection = (FRAME_COUNT - 1) / Math.max(1, sectionCount - 1);
-    // Phones get a lighter 768px-wide set; larger screens the full 1536px set.
     this.dir = window.innerWidth <= 900 ? 'frames/sm/' : 'frames/lg/';
 
     this._resize();
@@ -60,8 +48,6 @@ class FrameAnimation {
     });
   }
 
-  // Loads the frames for the first transition (enough to start), then
-  // streams the rest in the background, in order, a few at a time.
   async start(onProgress) {
     const firstBatch = Math.ceil(this.framesPerSection) + 1;
     let loaded = 0;
@@ -84,7 +70,6 @@ class FrameAnimation {
     return index * this.framesPerSection;
   }
 
-  // Falls back to the closest frame that has arrived so far.
   _imageFor(index) {
     if (this.frames[index]) return this.frames[index];
     for (let d = 1; d < FRAME_COUNT; d++) {
@@ -102,9 +87,6 @@ class FrameAnimation {
 
     const iw = img.naturalWidth;
     const ih = img.naturalHeight;
-    // Landscape screens: cover the whole screen. Portrait screens: a
-    // wide band through the middle, so the 16:9 frames are not cropped
-    // down to a sliver.
     const portrait = this.height > this.width;
     const scale = portrait
       ? Math.max(this.width / iw, (this.height * 0.6) / ih)
@@ -112,7 +94,6 @@ class FrameAnimation {
     const w = iw * scale;
     const h = ih * scale;
     const x = (this.width - w) / 2;
-    // On portrait the band sits a little high, leaving room for the hero text below it.
     const y = portrait ? Math.max(0, this.height * 0.36 - h / 2) : (this.height - h) / 2;
 
     const ctx = this.ctx;
@@ -142,11 +123,6 @@ class FrameAnimation {
   }
 }
 
-// ---------------------------------------------------------------
-// Carousel videos: only the most visible clip in a row plays, the
-// hovered clip always wins, and nothing downloads until the carousel
-// is close to the screen.
-// ---------------------------------------------------------------
 class AutoplayClips {
   constructor() {
     this.rows = new Map();
@@ -174,7 +150,6 @@ class AutoplayClips {
       });
     });
 
-    // Attach sources once a carousel is within a screen of the viewport.
     const hydrate = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -233,11 +208,6 @@ class AutoplayClips {
   }
 }
 
-// ---------------------------------------------------------------
-// Media carousels. Each section's items are split over two rows that
-// scroll in opposite directions. Add a project by adding an entry.
-//   kind: 'img' | 'video'
-// ---------------------------------------------------------------
 const CAROUSEL_DATA = [
   {
     key: 'gruboom',
@@ -277,7 +247,6 @@ const CAROUSEL_DATA = [
   {
     key: 'games',
     container: '.marquee-games',
-    // One project per row: Roid Rager on top, the Unity voxel terrain below.
     rows: [
       [
         { kind: 'video', src: 'extra_images/RoidRager3.mp4', poster: 'extra_images/RoidRager3-poster.webp', alt: 'Roid Rager gameplay clip' },
@@ -317,8 +286,6 @@ const CAROUSEL_DATA = [
   },
 ];
 
-// One marquee track holds the row's tiles twice, so the -50% translate
-// keyframe loops back onto an identical frame without a visible jump.
 function buildMarqueeTrack(items) {
   const track = document.createElement('div');
   track.className = 'marquee-track';
@@ -363,9 +330,6 @@ function buildMarqueeTrack(items) {
   return track;
 }
 
-// ---------------------------------------------------------------
-// App
-// ---------------------------------------------------------------
 class PortfolioApp {
   constructor() {
     this.sections = Array.from(document.querySelectorAll('.section'));
@@ -401,7 +365,6 @@ class PortfolioApp {
     this._loop();
   }
 
-  // ---------------- Loader ----------------
   _startLoader() {
     const loader = document.getElementById('loader');
     const bar = document.getElementById('loader-bar-fill');
@@ -409,7 +372,6 @@ class PortfolioApp {
     const status = document.getElementById('loader-status');
 
     const hide = () => loader?.classList.add('hidden');
-    // Never keep anyone stuck behind the loader on a slow connection.
     const fallback = setTimeout(hide, 8000);
 
     this.animation
@@ -425,12 +387,10 @@ class PortfolioApp {
       });
   }
 
-  // ---------------- Scroll position ----------------
   _sectionTop(i) {
     return this.sections[i].offsetTop;
   }
 
-  // Index of the section that contains the middle of the viewport.
   _sectionAtViewport() {
     const mid = window.scrollY + window.innerHeight / 2;
     let found = 0;
@@ -440,8 +400,6 @@ class PortfolioApp {
     return found;
   }
 
-  // Maps the scroll position to a (fractional) frame: section i's top
-  // shows that section's frame, and positions in between blend smoothly.
   _frameForScroll() {
     const y = window.scrollY;
     const last = this.sections.length - 1;
@@ -471,9 +429,6 @@ class PortfolioApp {
     }
   }
 
-  // ---------------- Snapping (desktop) ----------------
-  // True when the current section is taller than the screen and there is
-  // still part of it to scroll through in that direction.
   _canScrollInside(dir) {
     const section = this.sections[this.index];
     const top = section.offsetTop;
@@ -487,7 +442,6 @@ class PortfolioApp {
 
     const now = performance.now();
     if (this.isSnapping || now < this.wheelLockUntil) {
-      // Swallow trackpad momentum so one swipe moves one section.
       e.preventDefault();
       this.wheelLockUntil = Math.max(this.wheelLockUntil, now + 150);
       return;
@@ -526,7 +480,6 @@ class PortfolioApp {
   goTo(index, dir = 0) {
     index = clamp(index, 0, this.sections.length - 1);
     const section = this.sections[index];
-    // Coming back up into a tall section lands on its bottom edge.
     const overflow = section.offsetHeight - window.innerHeight;
     const targetY = dir < 0 && overflow > 0 ? section.offsetTop + overflow : section.offsetTop;
 
@@ -559,7 +512,6 @@ class PortfolioApp {
     requestAnimationFrame(step);
   }
 
-  // ---------------- Navigation ----------------
   _bindNavigation() {
     window.addEventListener('wheel', (e) => this._onWheel(e), { passive: false });
     window.addEventListener('keydown', (e) => this._onKeydown(e));
@@ -627,13 +579,11 @@ class PortfolioApp {
     document.fonts?.ready.then(this._updateNavIndicator);
   }
 
-  // ---------------- Content ----------------
   _buildCarousels() {
     CAROUSEL_DATA.forEach((config) => {
       const marquee = document.querySelector(config.container);
       if (!marquee) return;
 
-      // Either explicit rows, or even items on top and odd items below.
       const [top, bottom] = config.rows || [
         config.items.filter((_, i) => i % 2 === 0),
         config.items.filter((_, i) => i % 2 === 1),
@@ -647,7 +597,6 @@ class PortfolioApp {
     });
   }
 
-  // Fade content up as each section comes into view.
   _initReveals() {
     const items = document.querySelectorAll('.reveal');
     if (reducedMotion() || typeof anime === 'undefined') {
@@ -681,8 +630,6 @@ class PortfolioApp {
     items.forEach((el) => observer.observe(el));
   }
 
-  // Letter-by-letter entrance for headings. Words stay unbroken so lines
-  // still wrap between words, and screen readers get the plain text.
   _initHeadlines() {
     if (reducedMotion() || typeof anime === 'undefined') return;
 
@@ -720,7 +667,6 @@ class PortfolioApp {
     });
   }
 
-  // ---------------- Pointer effects (mouse only) ----------------
   _initPointerEffects() {
     if (reducedMotion() || !finePointer()) return;
 
