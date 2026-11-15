@@ -752,6 +752,12 @@ button:focus-visible {
   mix-blend-mode: screen;
 }
 
+.brand-icon-godot {
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: normal;
+}
+
 /* Contact */
 .contact-card {
   max-width: 520px;
@@ -819,10 +825,7 @@ button:focus-visible {
    Project sections (Web Dev, Games, Unreal, Unity)
    --------------------------------------------------------------- */
 
-.section-webdev,
-.section-work,
-.section-unreal,
-.section-unity {
+.section-project {
   padding-left: 0;
   padding-right: 0;
   gap: clamp(1rem, 2.5vh, 1.75rem);
@@ -879,11 +882,77 @@ button:focus-visible {
 
 .project-links {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0 var(--gutter);
+}
+
+.project-links-row {
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 0.75rem 1rem;
-  padding: 0 var(--gutter);
+}
+
+/* Logo used as a section title (Gruboom) */
+.project-logo-heading {
+  line-height: 0;
+  margin-bottom: 0.75rem;
+}
+
+.project-logo {
+  display: inline-block;
+  width: clamp(200px, 26vw, 340px);
+  max-height: 11vh;
+  object-fit: contain;
+  height: auto;
+  filter: drop-shadow(0 6px 24px rgba(0, 0, 0, 0.7));
+}
+
+/* Which carousel row shows which project */
+.row-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  list-style: none;
+}
+
+.row-legend li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: rgba(13, 13, 13, 0.6);
+  border: 1px solid var(--surface-border);
+  border-radius: 100px;
+  padding: 0.5rem 1.1rem;
+}
+
+.row-legend strong {
+  color: var(--text);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .row-legend li {
+    display: block;
+    border-radius: 12px;
+    text-align: left;
+  }
+
+  .row-legend strong {
+    margin-right: 0.35rem;
+  }
+}
+
+.row-legend-mark {
+  color: var(--accent);
+  font-weight: 700;
 }
 
 .project-link {

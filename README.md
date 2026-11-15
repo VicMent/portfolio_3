@@ -1,6 +1,6 @@
 # Vic Menten — Development Portfolio
 
-A personal portfolio site for **Vic Menten**, an IT graduate (Bachelor in Applied IT / Digital Experience, UCLL) with a one-year specialization in Indie Game Development (Syntra). The site shows work in web development and game development (Unreal Engine 5 and Unity). It is built as a full-screen, section-by-section scrolling experience with an animated background.
+A personal portfolio site for **Vic Menten**, an IT graduate (Bachelor in Applied IT / Digital Experience, UCLL) with a one-year specialization in Indie Game Development (Syntra). The site leads with web development, followed by game development in Godot, Unreal Engine 5 and Unity. It is built as a full-screen, section-by-section scrolling experience with an animated background.
 
 It is a static site: plain HTML, CSS and vanilla JavaScript (ES modules), with no build step and no framework.
 
@@ -11,23 +11,22 @@ It is a static site: plain HTML, CSS and vanilla JavaScript (ES modules), with n
 - **Background animation driven by scrolling.** A 170-frame WebP sequence is drawn to a full-screen `<canvas>`. The scroll position always picks the frame, so the animation follows the page however you scroll. There are two sets: `frames/lg/` (1536 px, about 4.7 MB) for larger screens and `frames/sm/` (768 px, about 2 MB) for phones.
 - **Fast start.** The loader waits only for the frames of the first transition (about 30 frames). The rest stream in afterwards in the background. Any frame that hasn't arrived yet is replaced by the nearest loaded one.
 - **Section snapping on desktop.** No library. Each wheel or trackpad swipe, PageUp/PageDown/Space/arrow press, or nav click moves exactly one section. If a section is taller than the screen, you scroll through it normally first, and scrolling back up lands on its bottom edge. Phones and touch devices use normal scrolling.
-- **Infinite media carousels.** Each project section has two rows of tiles moving in opposite directions, built from a data list (`CAROUSEL_DATA` in `js/app.js`). A row pauses while you hover it.
+- **Infinite media carousels.** Each project section has two rows of tiles moving in opposite directions, built from a data list (`CAROUSEL_DATA` in `js/app.js`). A section can split its items over the rows automatically or give each row its own list (the More Game Development section puts one project in each row). A row pauses while you hover it.
 - **Lazy, smart video.** Video sources are only attached when a carousel gets close to the screen. Only the most visible clip in each row plays, and the clip you hover always wins.
 - **Micro-interactions.** Magnetic buttons, 3D tilt on the glass cards, letter-by-letter headings, a sliding nav indicator and a scroll progress bar. Made with [anime.js](https://animejs.com/), and only active with a mouse.
 - **Accessibility.** `prefers-reduced-motion` turns off autoplay, carousels and effects. The heading animations keep the plain text available to screen readers. The site also has keyboard navigation, `aria-current` on the active nav link, and a mobile menu that closes with `Escape`.
-- **Printable CV page.** `cv.html` is a styled CV with links to the Dutch and English PDFs and a print button.
 
 ## Page sections
 
 | # | Section | Content |
 |---|---------|---------|
-| 1 | **Hero** | Name, tagline, links to itch.io and the CV |
+| 1 | **Hero** | Name, tagline, buttons to the work and the games |
 | 2 | **About & Skills** | Background, education (UCLL, Syntra), skill list (languages, software dev, game engines, 3D pipeline), the roles Vic is looking for |
-| 3 | **Web Development** | Client websites, web games, a Three.js 3D model viewer, earlier portfolio versions |
-| 4 | **Totally Ethical Labs** | One-week game jam game (2026). Vic did the programming. [Download on itch.io](https://vic-ment.itch.io/totally-ethical-labs) |
-| 5 | **Roid Rager** (Unreal Engine 5) | Retro-styled FPS wave-survival game, in development (Blueprints + C++) |
-| 6 | **Procedural Voxel Terrain** (Unity) | Infinite chunk-based worlds: Perlin noise, cave carving, animated water, custom shaders, C# Burst/Jobs |
-| 7 | **Contact** | LinkedIn, itch.io, GitHub, CV, email |
+| 3 | **Web Development** (main focus) | Client websites, web games, a Three.js 3D model viewer, earlier portfolio versions |
+| 4 | **Gruboom** (Godot 4) | Current project: turn-based artillery game with destructible terrain, AI opponents and online play. [itch.io](https://vic-ment.itch.io/gruboom) |
+| 5 | **Totally Ethical Labs** (Unreal Engine 5) | One-week game jam game (2026). Vic did the programming. [itch.io](https://vic-ment.itch.io/totally-ethical-labs) |
+| 6 | **More Game Development** | Top row: Roid Rager, a retro FPS in UE5 (on hold). Bottom row: procedural voxel terrain in Unity (school project) |
+| 7 | **Contact** | Email, LinkedIn, GitHub, itch.io |
 
 ## Tech stack
 
@@ -42,18 +41,17 @@ It is a static site: plain HTML, CSS and vanilla JavaScript (ES modules), with n
 ```
 .
 ├── index.html            # Main one-page portfolio
-├── cv.html               # Printable CV page
 ├── favicon.svg
 ├── og-image.jpg          # Social preview image (LinkedIn, Discord, ...)
 ├── css/
-│   ├── style.css         # Main site styles
-│   └── cv.css            # CV page styles
+│   └── style.css         # Site styles
 ├── js/
 │   └── app.js            # FrameAnimation, AutoplayClips, carousels, PortfolioApp
 ├── frames/
 │   ├── lg/               # 170 background frames, 1536 px WebP
 │   └── sm/               # Same frames at 768 px for phones
-├── extra_images/         # Project screenshots (WebP), videos (720p H.264) + posters, logos, CV PDFs
+├── extra_images/         # Project screenshots (WebP), videos (720p H.264) + posters, logos
+│   └── gruboom/          # Gruboom screenshots and logo (from the game's promo folder)
 └── package.json          # start/dev scripts
 ```
 

@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vic Menten · IT &amp; Game Programmer</title>
-  <meta name="description" content="Portfolio of Vic Menten, an IT graduate and game programmer from Belgium working on web development, Unreal Engine 5 and Unity projects.">
+  <meta name="description" content="Portfolio of Vic Menten, an IT graduate from Belgium focused on web development, with games in Godot, Unreal Engine 5 and Unity.">
   <meta name="author" content="Vic Menten">
   <meta name="theme-color" content="#0d0d0d">
 
   <!-- Social preview (LinkedIn, Discord, ...). Use absolute URLs for og:image / og:url once the site has its own domain. -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Vic Menten · IT &amp; Game Programmer">
-  <meta property="og:description" content="Web development, Unreal Engine 5 and Unity projects by Vic Menten.">
+  <meta property="og:description" content="Web development and game projects (Godot, Unreal Engine 5, Unity) by Vic Menten.">
   <meta property="og:image" content="og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
 
@@ -53,10 +53,9 @@
     <ul class="nav-links" id="nav-links">
       <li><a href="#about-skills">About &amp; Skills</a></li>
       <li><a href="#webdev">Web Dev</a></li>
-      <li><a href="#work">Games</a></li>
-      <li><a href="#unreal">Unreal</a></li>
-      <li><a href="#unity">Unity</a></li>
-      <li><a href="cv.html" class="nav-cv">CV</a></li>
+      <li><a href="#gruboom">Gruboom</a></li>
+      <li><a href="#ethical-labs">Ethical Labs</a></li>
+      <li><a href="#games">More Games</a></li>
       <li><a href="#contact" class="nav-cta">Contact</a></li>
     </ul>
     <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-controls="nav-links" aria-expanded="false">
@@ -81,7 +80,7 @@
         <p class="hero-meta reveal">Software · Web · Games</p>
         <div class="hero-actions reveal">
           <a class="contact-btn primary" href="#webdev">View my work</a>
-          <a class="contact-btn secondary" href="https://vic-ment.itch.io/totally-ethical-labs" target="_blank" rel="noopener">Play my game</a>
+          <a class="contact-btn secondary" href="#gruboom">See my games</a>
         </div>
         <a class="scroll-indicator reveal" href="#about-skills" aria-label="Scroll to About &amp; Skills">
           <span class="scroll-indicator-text">Scroll</span>
@@ -123,7 +122,7 @@
           <dl class="skill-list">
             <div class="skill-row">
               <dt>Programming &amp; Web</dt>
-              <dd>C#, Python, Java, JavaScript, TypeScript, PHP, React, SQL, HTML/CSS, Git, Bash</dd>
+              <dd>C#, Python, Java, JavaScript, TypeScript, PHP, React, SQL, HTML/CSS, GDScript, Git, Bash</dd>
             </div>
             <div class="skill-row">
               <dt>Software Dev</dt>
@@ -139,6 +138,10 @@
                 <span class="brand">
                   <span class="icon-chip"><img src="extra_images/unity-game-engine-icon.webp" alt="" class="brand-icon"></span>
                   Unity
+                </span>
+                <span class="brand">
+                  <span class="icon-chip"><img src="extra_images/godot-icon.svg" alt="" class="brand-icon brand-icon-godot"></span>
+                  Godot 4
                 </span>
               </dd>
             </div>
@@ -164,9 +167,9 @@
     </section>
 
     <!-- ============================ WEB DEV ============================ -->
-    <section class="section section-webdev" id="webdev">
+    <section class="section section-project section-webdev" id="webdev">
       <header class="section-header reveal">
-        <span class="project-tag">Software &amp; web development</span>
+        <span class="project-tag">Main focus · software &amp; web development</span>
         <h2>Web Development</h2>
         <p class="project-desc">Responsive, modular experiences, from client websites and web games to interactive 3D viewers, built with clean architecture, solid UX and fast performance.</p>
       </header>
@@ -187,67 +190,74 @@
       </div>
     </section>
 
-    <!-- ==================== GAMES · TOTALLY ETHICAL LABS ==================== -->
-    <section class="section section-work" id="work">
+    <!-- ============================ GRUBOOM (GODOT) ============================ -->
+    <section class="section section-project section-gruboom" id="gruboom">
       <header class="section-header reveal">
-        <span class="project-tag">Game jam · 2026</span>
+        <span class="project-tag">Godot 4 · current project</span>
+        <h2 class="project-logo-heading"><img src="extra_images/gruboom/logo.webp" alt="Gruboom" class="project-logo" width="900" height="259"></h2>
+        <p class="project-desc">A turn-based artillery game where little armies fight on an island in a puddle on the living-room table. Take turns, aim, and blow the fully destructible terrain apart until one team is left standing.</p>
+      </header>
+
+      <div class="carousel-stack reveal">
+        <div class="marquee marquee-gruboom"></div>
+      </div>
+
+      <div class="project-links reveal">
+        <ul class="feature-list-inline" aria-label="Highlights">
+          <li>Destructible hex terrain</li>
+          <li>AI opponents</li>
+          <li>Online multiplayer</li>
+          <li>GDScript</li>
+        </ul>
+        <div class="project-links-row">
+          <a class="project-link" href="https://vic-ment.itch.io/gruboom" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Download on itch.io
+          </a>
+          <span class="project-note">Windows · free · in development</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TOTALLY ETHICAL LABS (UE5) ==================== -->
+    <section class="section section-project section-ethical-labs" id="ethical-labs">
+      <header class="section-header reveal">
+        <span class="project-tag">Unreal Engine 5 · game jam · 2026</span>
         <h2>Totally Ethical Labs</h2>
         <p class="project-desc">A one-week game jam: figure out a way to kill the invincible alien. I handled all the programming while fellow student Bert created the assets.</p>
       </header>
 
       <div class="carousel-stack reveal">
-        <div class="marquee marquee-work"></div>
+        <div class="marquee marquee-ethical-labs"></div>
       </div>
 
       <div class="project-links reveal">
-        <a class="project-link" href="https://vic-ment.itch.io/totally-ethical-labs" target="_blank" rel="noopener">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          Download on itch.io
-        </a>
-        <span class="project-note">Windows · free download</span>
+        <div class="project-links-row">
+          <a class="project-link" href="https://vic-ment.itch.io/totally-ethical-labs" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Download on itch.io
+          </a>
+          <span class="project-note">Windows · free download</span>
+        </div>
       </div>
     </section>
 
-    <!-- ========================= UNREAL · ROID RAGER ========================= -->
-    <section class="section section-unreal" id="unreal">
+    <!-- ===================== MORE GAME DEVELOPMENT ===================== -->
+    <section class="section section-project section-games" id="games">
       <header class="section-header reveal">
-        <span class="project-tag">Unreal Engine 5 · in development</span>
-        <h2>Roid Rager</h2>
-        <p class="project-desc">A retro-styled FPS wave-survival game, built with Blueprints and C++.</p>
+        <span class="project-tag">Unreal Engine 5 · Unity</span>
+        <h2>More Game Development</h2>
+        <p class="project-desc">Earlier projects from my game development training: a retro FPS in Unreal Engine 5 and a procedural voxel world in Unity.</p>
       </header>
 
       <div class="carousel-stack reveal">
-        <div class="marquee marquee-unreal"></div>
+        <div class="marquee marquee-games"></div>
       </div>
 
       <div class="project-links reveal">
-        <ul class="feature-list-inline" aria-label="Technologies">
-          <li>Unreal Engine 5</li>
-          <li>Blueprints</li>
-          <li>C++</li>
-          <li>Blender</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ================== UNITY · PROCEDURAL VOXEL TERRAIN ================== -->
-    <section class="section section-unity" id="unity">
-      <header class="section-header reveal">
-        <span class="project-tag">Unity · academic project</span>
-        <h2>Procedural Voxel Terrain</h2>
-        <p class="project-desc">Infinite chunk-based worlds with Perlin noise, cave carving, animated water, custom shaders and handwritten C# systems.</p>
-      </header>
-
-      <div class="carousel-stack reveal">
-        <div class="marquee marquee-unity"></div>
-      </div>
-
-      <div class="project-links reveal">
-        <ul class="feature-list-inline" aria-label="Technologies">
-          <li>Unity 2022</li>
-          <li>C# / Burst / Jobs</li>
-          <li>Custom SRP</li>
-          <li>Compute Shaders</li>
+        <ul class="row-legend">
+          <li><span class="row-legend-mark" aria-hidden="true">↑</span><strong>Roid Rager</strong> Retro FPS wave-survival · UE5 Blueprints + C++ · on hold</li>
+          <li><span class="row-legend-mark" aria-hidden="true">↓</span><strong>Voxel Terrain</strong> Infinite chunked worlds, Perlin noise, caves · Unity C# · school project</li>
         </ul>
       </div>
     </section>
@@ -263,7 +273,6 @@
             <a href="https://www.linkedin.com/in/vicmenten" target="_blank" rel="noopener" class="contact-btn secondary">LinkedIn</a>
             <a href="https://github.com/VicMent" target="_blank" rel="noopener" class="contact-btn secondary">GitHub</a>
             <a href="https://vic-ment.itch.io" target="_blank" rel="noopener" class="contact-btn secondary">itch.io</a>
-            <a href="cv.html" class="contact-btn secondary">CV</a>
           </div>
           <p class="contact-footer">&copy; 2026 Vic Menten · Herselt, Belgium</p>
         </div>

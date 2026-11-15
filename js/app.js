@@ -240,8 +240,26 @@ class AutoplayClips {
 // ---------------------------------------------------------------
 const CAROUSEL_DATA = [
   {
-    key: 'work',
-    container: '.marquee-work',
+    key: 'gruboom',
+    container: '.marquee-gruboom',
+    items: [
+      { kind: 'img', src: 'extra_images/gruboom/20_main_menu.webp', alt: 'Gruboom main menu with the island on the table' },
+      { kind: 'img', src: 'extra_images/gruboom/01_island_on_the_table.webp', alt: 'Island in a puddle on the living-room table' },
+      { kind: 'img', src: 'extra_images/gruboom/04_barrels_and_craters.webp', alt: 'Explosive barrels and craters in the terrain' },
+      { kind: 'img', src: 'extra_images/gruboom/03_airstrike.webp', alt: 'Air strike over the cliffs' },
+      { kind: 'img', src: 'extra_images/gruboom/12_holy_grenade.webp', alt: 'Holy grenade blast with the match HUD' },
+      { kind: 'img', src: 'extra_images/gruboom/07_blue_on_the_cliffs.webp', alt: 'Blue team soldier on the cliffs' },
+      { kind: 'img', src: 'extra_images/gruboom/05_loot_crate.webp', alt: 'Loot crate next to a deep crater' },
+      { kind: 'img', src: 'extra_images/gruboom/13_turn_banner.webp', alt: 'Turn banner in a dug-out canyon' },
+      { kind: 'img', src: 'extra_images/gruboom/02_castle_island.webp', alt: 'Castle ruins island' },
+      { kind: 'img', src: 'extra_images/gruboom/06_bombs_away.webp', alt: 'Bombs falling toward the island' },
+      { kind: 'img', src: 'extra_images/gruboom/10_island_from_above.webp', alt: 'Island seen from above' },
+      { kind: 'img', src: 'extra_images/gruboom/08_red_in_the_canyon.webp', alt: 'Red team soldier in a canyon' },
+    ],
+  },
+  {
+    key: 'ethical-labs',
+    container: '.marquee-ethical-labs',
     items: [
       { kind: 'img', src: 'extra_images/ethicallabs_project.webp', alt: 'Totally Ethical Labs gameplay' },
       { kind: 'video', src: 'extra_images/TEL-bug.mp4', poster: 'extra_images/TEL-bug-poster.webp', alt: 'Totally Ethical Labs bug fix' },
@@ -257,34 +275,26 @@ const CAROUSEL_DATA = [
     ],
   },
   {
-    key: 'unreal',
-    container: '.marquee-unreal',
-    items: [
-      { kind: 'video', src: 'extra_images/RoidRager3.mp4', poster: 'extra_images/RoidRager3-poster.webp', alt: 'Roid Rager gameplay clip' },
-      { kind: 'video', src: 'extra_images/RoidRager4.mp4', poster: 'extra_images/RoidRager4-poster.webp', alt: 'Roid Rager boss clip' },
-      { kind: 'img', src: 'extra_images/RoidRager2.webp', alt: 'Roid Rager title screen' },
-      { kind: 'img', src: 'extra_images/RoidRager1.webp', alt: 'Roid Rager gameplay still' },
-      { kind: 'video', src: 'extra_images/RoidRager%20-%20tazer.mp4', poster: 'extra_images/RoidRager%20-%20tazer-poster.webp', alt: 'Roid Rager tazer weapon' },
-      { kind: 'video', src: 'extra_images/roidrager-slots.mp4', poster: 'extra_images/roidrager-slots-poster.webp', alt: 'Roid Rager slot machine' },
-      { kind: 'video', src: 'extra_images/roidrager-menu.mp4', poster: 'extra_images/roidrager-menu-poster.webp', alt: 'Roid Rager main menu' },
-      { kind: 'video', src: 'extra_images/roidrager-beer.mp4', poster: 'extra_images/roidrager-beer-poster.webp', alt: 'Roid Rager beer pickup' },
-      { kind: 'img', src: 'extra_images/roidrager-pig.webp', alt: 'Roid Rager pig enemy' },
-      { kind: 'img', src: 'extra_images/roidrager3.webp', alt: 'Roid Rager gameplay screenshot' },
-      { kind: 'img', src: 'extra_images/roidrager4.webp', alt: 'Roid Rager boss screenshot' },
-    ],
-  },
-  {
-    key: 'unity',
-    container: '.marquee-unity',
-    items: [
-      { kind: 'video', src: 'extra_images/unity_project.mp4', poster: 'extra_images/unity_project-poster.webp', alt: 'Procedural voxel terrain generator' },
-      { kind: 'video', src: 'extra_images/unity_script.mp4', poster: 'extra_images/unity_script-poster.webp', alt: 'Unity voxel scripting' },
-      { kind: 'video', src: 'extra_images/unity-animation.mp4', poster: 'extra_images/unity-animation-poster.webp', alt: 'Unity character animation' },
-      { kind: 'img', src: 'extra_images/image3%20unity.webp', alt: 'Unity project screenshot' },
-      { kind: 'img', src: 'extra_images/unity%20cave.webp', alt: 'Unity cave generation' },
-      { kind: 'img', src: 'extra_images/unity%20layers.webp', alt: 'Unity terrain layers' },
-      { kind: 'img', src: 'extra_images/unity%20map.webp', alt: 'Unity voxel map' },
-      { kind: 'img', src: 'extra_images/unity-character.webp', alt: 'Unity character' },
+    key: 'games',
+    container: '.marquee-games',
+    // One project per row: Roid Rager on top, the Unity voxel terrain below.
+    rows: [
+      [
+        { kind: 'video', src: 'extra_images/RoidRager3.mp4', poster: 'extra_images/RoidRager3-poster.webp', alt: 'Roid Rager gameplay clip' },
+        { kind: 'img', src: 'extra_images/RoidRager2.webp', alt: 'Roid Rager title screen' },
+        { kind: 'video', src: 'extra_images/RoidRager%20-%20tazer.mp4', poster: 'extra_images/RoidRager%20-%20tazer-poster.webp', alt: 'Roid Rager tazer weapon' },
+        { kind: 'img', src: 'extra_images/roidrager3.webp', alt: 'Roid Rager gameplay screenshot' },
+        { kind: 'video', src: 'extra_images/RoidRager4.mp4', poster: 'extra_images/RoidRager4-poster.webp', alt: 'Roid Rager boss clip' },
+        { kind: 'img', src: 'extra_images/roidrager-pig.webp', alt: 'Roid Rager pig enemy' },
+        { kind: 'video', src: 'extra_images/roidrager-slots.mp4', poster: 'extra_images/roidrager-slots-poster.webp', alt: 'Roid Rager slot machine' },
+      ],
+      [
+        { kind: 'video', src: 'extra_images/unity_project.mp4', poster: 'extra_images/unity_project-poster.webp', alt: 'Procedural voxel terrain generator' },
+        { kind: 'img', src: 'extra_images/unity%20map.webp', alt: 'Generated voxel map with lakes' },
+        { kind: 'video', src: 'extra_images/unity_script.mp4', poster: 'extra_images/unity_script-poster.webp', alt: 'C# terrain generation code' },
+        { kind: 'img', src: 'extra_images/unity%20layers.webp', alt: 'Terrain layers in a cross-section' },
+        { kind: 'img', src: 'extra_images/unity%20cave.webp', alt: 'Carved cave inside the terrain' },
+      ],
     ],
   },
   {
@@ -623,12 +633,12 @@ class PortfolioApp {
       const marquee = document.querySelector(config.container);
       if (!marquee) return;
 
-      // Even items run in the top row, odd items in the bottom row.
-      const rows = [
-        ['marquee-row marquee-row--top', config.items.filter((_, i) => i % 2 === 0)],
-        ['marquee-row marquee-row--bottom', config.items.filter((_, i) => i % 2 === 1)],
+      // Either explicit rows, or even items on top and odd items below.
+      const [top, bottom] = config.rows || [
+        config.items.filter((_, i) => i % 2 === 0),
+        config.items.filter((_, i) => i % 2 === 1),
       ];
-      rows.forEach(([className, items]) => {
+      [['marquee-row marquee-row--top', top], ['marquee-row marquee-row--bottom', bottom]].forEach(([className, items]) => {
         const row = document.createElement('div');
         row.className = className;
         row.appendChild(buildMarqueeTrack(items));
@@ -677,6 +687,7 @@ class PortfolioApp {
     if (reducedMotion() || typeof anime === 'undefined') return;
 
     document.querySelectorAll('.glass-card h2, .section-header h2').forEach((heading) => {
+      if (heading.querySelector('img')) return;
       const text = heading.textContent.trim();
       heading.setAttribute('aria-label', text);
       heading.innerHTML = text
